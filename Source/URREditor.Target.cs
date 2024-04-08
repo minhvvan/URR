@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 public class URREditorTarget : TargetRules
 {
-	public URREditorTarget( TargetInfo Target) : base(Target)
+	public URREditorTarget(TargetInfo Target) : base(Target)
 	{
 		Type = TargetType.Editor;
 		DefaultBuildSettings = BuildSettingsVersion.V4;
