@@ -19,6 +19,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Mesh, Meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UStaticMeshComponent> TileMesh;
 
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Mesh, Meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<ACharacter> UnitCharacter;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -27,4 +30,11 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
+protected:
+	bool isEmpty;
+
+public:
+	bool IsEmpty();
+
+	void SpawnUnit(int rank);
 };
