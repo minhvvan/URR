@@ -27,9 +27,9 @@ void UURRGA_SpawnUnit::ActivateAbility(const FGameplayAbilitySpecHandle Handle, 
 		else rank = 3;
 
 		Tile->SpawnUnit(rank);
-	}
 
-	CommitAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo);
+		CommitAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo);
+	}
 
 	bool bReplicateEndAbility = true;
 	bool bWasCancelled = false;

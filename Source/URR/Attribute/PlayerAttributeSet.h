@@ -20,13 +20,14 @@ UCLASS()
 class URR_API UPlayerAttributeSet : public UAttributeSet
 {
 	GENERATED_BODY()
-	
+
 public:
 	UPlayerAttributeSet();
 
 	ATTRIBUTE_ACCESSORS(UPlayerAttributeSet, Coin);
 	ATTRIBUTE_ACCESSORS(UPlayerAttributeSet, Health);
 	ATTRIBUTE_ACCESSORS(UPlayerAttributeSet, MaxHealth);
+	ATTRIBUTE_ACCESSORS(UPlayerAttributeSet, Cost);
 
 protected:
 	UPROPERTY(BlueprintReadOnly, Category = Stat, meta = (AllowPrivateAccess = true))
@@ -37,4 +38,10 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, Category = Stat, meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData MaxHealth;
+
+	UPROPERTY(BlueprintReadOnly, Category = Stat, meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData Cost;
+public:
+	virtual void PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data) override;
+
 };

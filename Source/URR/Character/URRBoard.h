@@ -71,6 +71,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, Meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UInputAction> DownAction;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, Meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class UInputAction> TestAction;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Widget, Meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UURRHudWidget> HudWidget;
 
@@ -83,8 +86,12 @@ protected:
 	UPROPERTY(EditAnywhere, Category = GAS)
 	TSubclassOf<UGameplayAbility> SpawnAbilityClass;
 
+	UPROPERTY(EditAnywhere, Category = GAS)
+	TSubclassOf<class UGameplayEffect> Testffect;
+
 protected:
 	void MoveInputPressed(int32 InputId);
+	void Test(int32 InputId);
 
 public:
 	void SpawnUnit();

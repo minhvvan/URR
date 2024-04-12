@@ -139,6 +139,7 @@ void AURRBoard::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	EnhancedInputComponent->BindAction(RightAction, ETriggerEvent::Triggered, this, &AURRBoard::MoveInputPressed, 1);
 	EnhancedInputComponent->BindAction(UpAction, ETriggerEvent::Triggered, this, &AURRBoard::MoveInputPressed, 2);
 	EnhancedInputComponent->BindAction(DownAction, ETriggerEvent::Triggered, this, &AURRBoard::MoveInputPressed, 3);
+	EnhancedInputComponent->BindAction(TestAction, ETriggerEvent::Triggered, this, &AURRBoard::Test, 0);
 }
 
 void AURRBoard::MoveInputPressed(int32 InputId)
@@ -147,6 +148,17 @@ void AURRBoard::MoveInputPressed(int32 InputId)
 	TArray<int> dy = { 0, 0, -1, 1 };
 	TArray<int> dx = { -1, 1, 0, 0 };
 
+}
+
+void AURRBoard::Test(int32 InputId)
+{
+	FGameplayEffectContextHandle EffectContextHandle = ASC->MakeEffectContext();
+	EffectContextHandle.AddSourceObject(this);
+	FGameplayEffectSpecHandle EffectSpecHandle = ASC->MakeOutgoingSpec(Testffect, 0, EffectContextHandle);
+	if (EffectSpecHandle.IsValid())
+	{
+		ASC->BP_ApplyGameplayEffectSpecToSelf(EffectSpecHandle);
+	}
 }
 
 void AURRBoard::SpawnUnit()
@@ -172,7 +184,8 @@ AURRTile* AURRBoard::GetEmptyTile()
 		}
 	}
 
-	int rand = FMath::Rand() % EmptyTiles.Num();
+	if (EmptyTiles.Num() == 0) return nullptr;
 
+	int rand = FMath::Rand() % EmptyTiles.Num();
 	return EmptyTiles[rand];
 }
