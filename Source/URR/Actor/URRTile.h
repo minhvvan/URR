@@ -19,8 +19,13 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Mesh, Meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<UStaticMeshComponent> TileMesh;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Mesh, Meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<ACharacter> UnitCharacter;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Unit, Meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class AURRCharacterUnit> UnitCharacter;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Unit, Meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<class AURRCharacterUnit> UnitClass;
+
+
 
 protected:
 	// Called when the game starts or when spawned
@@ -35,6 +40,5 @@ protected:
 
 public:
 	bool IsEmpty();
-
 	void SpawnUnit(int rank);
 };

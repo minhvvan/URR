@@ -2,6 +2,7 @@
 
 
 #include "Actor/URRTile.h"
+#include "Character/URRCharacterUnit.h"
 #include "Urr.h"
 
 // Sets default values
@@ -17,6 +18,12 @@ AURRTile::AURRTile(): isEmpty(true)
 	if (TileMeshRef.Succeeded())
 	{
 		TileMesh->SetStaticMesh(TileMeshRef.Object);
+	}
+
+	ConstructorHelpers::FClassFinder<AURRCharacterUnit> UnitRef(TEXT("/Script/Engine.Blueprint'/Game/URR/Blueprint/BP_Unit.BP_Unit_C'"));
+	if (UnitRef.Succeeded())
+	{
+		UnitClass = UnitRef.Class;
 	}
 }
 
@@ -42,6 +49,13 @@ bool AURRTile::IsEmpty()
 void AURRTile::SpawnUnit(int rank)
 {
 	//Spawn Uit
-	URR_LOG(LogURR, Log, TEXT("Spawn: %d"), rank);
-}
+	FVector SpawnLoc = GetActorLocation();
+	SpawnLoc.Z += 50;
 
+	FActorSpawnParameters params;
+
+	UnitCharacter = GetWorld()->SpawnActor<AURRCharacterUnit>(UnitClass, SpawnLoc, FRotator::ZeroRotator, params);
+	UnitCharacter->Init(rank);
+
+	isEmpty = false;
+}

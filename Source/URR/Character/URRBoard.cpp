@@ -5,6 +5,7 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Components/BoxComponent.h"
+#include "Components/WidgetComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "AbilitySystemComponent.h"
@@ -13,6 +14,7 @@
 #include "GA/URRGA_SpawnUnit.h"
 #include "Urr.h"
 
+
 AURRBoard::AURRBoard()
 {
  	// Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
@@ -20,6 +22,7 @@ AURRBoard::AURRBoard()
 
 	BoardArea = CreateDefaultSubobject<UBoxComponent>(TEXT("BoardArea"));
 	SetRootComponent(BoardArea);
+	BoardArea->SetBoxExtent(FVector(1500, 1500, 1000));
 
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
@@ -29,10 +32,23 @@ AURRBoard::AURRBoard()
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	FollowCamera->bUsePawnControlRotation = false;
 
+	CastleMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("CastleMesh"));
+	CastleMesh->SetupAttachment(RootComponent);	
+	
+	HpBar = CreateDefaultSubobject<UWidgetComponent>(TEXT("HpBar"));
+	HpBar->SetupAttachment(RootComponent);
+
 	ConstructorHelpers::FClassFinder<UURRHudWidget> HUDRef(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/URR/UI/WBP_Hud.WBP_Hud_C'"));
 	if (HUDRef.Succeeded())
 	{
 		HudClass = HUDRef.Class;
+	}
+
+	ConstructorHelpers::FObjectFinder<UStaticMesh> CastleMeshRef(TEXT("/Script/Engine.StaticMesh'/Game/URR/Mesh/WallMesh.WallMesh'"));
+	if (CastleMeshRef.Succeeded())
+	{
+		CastleMesh->SetStaticMesh(CastleMeshRef.Object);
+		CastleMesh->SetRelativeLocation(FVector(1000, -100, -400));
 	}
 }
 
@@ -57,6 +73,9 @@ void AURRBoard::PossessedBy(AController* NewController)
 			ASC->GiveAbility(StartSpec);
 		}
 	}
+
+	APlayerController* PC = CastChecked<APlayerController>(GetController());
+	PC->ConsoleCommand(TEXT("showdebug abilitysystem"));
 }
 
 // Called when the game starts or when spawned
@@ -138,7 +157,6 @@ void AURRBoard::SpawnUnit()
 	FGameplayAbilitySpec* Spec = ASC->FindAbilitySpecFromClass(SpawnAbilityClass);
 	if (Spec)
 	{
-		URR_LOG(LogURR, Log, TEXT("START"));
 		ASC->TryActivateAbility(Spec->Handle);
 	}
 }
