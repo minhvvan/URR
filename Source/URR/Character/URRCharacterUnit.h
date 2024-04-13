@@ -4,12 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "Character/URRCharacterBase.h"
+#include "Engine/StreamableManager.h"
 #include "URRCharacterUnit.generated.h"
 
 /**
  * 
  */
-UCLASS()
+UCLASS(config = URR)
 class URR_API AURRCharacterUnit : public AURRCharacterBase
 {
 	GENERATED_BODY()
@@ -20,13 +21,31 @@ public:
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
 protected:
-	virtual void BeginPlay();
-
 	UPROPERTY()
 	TObjectPtr<class UURRUnitAttributeSet> UnitAttributeSet;
 
 	UPROPERTY(EditAnywhere, Category = GAS)
 	TSubclassOf<class UGameplayEffect> InitStatEffect;
+
+	UPROPERTY()
+	TObjectPtr<UStaticMeshComponent> WeaponMesh;
+
+protected:
+	int Rank;
+
 public:
-	void Init(int rank);
+	virtual void Init(int rank);
+
+	void AttackMontageLoadCompleted();
+
+protected:
+	virtual void BeginPlay() override;
+	virtual void PostInitializeComponents() override;
+
+	UPROPERTY(config)
+	TArray<FSoftObjectPath> AttackMontages;
+	TSharedPtr<FStreamableHandle> AttackMontageHandle;
+
+	UPROPERTY(config)
+	TArray<FName> SocketName;
 };

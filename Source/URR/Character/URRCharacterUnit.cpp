@@ -4,9 +4,10 @@
 #include "Character/URRCharacterUnit.h"
 #include "Attribute/URRUnitAttributeSet.h"
 #include "AbilitySystemComponent.h"
+#include "Engine/AssetManager.h"
 #include "URR.h"
 
-AURRCharacterUnit::AURRCharacterUnit()
+AURRCharacterUnit::AURRCharacterUnit() : Rank(0)
 {
 	ConstructorHelpers::FObjectFinder<USkeletalMesh> MeshRef(TEXT("/Script/Engine.SkeletalMesh'/Game/soldier_battle_pack/Mesh/Soldier/SK_Soldier.SK_Soldier'"));
 	if (MeshRef.Succeeded())
@@ -17,6 +18,8 @@ AURRCharacterUnit::AURRCharacterUnit()
 	}
 
 	UnitAttributeSet = CreateDefaultSubobject<UURRUnitAttributeSet>(TEXT("UnitAttributeSet"));
+	WeaponMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("WeaponMesh"));
+	WeaponMesh->SetupAttachment(RootComponent);
 }
 
 UAbilitySystemComponent* AURRCharacterUnit::GetAbilitySystemComponent() const
@@ -27,18 +30,28 @@ UAbilitySystemComponent* AURRCharacterUnit::GetAbilitySystemComponent() const
 void AURRCharacterUnit::BeginPlay()
 {
 	Super::BeginPlay();
+}
 
-	URR_LOG(LogURR, Log, TEXT("BeginPlay"));
+void AURRCharacterUnit::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
 }
 
 void AURRCharacterUnit::Init(int rank)
 {
+	Rank = rank;
+	URR_LOG(LogURR, Log, TEXT("%d"), Rank);
+
 	FGameplayEffectContextHandle EffectContextHandle = ASC->MakeEffectContext();
 	EffectContextHandle.AddSourceObject(this);
-	FGameplayEffectSpecHandle EffectSpecHandle = ASC->MakeOutgoingSpec(InitStatEffect, rank, EffectContextHandle);
+	FGameplayEffectSpecHandle EffectSpecHandle = ASC->MakeOutgoingSpec(InitStatEffect, Rank+1, EffectContextHandle);
 	if (EffectSpecHandle.IsValid())
 	{
-		URR_LOG(LogURR, Log, TEXT("Init"));
 		ASC->BP_ApplyGameplayEffectSpecToSelf(EffectSpecHandle);
 	}
+}
+
+void AURRCharacterUnit::AttackMontageLoadCompleted()
+{
+
 }

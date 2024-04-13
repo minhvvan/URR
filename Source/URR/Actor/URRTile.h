@@ -4,9 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Engine/StreamableManager.h"
 #include "URRTile.generated.h"
 
-UCLASS()
+UCLASS(config = URR)
 class URR_API AURRTile : public AActor
 {
 	GENERATED_BODY()
@@ -25,7 +26,8 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Unit, Meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<class AURRCharacterUnit> UnitClass;
 
-
+	UPROPERTY(config)
+	TArray<FSoftClassPath> UnitClasses;
 
 protected:
 	// Called when the game starts or when spawned
@@ -37,8 +39,11 @@ public:
 
 protected:
 	bool isEmpty;
+	int Rank;
 
 public:
 	bool IsEmpty();
 	void SpawnUnit(int rank);
+
+	void UnitClassLoadCompleted();
 };

@@ -3,6 +3,7 @@
 
 #include "Actor/URRTile.h"
 #include "Character/URRCharacterUnit.h"
+#include "Engine/AssetManager.h"
 #include "Urr.h"
 
 // Sets default values
@@ -18,12 +19,6 @@ AURRTile::AURRTile(): isEmpty(true)
 	if (TileMeshRef.Succeeded())
 	{
 		TileMesh->SetStaticMesh(TileMeshRef.Object);
-	}
-
-	ConstructorHelpers::FClassFinder<AURRCharacterUnit> UnitRef(TEXT("/Script/Engine.Blueprint'/Game/URR/Blueprint/BP_Unit.BP_Unit_C'"));
-	if (UnitRef.Succeeded())
-	{
-		UnitClass = UnitRef.Class;
 	}
 }
 
@@ -48,14 +43,26 @@ bool AURRTile::IsEmpty()
 
 void AURRTile::SpawnUnit(int rank)
 {
-	//Spawn Uit
-	FVector SpawnLoc = GetActorLocation();
-	SpawnLoc.Z += 50;
+	Rank = rank;
 
-	FActorSpawnParameters params;
+	int32 Idx;
+	if (rank < 4) Idx = 0;
+	else if (rank == 4) Idx = 1;
+	else if (rank == 5) Idx = 2;
+	else if (rank == 6) Idx = 3;
 
-	UnitCharacter = GetWorld()->SpawnActor<AURRCharacterUnit>(UnitClass, SpawnLoc, FRotator::ZeroRotator, params);
-	UnitCharacter->Init(rank);
+	UnitClass = UnitClasses[Idx].TryLoadClass<AURRCharacterUnit>();
+	if (UnitClass)
+	{
+		//Spawn Uit
+		FVector SpawnLoc = GetActorLocation();
+		SpawnLoc.Z += 50;
 
-	isEmpty = false;
+		FActorSpawnParameters params;
+
+		UnitCharacter = GetWorld()->SpawnActor<AURRCharacterUnit>(UnitClass, SpawnLoc, FRotator::ZeroRotator, params);
+		UnitCharacter->Init(Rank);
+
+		isEmpty = false;
+	}
 }
