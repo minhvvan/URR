@@ -9,6 +9,7 @@
 /**
  * 
  */
+
 UCLASS(config = URR)
 class URR_API AURRCharacterSoldier : public AURRCharacterUnit
 {
@@ -20,37 +21,48 @@ public:
 	virtual void Init(int rank) override;
 
 protected:
+	UPROPERTY(EditAnywhere, Category=Mesh)
+	TObjectPtr<USkeletalMeshComponent> HeadMesh;
+
+	UPROPERTY(EditAnywhere, Category = Mesh)
+	TObjectPtr<USkeletalMeshComponent> BodyMesh;
+
+	UPROPERTY(EditAnywhere, Category = Mesh)
+	TObjectPtr<USkeletalMeshComponent> AccMesh;
+
+protected:
 	virtual void BeginPlay() override;
 	virtual void PostInitializeComponents() override;
 
-	void UnitMeshLoadCompleted();
 	void WeaponMeshLoadCompleted();
+	void HelmetMeshLoadCompleted();
+	void MaskMeshLoadCompleted();
+	void BackPackMeshLoadCompleted();
+	void MattressMeshLoadCompleted();
+	void BodyKitMeshLoadCompleted();
 
-	UPROPERTY(config)
-	FSoftObjectPath UnitMesh;
-	TSharedPtr<FStreamableHandle> UnitMeshHandle;
+	void UnitMaterialLoadCompleted();
+	void HelmetMaterialLoadCompleted();
+	void BodyKitMaterialLoadCompleted();
+	void BackPackMaterialLoadCompleted();
 
 	UPROPERTY(config)
 	TArray<FSoftObjectPath> WeaponMeshes;
 	TSharedPtr<FStreamableHandle> WeaponMeshHandle;
 
 	UPROPERTY(config)
-	FSoftObjectPath HelmetMesh;
-	TSharedPtr<FStreamableHandle> HelmetMeshHandle;
-
-	UPROPERTY(config)
-	FSoftObjectPath MaskMesh;
-	TSharedPtr<FStreamableHandle> MaskMeshHandle;
-
-	UPROPERTY(config)
-	FSoftObjectPath BackPackMesh;
-	TSharedPtr<FStreamableHandle> BackPackMeshHandle;
-
-	UPROPERTY(config)
-	FSoftObjectPath MattressMesh;
-	TSharedPtr<FStreamableHandle> MattressMeshHandle;
+	TArray<FSoftObjectPath> AdditiveMeshes;
+	TMap<int, TSharedPtr<FStreamableHandle>> AdditiveMeshHandles;
 
 	UPROPERTY(config)
 	TArray<FSoftObjectPath> UnitMaterials;
-	TSharedPtr<FStreamableHandle> UnitMaterialHandle;
+	TSharedPtr<FStreamableHandle> UnitMaterialHandle;	
+	
+	UPROPERTY(config)
+	TArray<FSoftObjectPath> BodyKitMaterials;
+	TSharedPtr<FStreamableHandle> BodyKitMaterialHandle;
+
+	UPROPERTY(config)
+	TArray<FSoftObjectPath> BackPackMaterials;
+	TSharedPtr<FStreamableHandle> BackPackMaterialHandle;
 };
