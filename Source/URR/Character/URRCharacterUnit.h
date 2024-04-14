@@ -27,9 +27,6 @@ protected:
 	UPROPERTY(EditAnywhere, Category = GAS)
 	TSubclassOf<class UGameplayEffect> InitStatEffect;
 
-	UPROPERTY()
-	TObjectPtr<UStaticMeshComponent> WeaponMesh;
-
 protected:
 	int Rank;
 

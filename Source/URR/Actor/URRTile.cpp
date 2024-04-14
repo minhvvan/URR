@@ -50,15 +50,19 @@ void AURRTile::SpawnUnit(int rank)
 	else if (rank == 4) Idx = 1;
 	else if (rank == 5) Idx = 2;
 	else if (rank == 6) Idx = 3;
+	else Idx = 4;
 
 	UnitClass = UnitClasses[Idx].TryLoadClass<AURRCharacterUnit>();
 	if (UnitClass)
 	{
 		//Spawn Uit
 		FVector SpawnLoc = GetActorLocation();
-		SpawnLoc.Z += 50;
+		SpawnLoc.Z += 138;
+
+		URR_LOG(LogURR, Log, TEXT("%s"), *SpawnLoc.ToString());
 
 		FActorSpawnParameters params;
+		params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 
 		UnitCharacter = GetWorld()->SpawnActor<AURRCharacterUnit>(UnitClass, SpawnLoc, FRotator::ZeroRotator, params);
 		UnitCharacter->Init(Rank);

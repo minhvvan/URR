@@ -21,6 +21,9 @@ AURRCharacterSoldier::AURRCharacterSoldier()
 		GetMesh()->SetSkeletalMesh(UnitMeshRef.Object);
 	}
 
+	WeaponMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("WeaponMesh"));
+	WeaponMesh->SetupAttachment(RootComponent);
+
 	HeadMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("HeadMesh"));
 	HeadMesh->SetupAttachment(RootComponent);
 	HeadMesh->SetLeaderPoseComponent(GetMesh());

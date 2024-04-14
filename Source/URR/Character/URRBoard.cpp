@@ -22,7 +22,7 @@ AURRBoard::AURRBoard()
 
 	BoardArea = CreateDefaultSubobject<UBoxComponent>(TEXT("BoardArea"));
 	SetRootComponent(BoardArea);
-	BoardArea->SetBoxExtent(FVector(1500, 1500, 1000));
+	//BoardArea->SetBoxExtent(FVector(1500, 1500, 1000));
 
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
@@ -103,7 +103,7 @@ void AURRBoard::BeginPlay()
 
 	for (int i = 0; i < 4; i++)
 	{
-		SpawnLocation.X = 530 * i;
+		SpawnLocation.X = 530 * i + 10;
 		SpawnLocation.Y = 0;
 
 		for (int j = 0; j < 4; j++)

@@ -18,8 +18,6 @@ AURRCharacterUnit::AURRCharacterUnit() : Rank(0)
 	}
 
 	UnitAttributeSet = CreateDefaultSubobject<UURRUnitAttributeSet>(TEXT("UnitAttributeSet"));
-	WeaponMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("WeaponMesh"));
-	WeaponMesh->SetupAttachment(RootComponent);
 }
 
 UAbilitySystemComponent* AURRCharacterUnit::GetAbilitySystemComponent() const

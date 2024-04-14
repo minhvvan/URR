@@ -21,6 +21,9 @@ public:
 	virtual void Init(int rank) override;
 
 protected:
+	UPROPERTY()
+	TObjectPtr<UStaticMeshComponent> WeaponMesh;
+
 	UPROPERTY(EditAnywhere, Category=Mesh)
 	TObjectPtr<USkeletalMeshComponent> HeadMesh;
 
