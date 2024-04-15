@@ -3,7 +3,37 @@
 
 #include "UI/URRHudWidget.h"
 #include "Components/Button.h"
+#include "Components/TextBlock.h"
+#include "Components/ProgressBar.h"
 #include "Character/URRBoard.h"
+#include "AbilitySystemComponent.h"
+#include "Attribute/PlayerAttributeSet.h"
+
+void UURRHudWidget::SetAbilitySystemComponent(AActor* InOwner)
+{
+	Super::SetAbilitySystemComponent(InOwner);
+	Board = Cast<AURRBoard>(InOwner);
+
+	if (ASC)
+	{
+		ASC->GetGameplayAttributeValueChangeDelegate(UPlayerAttributeSet::GetCoinAttribute()).AddUObject(this, &UURRHudWidget::OnCoinChanged);
+		ASC->GetGameplayAttributeValueChangeDelegate(UPlayerAttributeSet::GetHealthAttribute()).AddUObject(this, &UURRHudWidget::OnCoinChanged);
+		//ASC->RegisterGameplayTagEvent(ABTAG_CHARACTER_INVINSIBLE, EGameplayTagEventType::NewOrRemoved).AddUObject(this, &UABGASHpBarUserWidget::OnInvinsibleTagChanged);
+
+		const UPlayerAttributeSet* CurrentAttributeSet = ASC->GetSet<UPlayerAttributeSet>();
+		if (CurrentAttributeSet)
+		{
+			CurrentCoin = CurrentAttributeSet->GetCoin();
+			UpdateCoin();
+
+			CurrentHealth = CurrentAttributeSet->GetHealth();
+			CurrentMaxHealth = CurrentAttributeSet->GetMaxHealth();
+
+			TxtMaxHealth->SetText(FText::AsNumber(CurrentMaxHealth));
+			UpdateHealth();
+		}
+	}
+}
 
 void UURRHudWidget::NativeOnInitialized()
 {
@@ -20,4 +50,27 @@ void UURRHudWidget::OnSpawnClicked()
 	}
 
 	Board->SpawnUnit();
+}
+
+void UURRHudWidget::OnCoinChanged(const FOnAttributeChangeData& ChangeData)
+{
+	CurrentCoin = ChangeData.NewValue;
+	UpdateCoin();
+}
+
+void UURRHudWidget::OnHealthChanged(const FOnAttributeChangeData& ChangeData)
+{
+	CurrentHealth = ChangeData.NewValue;
+	UpdateHealth();
+}
+
+void UURRHudWidget::UpdateCoin()
+{
+	TxtCoin->SetText(FText::AsNumber(CurrentCoin));
+}
+
+void UURRHudWidget::UpdateHealth()
+{
+	TxtHealth->SetText(FText::AsNumber(CurrentHealth));
+	PBHealth->SetPercent(CurrentHealth / CurrentMaxHealth);
 }

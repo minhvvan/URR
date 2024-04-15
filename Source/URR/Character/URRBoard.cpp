@@ -5,7 +5,6 @@
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
 #include "Components/BoxComponent.h"
-#include "Components/WidgetComponent.h"
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "AbilitySystemComponent.h"
@@ -35,9 +34,6 @@ AURRBoard::AURRBoard()
 	CastleMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("CastleMesh"));
 	CastleMesh->SetupAttachment(RootComponent);	
 	
-	HpBar = CreateDefaultSubobject<UWidgetComponent>(TEXT("HpBar"));
-	HpBar->SetupAttachment(RootComponent);
-
 	ConstructorHelpers::FClassFinder<UURRHudWidget> HUDRef(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/URR/UI/WBP_Hud.WBP_Hud_C'"));
 	if (HUDRef.Succeeded())
 	{
@@ -118,7 +114,11 @@ void AURRBoard::BeginPlay()
 	if (HudClass)
 	{
 		HudWidget = CreateWidget<UURRHudWidget>(GetWorld(), HudClass);
-		if (HudWidget) HudWidget->AddToViewport();
+		if (HudWidget)
+		{
+			HudWidget->AddToViewport();
+			HudWidget->SetAbilitySystemComponent(this);
+		}
 	}
 }
 
