@@ -38,7 +38,7 @@ void AURRCharacterUnit::PostInitializeComponents()
 void AURRCharacterUnit::Init(int rank)
 {
 	Rank = rank;
-	URR_LOG(LogURR, Log, TEXT("%d"), Rank);
+	//URR_LOG(LogURR, Log, TEXT("%d"), Rank);
 
 	FGameplayEffectContextHandle EffectContextHandle = ASC->MakeEffectContext();
 	EffectContextHandle.AddSourceObject(this);

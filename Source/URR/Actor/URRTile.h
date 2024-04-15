@@ -40,10 +40,12 @@ public:
 protected:
 	bool isEmpty;
 	int Rank;
-
 public:
 	bool IsEmpty();
 	void SpawnUnit(int rank);
+	void RankUpUnit();
 
-	void UnitClassLoadCompleted();
+	void DestroyUnit();
+
+	int GetRank();
 };

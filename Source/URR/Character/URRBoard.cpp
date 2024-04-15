@@ -13,6 +13,13 @@
 #include "GA/URRGA_SpawnUnit.h"
 #include "Urr.h"
 
+enum MoveDir
+{
+	MOVE_LEFT,
+	MOVE_RIGHT,
+	MOVE_UP,
+	MOVE_DOWN
+};
 
 AURRBoard::AURRBoard()
 {
@@ -97,9 +104,11 @@ void AURRBoard::BeginPlay()
 
 	Tiles.SetNum(4);
 
+	//1590
+
 	for (int i = 0; i < 4; i++)
 	{
-		SpawnLocation.X = 530 * i + 10;
+		SpawnLocation.X = 1590 - (530 * i);
 		SpawnLocation.Y = 0;
 
 		for (int j = 0; j < 4; j++)
@@ -144,10 +153,21 @@ void AURRBoard::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 
 void AURRBoard::MoveInputPressed(int32 InputId)
 {
-	//Move Tiles
-	TArray<int> dy = { 0, 0, -1, 1 };
-	TArray<int> dx = { -1, 1, 0, 0 };
-
+	switch (InputId)
+	{
+	case MoveDir::MOVE_LEFT:
+		MoveLeft();
+		break;
+	case MoveDir::MOVE_RIGHT:
+		MoveRight();
+		break;
+	case MoveDir::MOVE_UP:
+		MoveUp();
+		break;
+	case MoveDir::MOVE_DOWN:
+		MoveDown();
+		break;
+	}
 }
 
 void AURRBoard::Test(int32 InputId)
@@ -159,6 +179,101 @@ void AURRBoard::Test(int32 InputId)
 	{
 		ASC->BP_ApplyGameplayEffectSpecToSelf(EffectSpecHandle);
 	}
+}
+
+bool AURRBoard::IsValidIdx(int y, int x)
+{
+	return y >= 0 && y < 4 && x >= 0 && x < 4;
+}
+
+void AURRBoard::MoveLeft()
+{
+	TArray<int> dy = { 0, 0, 1, -1 };
+	TArray<int> dx = { -1, 1, 0, 0 };
+
+	//1 0 2 4 -> 8 0 0 0
+
+	for (int i = 0; i < 4; i++)
+	{
+		TArray<int> ExistSet;
+		TArray<int> EmptySet;
+
+		for (int j = 0; j < 4; j++)
+		{
+			if (Tiles[i][j]->IsEmpty())
+			{
+				EmptySet.Add(j);
+			}
+			else ExistSet.Add(j);
+		}
+
+		ExistSet.Heapify();
+		EmptySet.Heapify();
+
+		while(!ExistSet.IsEmpty())
+		{
+			int currentIdx;
+			ExistSet.HeapPop(currentIdx, true);
+			int currentRank = Tiles[i][currentIdx]->GetRank();
+
+			int prevRank = -1;
+			int prevIdx = -1;
+
+			for (int j = currentIdx - 1; j >= 0; j--)
+			{
+				if (!Tiles[i][j]->IsEmpty())
+				{
+					prevRank = Tiles[i][j]->GetRank();
+					prevIdx = j;
+					break;
+				}
+			}
+
+			if (currentRank == prevRank)
+			{
+				Tiles[i][currentIdx]->DestroyUnit();
+				Tiles[i][prevIdx]->RankUpUnit();
+
+				ExistSet.HeapPush(prevIdx);
+			}
+			else
+			{
+				if (EmptySet.IsEmpty()) continue;
+				if (currentIdx < EmptySet.HeapTop()) continue;
+
+				int firstEmpty;
+				EmptySet.HeapPop(firstEmpty, true);
+
+				Tiles[i][currentIdx]->DestroyUnit();
+				Tiles[i][firstEmpty]->SpawnUnit(currentRank);
+
+				EmptySet.HeapPush(currentIdx);
+			}
+		}
+	}
+}
+
+void AURRBoard::MoveRight()
+{
+	TArray<int> dy = { 0, 0, 1, -1 };
+	TArray<int> dx = { -1, 1, 0, 0 };
+}
+
+void AURRBoard::MoveUp()
+{
+	TArray<int> dy = { 0, 0, 1, -1 };
+	TArray<int> dx = { -1, 1, 0, 0 };
+}
+
+void AURRBoard::MoveDown()
+{
+	TArray<int> dy = { 0, 0, 1, -1 };
+	TArray<int> dx = { -1, 1, 0, 0 };
+}
+
+TPair<int, int> AURRBoard::FindTarget(int Y, int X, int dir)
+{
+	return TPair<int, int>();
 }
 
 void AURRBoard::SpawnUnit()

@@ -59,8 +59,6 @@ void AURRTile::SpawnUnit(int rank)
 		FVector SpawnLoc = GetActorLocation();
 		SpawnLoc.Z += 138;
 
-		URR_LOG(LogURR, Log, TEXT("%s"), *SpawnLoc.ToString());
-
 		FActorSpawnParameters params;
 		params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 
@@ -69,4 +67,28 @@ void AURRTile::SpawnUnit(int rank)
 
 		isEmpty = false;
 	}
+}
+
+void AURRTile::RankUpUnit()
+{
+	int CurrentRank = Rank;
+	DestroyUnit();
+
+	SpawnUnit(CurrentRank + 1);
+}
+
+void AURRTile::DestroyUnit()
+{
+	if (UnitCharacter)
+	{
+		UnitCharacter->Destroy();
+		UnitCharacter = nullptr;
+		isEmpty = true;
+		Rank = 0;
+	}
+}
+
+int AURRTile::GetRank()
+{
+	return Rank;
 }

@@ -90,6 +90,15 @@ protected:
 	void MoveInputPressed(int32 InputId);
 	void Test(int32 InputId);
 
+	bool IsValidIdx(int y, int x);
+
+	void MoveLeft();
+	void MoveRight();
+	void MoveUp();
+	void MoveDown();
+
+	TPair<int, int> FindTarget(int Y, int X, int dir);
+
 public:
 	void SpawnUnit();
 

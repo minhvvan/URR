@@ -6,7 +6,7 @@
 #include "Tag/URRGameplayTag.h"
 
 UPlayerAttributeSet::UPlayerAttributeSet() :
-	Coin(0),
+	Coin(1000),
 	Health(2048),
 	MaxHealth(2048)
 {
