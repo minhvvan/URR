@@ -13,6 +13,15 @@ enum EAdditiveMeshEnum
 	MESH_BodyKit,
 };
 
+enum ELoadPart
+{
+	LOAD_MAT,
+	LOAD_WEAPON,
+	LOAD_HEAD,
+	LOAD_BODY,
+	LOAD_ACC,
+};
+
 AURRCharacterSoldier::AURRCharacterSoldier()
 {
 	ConstructorHelpers::FObjectFinder<USkeletalMesh> UnitMeshRef(TEXT("/Script/Engine.SkeletalMesh'/Game/soldier_battle_pack/Mesh/Soldier/SK_Soldier.SK_Soldier'"));
@@ -38,23 +47,26 @@ AURRCharacterSoldier::AURRCharacterSoldier()
 	AccMesh->SetupAttachment(RootComponent);
 	AccMesh->SetLeaderPoseComponent(GetMesh());
 	AccMesh->SetHiddenInGame(true);
+
+	LoadCompletedPart.Init(false, 5);
 }
 
 void AURRCharacterSoldier::Init(int rank)
 {
 	Super::Init(rank);
 
-	WeaponMeshHandle = UAssetManager::Get().GetStreamableManager().RequestAsyncLoad(WeaponMeshes[Rank], FStreamableDelegate::CreateUObject(this, &AURRCharacterSoldier::WeaponMeshLoadCompleted));
-	UnitMaterialHandle = UAssetManager::Get().GetStreamableManager().RequestAsyncLoad(UnitMaterials[Rank], FStreamableDelegate::CreateUObject(this, &AURRCharacterSoldier::UnitMaterialLoadCompleted));
-
 	switch (rank)
 	{
 	case 0:
 		AdditiveMeshHandles.Add(EAdditiveMeshEnum::MESH_Helmet, UAssetManager::Get().GetStreamableManager().RequestAsyncLoad(AdditiveMeshes[EAdditiveMeshEnum::MESH_Helmet], FStreamableDelegate::CreateUObject(this, &AURRCharacterSoldier::HelmetMeshLoadCompleted)));
+		LoadCompletedPart[LOAD_MAT] = true;
+		LoadCompletedPart[LOAD_BODY] = true;
+		LoadCompletedPart[LOAD_ACC] = true;
 		break;
 	case 1:
 		AdditiveMeshHandles.Add(EAdditiveMeshEnum::MESH_Mask, UAssetManager::Get().GetStreamableManager().RequestAsyncLoad(AdditiveMeshes[EAdditiveMeshEnum::MESH_Mask], FStreamableDelegate::CreateUObject(this, &AURRCharacterSoldier::MaskMeshLoadCompleted)));
 		AdditiveMeshHandles.Add(EAdditiveMeshEnum::MESH_BodyKit, UAssetManager::Get().GetStreamableManager().RequestAsyncLoad(AdditiveMeshes[EAdditiveMeshEnum::MESH_BodyKit], FStreamableDelegate::CreateUObject(this, &AURRCharacterSoldier::BodyKitMeshLoadCompleted)));
+		LoadCompletedPart[LOAD_ACC] = true;
 		break;
 	case 2:
 		AdditiveMeshHandles.Add(EAdditiveMeshEnum::MESH_Helmet, UAssetManager::Get().GetStreamableManager().RequestAsyncLoad(AdditiveMeshes[EAdditiveMeshEnum::MESH_Helmet], FStreamableDelegate::CreateUObject(this, &AURRCharacterSoldier::HelmetMeshLoadCompleted)));
@@ -64,8 +76,12 @@ void AURRCharacterSoldier::Init(int rank)
 	case 3:
 		AdditiveMeshHandles.Add(EAdditiveMeshEnum::MESH_Helmet, UAssetManager::Get().GetStreamableManager().RequestAsyncLoad(AdditiveMeshes[EAdditiveMeshEnum::MESH_Helmet], FStreamableDelegate::CreateUObject(this, &AURRCharacterSoldier::HelmetMeshLoadCompleted)));
 		AdditiveMeshHandles.Add(EAdditiveMeshEnum::MESH_BackPack, UAssetManager::Get().GetStreamableManager().RequestAsyncLoad(AdditiveMeshes[EAdditiveMeshEnum::MESH_BackPack], FStreamableDelegate::CreateUObject(this, &AURRCharacterSoldier::BackPackMeshLoadCompleted)));
+		LoadCompletedPart[LOAD_ACC] = true;
 		break;
 	}
+
+	WeaponMeshHandle = UAssetManager::Get().GetStreamableManager().RequestAsyncLoad(WeaponMeshes[Rank], FStreamableDelegate::CreateUObject(this, &AURRCharacterSoldier::WeaponMeshLoadCompleted));
+	UnitMaterialHandle = UAssetManager::Get().GetStreamableManager().RequestAsyncLoad(UnitMaterials[Rank], FStreamableDelegate::CreateUObject(this, &AURRCharacterSoldier::UnitMaterialLoadCompleted));
 }
 
 void AURRCharacterSoldier::BeginPlay()
@@ -92,6 +108,7 @@ void AURRCharacterSoldier::WeaponMeshLoadCompleted()
 	}
 
 	WeaponMeshHandle->ReleaseHandle();
+	UnitLoadCompleted(LOAD_WEAPON);
 }
 
 void AURRCharacterSoldier::HelmetMeshLoadCompleted()
@@ -126,6 +143,8 @@ void AURRCharacterSoldier::MaskMeshLoadCompleted()
 
 	AdditiveMeshHandles[EAdditiveMeshEnum::MESH_Mask]->ReleaseHandle();
 	AdditiveMeshHandles.Remove(EAdditiveMeshEnum::MESH_Mask);
+
+	UnitLoadCompleted(LOAD_HEAD);
 }
 
 void AURRCharacterSoldier::BackPackMeshLoadCompleted()
@@ -160,6 +179,7 @@ void AURRCharacterSoldier::MattressMeshLoadCompleted()
 
 	AdditiveMeshHandles[EAdditiveMeshEnum::MESH_Mattress]->ReleaseHandle();
 	AdditiveMeshHandles.Remove(EAdditiveMeshEnum::MESH_Mattress);
+	UnitLoadCompleted(LOAD_ACC);
 }
 
 void AURRCharacterSoldier::BodyKitMeshLoadCompleted()
@@ -192,6 +212,7 @@ void AURRCharacterSoldier::UnitMaterialLoadCompleted()
 	}
 
 	UnitMaterialHandle->ReleaseHandle();
+	UnitLoadCompleted(LOAD_MAT);
 }
 
 void AURRCharacterSoldier::HelmetMaterialLoadCompleted()
@@ -206,6 +227,7 @@ void AURRCharacterSoldier::HelmetMaterialLoadCompleted()
 	}
 
 	BodyKitMaterialHandle->ReleaseHandle();
+	UnitLoadCompleted(LOAD_HEAD);
 }
 
 void AURRCharacterSoldier::BodyKitMaterialLoadCompleted()
@@ -220,6 +242,7 @@ void AURRCharacterSoldier::BodyKitMaterialLoadCompleted()
 	}
 
 	BodyKitMaterialHandle->ReleaseHandle();
+	UnitLoadCompleted(LOAD_BODY);
 }
 
 void AURRCharacterSoldier::BackPackMaterialLoadCompleted()
@@ -234,4 +257,22 @@ void AURRCharacterSoldier::BackPackMaterialLoadCompleted()
 	}
 
 	BackPackMaterialHandle->ReleaseHandle();
+	UnitLoadCompleted(LOAD_BODY);
+}
+
+void AURRCharacterSoldier::UnitLoadCompleted(int part)
+{
+	LoadCompletedPart[part] = true;
+
+	bool bComplete = true;
+	for (auto part : LoadCompletedPart)
+	{
+		if (!part)
+		{
+			bComplete = false;
+			break;
+		}
+	}
+
+	if(bComplete) OnLoadCompleteDelegate.Broadcast();
 }

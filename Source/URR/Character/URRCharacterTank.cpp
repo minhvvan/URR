@@ -11,3 +11,9 @@ AURRCharacterTank::AURRCharacterTank()
 		GetMesh()->SetSkeletalMesh(MeshRef.Object);
 	}
 }
+
+void AURRCharacterTank::Init(int rank)
+{
+	OnLoadCompleteDelegate.Broadcast();
+
+}

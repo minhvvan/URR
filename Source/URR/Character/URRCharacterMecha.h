@@ -55,4 +55,9 @@ protected:
 	void AdditiveMeshLoadCompleted();
 
 	void UnitMaterialLoadCompleted();
+
+	void UnitLoadCompleted(int part);
+
+protected:
+	TArray<bool> LoadCompletedPart;
 };

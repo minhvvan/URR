@@ -49,6 +49,12 @@ protected:
 	void BodyKitMaterialLoadCompleted();
 	void BackPackMaterialLoadCompleted();
 
+	void UnitLoadCompleted(int part);
+
+protected:
+	TArray<bool> LoadCompletedPart;
+
+protected:
 	UPROPERTY(config)
 	TArray<FSoftObjectPath> WeaponMeshes;
 	TSharedPtr<FStreamableHandle> WeaponMeshHandle;

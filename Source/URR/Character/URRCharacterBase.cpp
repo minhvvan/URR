@@ -22,7 +22,6 @@ UAbilitySystemComponent* AURRCharacterBase::GetAbilitySystemComponent() const
 void AURRCharacterBase::BeginPlay()
 {
 	Super::BeginPlay();
-	//ASC->InitAbilityActorInfo(this, this);
 }
 
 // Called every frame

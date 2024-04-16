@@ -11,3 +11,8 @@ AURRCharacterTurret::AURRCharacterTurret()
 		GetMesh()->SetSkeletalMesh(MeshRef.Object);
 	}
 }
+
+void AURRCharacterTurret::Init(int rank)
+{
+	OnLoadCompleteDelegate.Broadcast();
+}

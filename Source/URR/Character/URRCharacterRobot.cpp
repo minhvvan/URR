@@ -11,3 +11,8 @@ AURRCharacterRobot::AURRCharacterRobot()
 		GetMesh()->SetSkeletalMesh(MeshRef.Object);
 	}
 }
+
+void AURRCharacterRobot::Init(int rank)
+{
+	OnLoadCompleteDelegate.Broadcast();
+}

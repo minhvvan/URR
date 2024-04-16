@@ -29,6 +29,14 @@ void AURRTile::BeginPlay()
 	
 }
 
+void AURRTile::UnitLoadCompleteCallback()
+{
+	FVector SpawnLoc = GetActorLocation();
+	SpawnLoc.Z += 138;
+	FTransform FinalTransform = FTransform(FRotator::ZeroRotator, SpawnLoc);
+	UnitCharacter->FinishSpawning(FinalTransform);
+}
+
 // Called every frame
 void AURRTile::Tick(float DeltaTime)
 {
@@ -43,6 +51,13 @@ bool AURRTile::IsEmpty()
 
 void AURRTile::SpawnUnit(int rank)
 {
+	if (rank > 10)
+	{
+		//Shuffle
+		URR_LOG(LogURR, Log, TEXT("Shffle"));
+		return;
+	}
+
 	Rank = rank;
 
 	int32 Idx;
@@ -62,7 +77,9 @@ void AURRTile::SpawnUnit(int rank)
 		FActorSpawnParameters params;
 		params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 
-		UnitCharacter = GetWorld()->SpawnActor<AURRCharacterUnit>(UnitClass, SpawnLoc, FRotator::ZeroRotator, params);
+		//UnitCharacter = GetWorld()->SpawnActor<AURRCharacterUnit>(UnitClass, SpawnLoc, FRotator::ZeroRotator, params);
+		UnitCharacter = GetWorld()->SpawnActorDeferred<AURRCharacterUnit>(UnitClass, FTransform::Identity, this, nullptr, ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn);
+		UnitCharacter->OnLoadCompleteDelegate.AddDynamic(this, &AURRTile::UnitLoadCompleteCallback);
 		UnitCharacter->Init(Rank);
 
 		isEmpty = false;

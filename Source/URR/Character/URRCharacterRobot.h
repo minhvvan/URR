@@ -16,4 +16,6 @@ class URR_API AURRCharacterRobot : public AURRCharacterUnit
 	
 public:
 	AURRCharacterRobot();
+
+	virtual void Init(int rank) override;
 };

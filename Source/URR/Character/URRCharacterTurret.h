@@ -16,4 +16,6 @@ class URR_API AURRCharacterTurret : public AURRCharacterUnit
 	
 public:
 	AURRCharacterTurret();
+
+	virtual void Init(int rank) override;
 };

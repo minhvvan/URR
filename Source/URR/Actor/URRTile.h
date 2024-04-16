@@ -33,6 +33,9 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	UFUNCTION()
+	void UnitLoadCompleteCallback();
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -40,6 +43,7 @@ public:
 protected:
 	bool isEmpty;
 	int Rank;
+
 public:
 	bool IsEmpty();
 	void SpawnUnit(int rank);

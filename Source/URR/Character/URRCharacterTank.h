@@ -16,4 +16,7 @@ class URR_API AURRCharacterTank : public AURRCharacterUnit
 	
 public:
 	AURRCharacterTank();
+
+	virtual void Init(int rank) override;
+
 };

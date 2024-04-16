@@ -25,6 +25,11 @@ UAbilitySystemComponent* AURRCharacterUnit::GetAbilitySystemComponent() const
 	return ASC;
 }
 
+void AURRCharacterUnit::PossessedBy(AController* NewController)
+{
+	Super::PossessedBy(NewController);
+}
+
 void AURRCharacterUnit::BeginPlay()
 {
 	Super::BeginPlay();
@@ -33,20 +38,24 @@ void AURRCharacterUnit::BeginPlay()
 void AURRCharacterUnit::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
+
+	if (ASC)
+	{
+		ASC->InitAbilityActorInfo(this, this);
+
+		FGameplayEffectContextHandle EffectContextHandle = ASC->MakeEffectContext();
+		EffectContextHandle.AddSourceObject(this);
+		FGameplayEffectSpecHandle EffectSpecHandle = ASC->MakeOutgoingSpec(InitStatEffect, Rank + 1, EffectContextHandle);
+		if (EffectSpecHandle.IsValid())
+		{
+			ASC->BP_ApplyGameplayEffectSpecToSelf(EffectSpecHandle);
+		}
+	}
 }
 
 void AURRCharacterUnit::Init(int rank)
 {
 	Rank = rank;
-	//URR_LOG(LogURR, Log, TEXT("%d"), Rank);
-
-	FGameplayEffectContextHandle EffectContextHandle = ASC->MakeEffectContext();
-	EffectContextHandle.AddSourceObject(this);
-	FGameplayEffectSpecHandle EffectSpecHandle = ASC->MakeOutgoingSpec(InitStatEffect, Rank+1, EffectContextHandle);
-	if (EffectSpecHandle.IsValid())
-	{
-		ASC->BP_ApplyGameplayEffectSpecToSelf(EffectSpecHandle);
-	}
 }
 
 void AURRCharacterUnit::AttackMontageLoadCompleted()

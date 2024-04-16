@@ -7,6 +7,7 @@
 #include "Engine/StreamableManager.h"
 #include "URRCharacterUnit.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnLoadCompleted);
 /**
  * 
  */
@@ -19,6 +20,7 @@ public:
 	AURRCharacterUnit();
 
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
+	virtual void PossessedBy(AController* NewController) override;
 
 protected:
 	UPROPERTY()
@@ -34,6 +36,8 @@ public:
 	virtual void Init(int rank);
 
 	void AttackMontageLoadCompleted();
+
+	FOnLoadCompleted OnLoadCompleteDelegate;
 
 protected:
 	virtual void BeginPlay() override;

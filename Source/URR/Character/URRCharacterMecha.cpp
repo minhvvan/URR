@@ -4,6 +4,14 @@
 #include "Character/URRCharacterMecha.h"
 #include "Engine/AssetManager.h"
 
+enum ELoadPart
+{
+	LOAD_UNIT_MESH,
+	LOAD_MAT,
+	LOAD_WEAPON,
+	LOAD_ADDITIVE,
+};
+
 AURRCharacterMecha::AURRCharacterMecha()
 {
 	ConstructorHelpers::FObjectFinder<USkeletalMesh> UnitMeshRef(TEXT("/Script/Engine.SkeletalMesh'/Game/ModularSciFiHeroesHP/Mesh/Mecha/Character/SK_Mecha_Pistol.SK_Mecha_Pistol'"));
@@ -17,6 +25,8 @@ AURRCharacterMecha::AURRCharacterMecha()
 
 	AdditiveMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("AdditiveMesh"));
 	AdditiveMesh->SetupAttachment(RootComponent);
+
+	LoadCompletedPart.Init(false, 4);
 }
 
 void AURRCharacterMecha::Init(int rank)
@@ -28,7 +38,11 @@ void AURRCharacterMecha::Init(int rank)
 	UnitMeshHandle = UAssetManager::Get().GetStreamableManager().RequestAsyncLoad(UnitMeshes[Idx], FStreamableDelegate::CreateUObject(this, &AURRCharacterMecha::UnitMeshLoadCompleted));
 	UnitMaterialHandle = UAssetManager::Get().GetStreamableManager().RequestAsyncLoad(UnitMaterials[Idx], FStreamableDelegate::CreateUObject(this, &AURRCharacterMecha::UnitMaterialLoadCompleted));
 
-	if (Idx == 1) return;
+	if (Idx == 1)
+	{
+		UnitLoadCompleted(LOAD_ADDITIVE);
+		return;
+	}
 	
 	Idx = FMath::Clamp(Idx-1, 0, 2);
 	AdditiveMeshHandle = UAssetManager::Get().GetStreamableManager().RequestAsyncLoad(AdditiveMeshes[Idx], FStreamableDelegate::CreateUObject(this, &AURRCharacterMecha::AdditiveMeshLoadCompleted));
@@ -46,6 +60,7 @@ void AURRCharacterMecha::UnitMeshLoadCompleted()
 	}
 
 	WeaponMeshHandle->ReleaseHandle();
+	UnitLoadCompleted(LOAD_UNIT_MESH);
 }
 
 void AURRCharacterMecha::WeaponMeshLoadCompleted()
@@ -64,6 +79,7 @@ void AURRCharacterMecha::WeaponMeshLoadCompleted()
 	}
 
 	WeaponMeshHandle->ReleaseHandle();
+	UnitLoadCompleted(LOAD_WEAPON);
 }
 
 void AURRCharacterMecha::AdditiveMeshLoadCompleted()
@@ -80,6 +96,7 @@ void AURRCharacterMecha::AdditiveMeshLoadCompleted()
 	}
 
 	AdditiveMeshHandle->ReleaseHandle();
+	UnitLoadCompleted(LOAD_ADDITIVE);
 }
 
 void AURRCharacterMecha::UnitMaterialLoadCompleted()
@@ -98,4 +115,22 @@ void AURRCharacterMecha::UnitMaterialLoadCompleted()
 	}
 
 	UnitMaterialHandle->ReleaseHandle();
+	UnitLoadCompleted(LOAD_MAT);
+}
+
+void AURRCharacterMecha::UnitLoadCompleted(int part)
+{
+	LoadCompletedPart[part] = true;
+
+	bool bComplete = true;
+	for (auto part : LoadCompletedPart)
+	{
+		if (!part)
+		{
+			bComplete = false;
+			break;
+		}
+	}
+
+	if (bComplete) OnLoadCompleteDelegate.Broadcast();
 }
