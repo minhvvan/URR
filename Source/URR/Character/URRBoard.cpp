@@ -188,11 +188,6 @@ bool AURRBoard::IsValidIdx(int y, int x)
 
 void AURRBoard::MoveLeft()
 {
-	TArray<int> dy = { 0, 0, 1, -1 };
-	TArray<int> dx = { -1, 1, 0, 0 };
-
-	//1 0 2 4 -> 8 0 0 0
-
 	for (int i = 0; i < 4; i++)
 	{
 		TArray<int> ExistSet;
@@ -246,29 +241,197 @@ void AURRBoard::MoveLeft()
 
 				Tiles[i][currentIdx]->DestroyUnit();
 				Tiles[i][firstEmpty]->SpawnUnit(currentRank);
-
-				EmptySet.HeapPush(currentIdx);
 			}
+		
+			EmptySet.HeapPush(currentIdx);
 		}
 	}
 }
 
 void AURRBoard::MoveRight()
 {
-	TArray<int> dy = { 0, 0, 1, -1 };
-	TArray<int> dx = { -1, 1, 0, 0 };
+	for (int i = 0; i < 4; i++)
+	{
+		TArray<int> ExistSet;
+		TArray<int> EmptySet;
+
+		for (int j = 3; j >= 0; j--)
+		{
+			if (Tiles[i][j]->IsEmpty())
+			{
+				EmptySet.Add(j);
+			}
+			else ExistSet.Add(j);
+		}
+
+		ExistSet.Heapify(TGreater<int>());
+		EmptySet.Heapify(TGreater<int>());
+
+		while (!ExistSet.IsEmpty())
+		{
+			int currentIdx;
+			ExistSet.HeapPop(currentIdx, TGreater<int>(), true);
+			int currentRank = Tiles[i][currentIdx]->GetRank();
+
+			int prevRank = -1;
+			int prevIdx = -1;
+
+			for (int j = currentIdx+1; j < 4; j++)
+			{
+				if (!Tiles[i][j]->IsEmpty())
+				{
+					prevRank = Tiles[i][j]->GetRank();
+					prevIdx = j;
+					break;
+				}
+			}
+
+			if (currentRank == prevRank)
+			{
+				Tiles[i][currentIdx]->DestroyUnit();
+				Tiles[i][prevIdx]->RankUpUnit();
+
+				ExistSet.HeapPush(prevIdx, TGreater<int>());
+			}
+			else
+			{
+				if (EmptySet.IsEmpty()) continue;
+				if (currentIdx > EmptySet.HeapTop()) continue;
+
+				int firstEmpty;
+				EmptySet.HeapPop(firstEmpty, TGreater<int>(), true);
+
+				Tiles[i][currentIdx]->DestroyUnit();
+				Tiles[i][firstEmpty]->SpawnUnit(currentRank);
+			}
+
+			EmptySet.HeapPush(currentIdx, TGreater<int>());
+		}
+	}
 }
 
 void AURRBoard::MoveUp()
 {
-	TArray<int> dy = { 0, 0, 1, -1 };
-	TArray<int> dx = { -1, 1, 0, 0 };
+	for (int j = 0; j < 4; j++)
+	{
+		TArray<int> ExistSet;
+		TArray<int> EmptySet;
+
+		for (int i = 0; i < 4; i++)
+		{
+			if (Tiles[i][j]->IsEmpty())
+			{
+				EmptySet.Add(i);
+			}
+			else ExistSet.Add(i);
+		}
+
+		ExistSet.Heapify();
+		EmptySet.Heapify();
+
+		while (!ExistSet.IsEmpty())
+		{
+			int currentIdx;
+			ExistSet.HeapPop(currentIdx, true);
+			int currentRank = Tiles[currentIdx][j]->GetRank();
+
+			int prevRank = -1;
+			int prevIdx = -1;
+
+			for (int i = currentIdx - 1; i >= 0; i--)
+			{
+				if (!Tiles[i][j]->IsEmpty())
+				{
+					prevRank = Tiles[i][j]->GetRank();
+					prevIdx = i;
+					break;
+				}
+			}
+
+			if (currentRank == prevRank)
+			{
+				Tiles[currentIdx][j]->DestroyUnit();
+				Tiles[prevIdx][j]->RankUpUnit();
+
+				ExistSet.HeapPush(prevIdx);
+			}
+			else
+			{
+				if (EmptySet.IsEmpty()) continue;
+				if (currentIdx < EmptySet.HeapTop()) continue;
+
+				int firstEmpty;
+				EmptySet.HeapPop(firstEmpty, true);
+
+				Tiles[currentIdx][j]->DestroyUnit();
+				Tiles[firstEmpty][j]->SpawnUnit(currentRank);
+			}
+			
+			EmptySet.HeapPush(currentIdx);
+		}
+	}
 }
 
 void AURRBoard::MoveDown()
 {
-	TArray<int> dy = { 0, 0, 1, -1 };
-	TArray<int> dx = { -1, 1, 0, 0 };
+	for (int j = 0; j < 4; j++)
+	{
+		TArray<int> ExistSet;
+		TArray<int> EmptySet;
+
+		for (int i = 3; i >= 0; i--)
+		{
+			if (Tiles[i][j]->IsEmpty())
+			{
+				EmptySet.Add(i);
+			}
+			else ExistSet.Add(i);
+		}
+
+		ExistSet.Heapify(TGreater<int>());
+		EmptySet.Heapify(TGreater<int>());
+
+		while (!ExistSet.IsEmpty())
+		{
+			int currentIdx;
+			ExistSet.HeapPop(currentIdx, TGreater<int>(), true);
+			int currentRank = Tiles[currentIdx][j]->GetRank();
+
+			int prevRank = -1;
+			int prevIdx = -1;
+
+			for (int i = currentIdx + 1; i < 4; i++)
+			{
+				if (!Tiles[i][j]->IsEmpty())
+				{
+					prevRank = Tiles[i][j]->GetRank();
+					prevIdx = i;
+					break;
+				}
+			}
+
+			if (currentRank == prevRank)
+			{
+				Tiles[currentIdx][j]->DestroyUnit();
+				Tiles[prevIdx][j]->RankUpUnit();
+
+				ExistSet.HeapPush(prevIdx, TGreater<int>());
+			}
+			else
+			{
+				if (EmptySet.IsEmpty()) continue;
+				if (currentIdx > EmptySet.HeapTop()) continue;
+
+				int firstEmpty;
+				EmptySet.HeapPop(firstEmpty, TGreater<int>(), true);
+
+				Tiles[currentIdx][j]->DestroyUnit();
+				Tiles[firstEmpty][j]->SpawnUnit(currentRank);
+			}
+			
+			EmptySet.HeapPush(currentIdx, TGreater<int>());
+		}
+	}
 }
 
 TPair<int, int> AURRBoard::FindTarget(int Y, int X, int dir)
