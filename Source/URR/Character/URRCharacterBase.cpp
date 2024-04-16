@@ -24,6 +24,18 @@ void AURRCharacterBase::BeginPlay()
 	Super::BeginPlay();
 }
 
+void AURRCharacterBase::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
+
+	for (const auto& StartAbility : StartAbilities)
+	{
+		FGameplayAbilitySpec StartSpec(StartAbility.Value);
+		StartSpec.InputID = StartAbility.Key;
+		ASC->GiveAbility(StartSpec);
+	}
+}
+
 // Called every frame
 void AURRCharacterBase::Tick(float DeltaTime)
 {

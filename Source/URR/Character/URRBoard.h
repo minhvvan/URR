@@ -97,8 +97,6 @@ protected:
 	void MoveUp();
 	void MoveDown();
 
-	TPair<int, int> FindTarget(int Y, int X, int dir);
-
 public:
 	void SpawnUnit();
 

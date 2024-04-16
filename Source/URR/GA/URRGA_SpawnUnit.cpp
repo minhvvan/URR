@@ -21,8 +21,8 @@ void UURRGA_SpawnUnit::ActivateAbility(const FGameplayAbilitySpecHandle Handle, 
 	{
 		int temp = FMath::Rand() % 100;
 		int rank = 0;
-		if (temp < 70) rank = 7;
-		else if (temp < 90) rank = 8;
+		if (temp < 70) rank = 6;
+		else if (temp < 90) rank = 1;
 		else if (temp < 98) rank = 2;
 		else rank = 3;
 
@@ -39,5 +39,4 @@ void UURRGA_SpawnUnit::ActivateAbility(const FGameplayAbilitySpecHandle Handle, 
 void UURRGA_SpawnUnit::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
 {
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
-
 }

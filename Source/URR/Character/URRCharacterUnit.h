@@ -30,18 +30,23 @@ protected:
 	TSubclassOf<class UGameplayEffect> InitStatEffect;
 
 protected:
-	int Rank;
+	virtual void BeginPlay() override;
+	virtual void PostInitializeComponents() override;
 
 public:
 	virtual void Init(int rank);
 
 	void AttackMontageLoadCompleted();
 
+	FORCEINLINE class UAnimMontage* GetPlacedActionMontage() const { return PlacedActionMontage; }
+
 	FOnLoadCompleted OnLoadCompleteDelegate;
 
 protected:
-	virtual void BeginPlay() override;
-	virtual void PostInitializeComponents() override;
+	int Rank;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animation)
+	TObjectPtr<class UAnimMontage> PlacedActionMontage;
 
 	UPROPERTY(config)
 	TArray<FSoftObjectPath> AttackMontages;

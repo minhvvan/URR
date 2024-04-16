@@ -22,6 +22,8 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	virtual void PostInitializeComponents() override;
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -32,4 +34,7 @@ public:
 protected:
 	UPROPERTY(EditAnywhere, Category = GAS)
 	TObjectPtr<UAbilitySystemComponent> ASC;
+
+	UPROPERTY(EditAnywhere, Category = GAS)
+	TMap<int32, TSubclassOf<class UGameplayAbility>> StartAbilities;
 };

@@ -50,6 +50,12 @@ void AURRCharacterUnit::PostInitializeComponents()
 		{
 			ASC->BP_ApplyGameplayEffectSpecToSelf(EffectSpecHandle);
 		}
+
+		FGameplayAbilitySpec* Spec = ASC->FindAbilitySpecFromInputID(0);
+		if (Spec)
+		{
+			ASC->TryActivateAbility(Spec->Handle);
+		}
 	}
 }
 

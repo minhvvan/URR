@@ -434,11 +434,6 @@ void AURRBoard::MoveDown()
 	}
 }
 
-TPair<int, int> AURRBoard::FindTarget(int Y, int X, int dir)
-{
-	return TPair<int, int>();
-}
-
 void AURRBoard::SpawnUnit()
 {
 	//GA Activate

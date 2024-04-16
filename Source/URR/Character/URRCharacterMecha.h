@@ -53,7 +53,6 @@ protected:
 	void UnitMeshLoadCompleted();
 	void WeaponMeshLoadCompleted();
 	void AdditiveMeshLoadCompleted();
-
 	void UnitMaterialLoadCompleted();
 
 	void UnitLoadCompleted(int part);
