@@ -78,7 +78,9 @@ void AURRBoard::PossessedBy(AController* NewController)
 
 		for (auto StartAbility : StartAbilities)
 		{
-			FGameplayAbilitySpec StartSpec(StartAbility);
+			FGameplayAbilitySpec StartSpec(StartAbility.Value);
+			StartSpec.InputID = StartAbility.Key;
+
 			ASC->GiveAbility(StartSpec);
 		}
 	}
@@ -443,7 +445,7 @@ void AURRBoard::SpawnUnit()
 	//GA Activate
 	if (!ASC) return;
 
-	FGameplayAbilitySpec* Spec = ASC->FindAbilitySpecFromClass(SpawnAbilityClass);
+	FGameplayAbilitySpec* Spec = ASC->FindAbilitySpecFromInputID(0);
 	if (Spec)
 	{
 		ASC->TryActivateAbility(Spec->Handle);

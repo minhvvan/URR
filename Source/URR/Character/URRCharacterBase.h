@@ -7,7 +7,7 @@
 #include "AbilitySystemInterface.h"
 #include "URRCharacterBase.generated.h"
 
-UCLASS()
+UCLASS(config=URR)
 class URR_API AURRCharacterBase : public ACharacter, public IAbilitySystemInterface
 {
 	GENERATED_BODY()

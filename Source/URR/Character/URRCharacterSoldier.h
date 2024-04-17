@@ -6,10 +6,6 @@
 #include "Character/URRCharacterUnit.h"
 #include "URRCharacterSoldier.generated.h"
 
-/**
- * 
- */
-
 UCLASS(config = URR)
 class URR_API AURRCharacterSoldier : public AURRCharacterUnit
 {

@@ -78,10 +78,7 @@ protected:
 	TSubclassOf<UURRHudWidget> HudClass;
 
 	UPROPERTY(EditAnywhere, Category = GAS)
-	TArray<TSubclassOf<class UGameplayAbility>> StartAbilities;
-
-	UPROPERTY(EditAnywhere, Category = GAS)
-	TSubclassOf<UGameplayAbility> SpawnAbilityClass;
+	TMap<int, TSubclassOf<class UGameplayAbility>> StartAbilities;
 
 	UPROPERTY(EditAnywhere, Category = GAS)
 	TSubclassOf<class UGameplayEffect> Testffect;

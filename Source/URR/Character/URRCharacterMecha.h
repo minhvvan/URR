@@ -60,3 +60,11 @@ protected:
 protected:
 	TArray<bool> LoadCompletedPart;
 };
+
+enum ELoadPart
+{
+	LOAD_UNIT_MESH,
+	LOAD_MAT,
+	LOAD_WEAPON,
+	LOAD_ADDITIVE,
+};

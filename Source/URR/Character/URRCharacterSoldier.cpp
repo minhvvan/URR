@@ -1,5 +1,6 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
+#pragma once
 
 #include "Character/URRCharacterSoldier.h"
 #include "Engine/AssetManager.h"
@@ -13,7 +14,7 @@ enum EAdditiveMeshEnum
 	MESH_BodyKit,
 };
 
-enum ELoadPart
+enum ELoadAsset
 {
 	LOAD_MAT,
 	LOAD_WEAPON,
@@ -59,14 +60,14 @@ void AURRCharacterSoldier::Init(int rank)
 	{
 	case 0:
 		AdditiveMeshHandles.Add(EAdditiveMeshEnum::MESH_Helmet, UAssetManager::Get().GetStreamableManager().RequestAsyncLoad(AdditiveMeshes[EAdditiveMeshEnum::MESH_Helmet], FStreamableDelegate::CreateUObject(this, &AURRCharacterSoldier::HelmetMeshLoadCompleted)));
-		LoadCompletedPart[LOAD_MAT] = true;
-		LoadCompletedPart[LOAD_BODY] = true;
-		LoadCompletedPart[LOAD_ACC] = true;
+		LoadCompletedPart[ELoadAsset::LOAD_MAT] = true;
+		LoadCompletedPart[ELoadAsset::LOAD_BODY] = true;
+		LoadCompletedPart[ELoadAsset::LOAD_ACC] = true;
 		break;
 	case 1:
 		AdditiveMeshHandles.Add(EAdditiveMeshEnum::MESH_Mask, UAssetManager::Get().GetStreamableManager().RequestAsyncLoad(AdditiveMeshes[EAdditiveMeshEnum::MESH_Mask], FStreamableDelegate::CreateUObject(this, &AURRCharacterSoldier::MaskMeshLoadCompleted)));
 		AdditiveMeshHandles.Add(EAdditiveMeshEnum::MESH_BodyKit, UAssetManager::Get().GetStreamableManager().RequestAsyncLoad(AdditiveMeshes[EAdditiveMeshEnum::MESH_BodyKit], FStreamableDelegate::CreateUObject(this, &AURRCharacterSoldier::BodyKitMeshLoadCompleted)));
-		LoadCompletedPart[LOAD_ACC] = true;
+		LoadCompletedPart[ELoadAsset::LOAD_ACC] = true;
 		break;
 	case 2:
 		AdditiveMeshHandles.Add(EAdditiveMeshEnum::MESH_Helmet, UAssetManager::Get().GetStreamableManager().RequestAsyncLoad(AdditiveMeshes[EAdditiveMeshEnum::MESH_Helmet], FStreamableDelegate::CreateUObject(this, &AURRCharacterSoldier::HelmetMeshLoadCompleted)));
@@ -76,7 +77,7 @@ void AURRCharacterSoldier::Init(int rank)
 	case 3:
 		AdditiveMeshHandles.Add(EAdditiveMeshEnum::MESH_Helmet, UAssetManager::Get().GetStreamableManager().RequestAsyncLoad(AdditiveMeshes[EAdditiveMeshEnum::MESH_Helmet], FStreamableDelegate::CreateUObject(this, &AURRCharacterSoldier::HelmetMeshLoadCompleted)));
 		AdditiveMeshHandles.Add(EAdditiveMeshEnum::MESH_BackPack, UAssetManager::Get().GetStreamableManager().RequestAsyncLoad(AdditiveMeshes[EAdditiveMeshEnum::MESH_BackPack], FStreamableDelegate::CreateUObject(this, &AURRCharacterSoldier::BackPackMeshLoadCompleted)));
-		LoadCompletedPart[LOAD_ACC] = true;
+		LoadCompletedPart[ELoadAsset::LOAD_ACC] = true;
 		break;
 	}
 
@@ -110,7 +111,7 @@ void AURRCharacterSoldier::WeaponMeshLoadCompleted()
 	}
 
 	WeaponMeshHandle->ReleaseHandle();
-	UnitLoadCompleted(LOAD_WEAPON);
+	UnitLoadCompleted(ELoadAsset::LOAD_WEAPON);
 }
 
 void AURRCharacterSoldier::HelmetMeshLoadCompleted()
@@ -146,7 +147,7 @@ void AURRCharacterSoldier::MaskMeshLoadCompleted()
 	AdditiveMeshHandles[EAdditiveMeshEnum::MESH_Mask]->ReleaseHandle();
 	AdditiveMeshHandles.Remove(EAdditiveMeshEnum::MESH_Mask);
 
-	UnitLoadCompleted(LOAD_HEAD);
+	UnitLoadCompleted(ELoadAsset::LOAD_HEAD);
 }
 
 void AURRCharacterSoldier::BackPackMeshLoadCompleted()
@@ -181,7 +182,7 @@ void AURRCharacterSoldier::MattressMeshLoadCompleted()
 
 	AdditiveMeshHandles[EAdditiveMeshEnum::MESH_Mattress]->ReleaseHandle();
 	AdditiveMeshHandles.Remove(EAdditiveMeshEnum::MESH_Mattress);
-	UnitLoadCompleted(LOAD_ACC);
+	UnitLoadCompleted(ELoadAsset::LOAD_ACC);
 }
 
 void AURRCharacterSoldier::BodyKitMeshLoadCompleted()
@@ -214,7 +215,7 @@ void AURRCharacterSoldier::UnitMaterialLoadCompleted()
 	}
 
 	UnitMaterialHandle->ReleaseHandle();
-	UnitLoadCompleted(LOAD_MAT);
+	UnitLoadCompleted(ELoadAsset::LOAD_MAT);
 }
 
 void AURRCharacterSoldier::HelmetMaterialLoadCompleted()
@@ -229,7 +230,7 @@ void AURRCharacterSoldier::HelmetMaterialLoadCompleted()
 	}
 
 	BodyKitMaterialHandle->ReleaseHandle();
-	UnitLoadCompleted(LOAD_HEAD);
+	UnitLoadCompleted(ELoadAsset::LOAD_HEAD);
 }
 
 void AURRCharacterSoldier::BodyKitMaterialLoadCompleted()
@@ -244,7 +245,7 @@ void AURRCharacterSoldier::BodyKitMaterialLoadCompleted()
 	}
 
 	BodyKitMaterialHandle->ReleaseHandle();
-	UnitLoadCompleted(LOAD_BODY);
+	UnitLoadCompleted(ELoadAsset::LOAD_BODY);
 }
 
 void AURRCharacterSoldier::BackPackMaterialLoadCompleted()
@@ -259,7 +260,7 @@ void AURRCharacterSoldier::BackPackMaterialLoadCompleted()
 	}
 
 	BackPackMaterialHandle->ReleaseHandle();
-	UnitLoadCompleted(LOAD_BODY);
+	UnitLoadCompleted(ELoadAsset::LOAD_BODY);
 }
 
 void AURRCharacterSoldier::UnitLoadCompleted(int part)

@@ -4,14 +4,6 @@
 #include "Character/URRCharacterMecha.h"
 #include "Engine/AssetManager.h"
 
-enum ELoadPart
-{
-	LOAD_UNIT_MESH,
-	LOAD_MAT,
-	LOAD_WEAPON,
-	LOAD_ADDITIVE,
-};
-
 AURRCharacterMecha::AURRCharacterMecha()
 {
 	ConstructorHelpers::FObjectFinder<USkeletalMesh> UnitMeshRef(TEXT("/Script/Engine.SkeletalMesh'/Game/ModularSciFiHeroesHP/Mesh/Mecha/Character/SK_Mecha_Pistol.SK_Mecha_Pistol'"));
