@@ -3,6 +3,8 @@
 
 #include "Actor/URRTile.h"
 #include "Character/URRCharacterUnit.h"
+#include "UI/URRGASWidgetComponent.h"
+#include "UI/URRTileRankWidget.h"
 #include "Engine/AssetManager.h"
 #include "Urr.h"
 
@@ -13,7 +15,22 @@ AURRTile::AURRTile(): isEmpty(true)
 	PrimaryActorTick.bCanEverTick = true;
 
 	TileMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("TileMesh"));
-	SetRootComponent(TileMesh);
+	SetRootComponent(TileMesh);	
+	
+	RankWidgetComp = CreateDefaultSubobject<UURRGASWidgetComponent>(TEXT("RankWidgetComp"));
+	RankWidgetComp->SetupAttachment(RootComponent);
+
+	static ConstructorHelpers::FClassFinder<UUserWidget> RankWidgetRef(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/URR/UI/WBP_TileRank.WBP_TileRank_C'"));
+	if (RankWidgetRef.Succeeded())
+	{
+		RankWidgetComp->SetWidgetClass(RankWidgetRef.Class);
+		RankWidgetComp->SetWidgetSpace(EWidgetSpace::World);
+		RankWidgetComp->SetDrawSize(FVector2D(1000.f, 1000.f));
+		RankWidgetComp->SetRelativeLocation({0, 0, 51.f});
+		RankWidgetComp->SetRelativeRotation({90, 0, 180.f});
+		RankWidgetComp->SetCollisionEnabled(ECollisionEnabled::NoCollision);
+		RankWidgetComp->SetHiddenInGame(true);
+	}
 
 	ConstructorHelpers::FObjectFinder<UStaticMesh> TileMeshRef(TEXT("/Script/Engine.StaticMesh'/Game/URR/Mesh/TileMesh.TileMesh'"));
 	if (TileMeshRef.Succeeded())
@@ -33,8 +50,19 @@ void AURRTile::UnitLoadCompleteCallback()
 {
 	FVector SpawnLoc = GetActorLocation();
 	SpawnLoc.Z += 138;
-	FTransform FinalTransform = FTransform(FRotator::ZeroRotator, SpawnLoc);
+	FTransform FinalTransform = FTransform(FRotator(0.f, 180.f, 0.f), SpawnLoc);
 	UnitCharacter->FinishSpawning(FinalTransform);
+}
+
+void AURRTile::TileMaterialLoadCompleted()
+{
+	UMaterialInstance* Mat = Cast<UMaterialInstance>(TileMaterialHandle->GetLoadedAsset());
+	if (Mat)
+	{
+		TileMesh->SetMaterial(0, Mat);
+	}
+
+	TileMaterialHandle->ReleaseHandle();
 }
 
 // Called every frame
@@ -58,7 +86,12 @@ void AURRTile::SpawnUnit(int rank)
 		return;
 	}
 
+	if(!RankWidget) RankWidget = CastChecked<UURRTileRankWidget>(RankWidgetComp->GetWidget());
 	Rank = rank;
+	RankWidget->SetRank(rank);
+	RankWidgetComp->SetHiddenInGame(false);
+
+	TileMaterialHandle = UAssetManager::Get().GetStreamableManager().RequestAsyncLoad(TileMaterials[Rank], FStreamableDelegate::CreateUObject(this, &AURRTile::TileMaterialLoadCompleted));
 
 	int32 Idx;
 	if (rank < 4) Idx = 0;
@@ -77,7 +110,6 @@ void AURRTile::SpawnUnit(int rank)
 		FActorSpawnParameters params;
 		params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 
-		//UnitCharacter = GetWorld()->SpawnActor<AURRCharacterUnit>(UnitClass, SpawnLoc, FRotator::ZeroRotator, params);
 		UnitCharacter = GetWorld()->SpawnActorDeferred<AURRCharacterUnit>(UnitClass, FTransform::Identity, this, nullptr, ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn);
 		UnitCharacter->OnLoadCompleteDelegate.AddDynamic(this, &AURRTile::UnitLoadCompleteCallback);
 		UnitCharacter->Init(Rank);
@@ -102,6 +134,12 @@ void AURRTile::DestroyUnit()
 		UnitCharacter = nullptr;
 		isEmpty = true;
 		Rank = 0;
+
+		if (!RankWidget) RankWidget = CastChecked<UURRTileRankWidget>(RankWidgetComp->GetWidget());
+		RankWidget->SetRank(0);
+		RankWidgetComp->SetHiddenInGame(true);
+
+		TileMaterialHandle = UAssetManager::Get().GetStreamableManager().RequestAsyncLoad(TileMaterials[11], FStreamableDelegate::CreateUObject(this, &AURRTile::TileMaterialLoadCompleted));
 	}
 }
 

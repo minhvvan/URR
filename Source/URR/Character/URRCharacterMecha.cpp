@@ -123,9 +123,9 @@ void AURRCharacterMecha::UnitLoadCompleted(int part)
 	LoadCompletedPart[part] = true;
 
 	bool bComplete = true;
-	for (auto part : LoadCompletedPart)
+	for (auto Unitpart : LoadCompletedPart)
 	{
-		if (!part)
+		if (!Unitpart)
 		{
 			bComplete = false;
 			break;

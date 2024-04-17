@@ -52,6 +52,12 @@ AURRBoard::AURRBoard()
 	{
 		CastleMesh->SetStaticMesh(CastleMeshRef.Object);
 		CastleMesh->SetRelativeLocation(FVector(1000, -100, -400));
+	}	
+	
+	ConstructorHelpers::FClassFinder<AURRTile> TileClassRef(TEXT("/Script/Engine.Blueprint'/Game/URR/Blueprint/BP_Tile.BP_Tile_C'"));
+	if (TileClassRef.Succeeded())
+	{
+		TileClass = TileClassRef.Class;
 	}
 }
 
@@ -104,8 +110,6 @@ void AURRBoard::BeginPlay()
 
 	Tiles.SetNum(4);
 
-	//1590
-
 	for (int i = 0; i < 4; i++)
 	{
 		SpawnLocation.X = 1590 - (530 * i);
@@ -113,7 +117,7 @@ void AURRBoard::BeginPlay()
 
 		for (int j = 0; j < 4; j++)
 		{
-			AURRTile* Tile = GetWorld()->SpawnActor<AURRTile>(AURRTile::StaticClass(), SpawnLocation, Rotator, SpawnParams);
+			AURRTile* Tile = GetWorld()->SpawnActor<AURRTile>(TileClass, SpawnLocation, Rotator, SpawnParams);
 			Tiles[i].Add(Tile);
 
 			SpawnLocation.Y += 530;

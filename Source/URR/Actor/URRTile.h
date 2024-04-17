@@ -23,11 +23,8 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Unit, Meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class AURRCharacterUnit> UnitCharacter;
 
-	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Unit, Meta = (AllowPrivateAccess = "true"))
-	TSubclassOf<class AURRCharacterUnit> UnitClass;
-
-	UPROPERTY(config)
-	TArray<FSoftClassPath> UnitClasses;
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Mesh, Meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class UURRGASWidgetComponent> RankWidgetComp;
 
 protected:
 	// Called when the game starts or when spawned
@@ -36,11 +33,26 @@ protected:
 	UFUNCTION()
 	void UnitLoadCompleteCallback();
 
+	void TileMaterialLoadCompleted();
+
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
 protected:
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Unit, Meta = (AllowPrivateAccess = "true"))
+	TSubclassOf<class AURRCharacterUnit> UnitClass;
+
+	UPROPERTY(config)
+	TArray<FSoftClassPath> UnitClasses;
+
+	UPROPERTY(config)
+	TArray<FSoftClassPath> TileMaterials;
+	TSharedPtr<FStreamableHandle> TileMaterialHandle;
+
+	UPROPERTY()
+	TObjectPtr<class UURRTileRankWidget> RankWidget;
+
 	bool isEmpty;
 	int Rank;
 
