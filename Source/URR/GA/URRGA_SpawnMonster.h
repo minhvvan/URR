@@ -21,12 +21,14 @@ protected:
 	virtual void ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData) override;
 	virtual void EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled);
 
+protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Unit, Meta = (AllowPrivateAccess = "true"))
 	TSubclassOf<class AURRCharacterMonster> MonsterClass;
 
 	FTimerHandle MonsterSpawnTimer;
 
 	TObjectPtr<class AURRMonsterSpawner> Spawner;
+	
 	int MonsterID;
 	int MonsterNum;
 

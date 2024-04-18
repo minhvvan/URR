@@ -4,6 +4,7 @@
 #include "GA/URRGA_SpawnMonster.h"
 #include "Character/URRCharacterMonster.h"
 #include "Actor/URRMonsterSpawner.h"
+#include "Abilities/Tasks/AbilityTask_SpawnActor.h"
 #include "URR.h"
 
 UURRGA_SpawnMonster::UURRGA_SpawnMonster()
@@ -39,24 +40,28 @@ void UURRGA_SpawnMonster::StartSpawnMonster()
 	FActorSpawnParameters params;
 	params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 
-	AURRCharacterMonster* Monster = Spawner->GetWorld()->SpawnActor<AURRCharacterMonster>(MonsterClass, Spawner->GetActorLocation(), FRotator(0.f, 180.f, 0.f), params);
+	AURRCharacterMonster* Monster = Spawner->GetWorld()->SpawnActorDeferred<AURRCharacterMonster>(MonsterClass, FTransform::Identity, nullptr, nullptr, ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn);
 	if (Monster)
 	{
+		Monster->InitMonster(MonsterID);
+		Monster->FinishSpawning(Spawner->GetActorTransform());
+		Monster->StartMove();
+
 		Spawner->AddSpawnedMonster(Monster);
 		MonsterNum--;
 
 		Spawner->GetWorldTimerManager().SetTimer(MonsterSpawnTimer, this, &UURRGA_SpawnMonster::CheckSpawnMonster, 1.f, false);
-		URR_LOG(LogURR, Log, TEXT("Start"));
 	}
 }
 
 void UURRGA_SpawnMonster::CheckSpawnMonster()
 {
-	URR_LOG(LogURR, Log, TEXT("Check"));
-
 	MonsterSpawnTimer.Invalidate();
 	if (MonsterNum > 0)
 	{
 		StartSpawnMonster();
+		return;
 	}
+
+	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, false, false);
 }

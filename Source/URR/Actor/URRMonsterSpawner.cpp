@@ -2,7 +2,9 @@
 
 
 #include "Actor/URRMonsterSpawner.h"
+#include "Character/URRCharacterMonster.h"
 #include "Components/BoxComponent.h"
+#include "Components/SplineComponent.h"
 #include "Character/URRCharacterMecha.h"
 #include "AbilitySystemComponent.h"
 
@@ -13,9 +15,13 @@ AURRMonsterSpawner::AURRMonsterSpawner()
 	PrimaryActorTick.bCanEverTick = true;
 
 	ASC = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("ASC"));
+	
 	BoundBox = CreateDefaultSubobject<UBoxComponent>(TEXT("BoundBox"));
-
 	SetRootComponent(BoundBox);
+
+	PathSpline = CreateDefaultSubobject<USplineComponent>(TEXT("PathSpline"));
+	PathSpline->SetupAttachment(RootComponent);
+
 	BoundBox->SetBoxExtent({ 300, 300 ,300 });
 
 	currentIdx = 0;
@@ -88,4 +94,15 @@ void AURRMonsterSpawner::AddSpawnedMonster(AURRCharacterMonster* monster)
 	//monster Die Delegate Bind
 
 	SpawnedMonsters.Add(monster);
+	monster->SetSpawner(this);
+}
+
+FTransform AURRMonsterSpawner::GetPathTransform(float DeltaTime)
+{
+	if (PathSpline)
+	{
+		return PathSpline->GetTransformAtDistanceAlongSpline(DeltaTime, ESplineCoordinateSpace::World);
+	}
+
+	return FTransform();
 }

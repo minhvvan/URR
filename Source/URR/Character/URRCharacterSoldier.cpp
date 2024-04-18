@@ -1,7 +1,5 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
-#pragma once
-
 #include "Character/URRCharacterSoldier.h"
 #include "Engine/AssetManager.h"
 
@@ -22,6 +20,7 @@ enum ELoadAsset
 	LOAD_BODY,
 	LOAD_ACC,
 };
+
 
 AURRCharacterSoldier::AURRCharacterSoldier()
 {

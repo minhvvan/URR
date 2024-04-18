@@ -22,9 +22,10 @@ protected:
 	UPROPERTY(VisibleAnywhere, meta = (BindWidget))
 	TObjectPtr<class UProgressBar> PBHealth;
 
-protected:
 	virtual void OnHealthChanged(const FOnAttributeChangeData& ChangeData);
-	void UpdateHealth();
+	virtual void OnMaxHealthChanged(const FOnAttributeChangeData& ChangeData);
+
+	void UpdateHpBar();
 
 protected:
 	int CurrentHealth;

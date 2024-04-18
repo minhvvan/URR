@@ -34,6 +34,8 @@ protected:
 	UPROPERTY(EditAnywhere)
 	TObjectPtr<class UBoxComponent> BoundBox;
 
+	UPROPERTY(EditAnywhere, Category = GAS)
+	TObjectPtr<class USplineComponent> PathSpline;
 
 protected:
 	UPROPERTY(EditAnywhere, Category = GAS)
@@ -66,4 +68,5 @@ public:
 
 	void AddSpawnedMonster(AURRCharacterMonster* monster);
 
+	FTransform GetPathTransform(float DeltaTime);
 };

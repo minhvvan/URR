@@ -13,13 +13,14 @@ void UURRHpBarWidget::SetAbilitySystemComponent(AActor* InOwner)
 	if (ASC)
 	{
 		ASC->GetGameplayAttributeValueChangeDelegate(UPlayerAttributeSet::GetHealthAttribute()).AddUObject(this, &UURRHpBarWidget::OnHealthChanged);
+		ASC->GetGameplayAttributeValueChangeDelegate(UPlayerAttributeSet::GetMaxHealthAttribute()).AddUObject(this, &UURRHpBarWidget::OnMaxHealthChanged);
 
 		const UPlayerAttributeSet* CurrentAttributeSet = ASC->GetSet<UPlayerAttributeSet>();
 		if (CurrentAttributeSet)
 		{
 			CurrentHealth = CurrentAttributeSet->GetHealth();
 			CurrentMaxHealth = CurrentAttributeSet->GetMaxHealth();
-			UpdateHealth();
+			UpdateHpBar();
 		}
 	}
 }
@@ -27,10 +28,16 @@ void UURRHpBarWidget::SetAbilitySystemComponent(AActor* InOwner)
 void UURRHpBarWidget::OnHealthChanged(const FOnAttributeChangeData& ChangeData)
 {
 	CurrentHealth = ChangeData.NewValue;
-	UpdateHealth();
+	UpdateHpBar();
 }
 
-void UURRHpBarWidget::UpdateHealth()
+void UURRHpBarWidget::OnMaxHealthChanged(const FOnAttributeChangeData& ChangeData)
+{
+	CurrentMaxHealth = ChangeData.NewValue;
+	UpdateHpBar();
+}
+
+void UURRHpBarWidget::UpdateHpBar()
 {
 	PBHealth->SetPercent(CurrentHealth / CurrentMaxHealth);
 }
