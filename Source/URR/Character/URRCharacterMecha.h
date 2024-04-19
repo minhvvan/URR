@@ -64,7 +64,7 @@ protected:
 enum ELoadPart
 {
 	LOAD_UNIT_MESH,
-	LOAD_MAT,
-	LOAD_WEAPON,
+	ASSET_MAT,
+	ASSET_WEAPON,
 	LOAD_ADDITIVE,
 };

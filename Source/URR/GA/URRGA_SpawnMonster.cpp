@@ -7,7 +7,10 @@
 #include "Abilities/Tasks/AbilityTask_SpawnActor.h"
 #include "URR.h"
 
-UURRGA_SpawnMonster::UURRGA_SpawnMonster()
+UURRGA_SpawnMonster::UURRGA_SpawnMonster():
+	MonsterID(0),
+	MonsterNum(1),
+	MonsterSpawnTerm(5.f)
 {
 	ConstructorHelpers::FClassFinder<AURRCharacterMonster> MonsterRef(TEXT("/Script/Engine.Blueprint'/Game/URR/Blueprint/BP_Monster.BP_Monster_C'"));
 	if (MonsterRef.Succeeded())
@@ -26,6 +29,7 @@ void UURRGA_SpawnMonster::ActivateAbility(const FGameplayAbilitySpecHandle Handl
 	//CurrentMonsterInfo.Num만큼 스폰
 	MonsterID = CurrentMonsterInfo.MonsterID;
 	MonsterNum = CurrentMonsterInfo.MonsterNum;
+	MonsterSpawnTerm = CurrentMonsterInfo.MonsterSpawnTerm;
 
 	StartSpawnMonster();
 }
@@ -50,7 +54,7 @@ void UURRGA_SpawnMonster::StartSpawnMonster()
 		Spawner->AddSpawnedMonster(Monster);
 		MonsterNum--;
 
-		Spawner->GetWorldTimerManager().SetTimer(MonsterSpawnTimer, this, &UURRGA_SpawnMonster::CheckSpawnMonster, 1.f, false);
+		Spawner->GetWorldTimerManager().SetTimer(MonsterSpawnTimer, this, &UURRGA_SpawnMonster::CheckSpawnMonster, MonsterSpawnTerm, false);
 	}
 }
 

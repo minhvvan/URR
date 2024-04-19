@@ -71,7 +71,7 @@ void AURRCharacterMecha::WeaponMeshLoadCompleted()
 	}
 
 	WeaponMeshHandle->ReleaseHandle();
-	UnitLoadCompleted(LOAD_WEAPON);
+	UnitLoadCompleted(ASSET_WEAPON);
 }
 
 void AURRCharacterMecha::AdditiveMeshLoadCompleted()
@@ -107,7 +107,7 @@ void AURRCharacterMecha::UnitMaterialLoadCompleted()
 	}
 
 	UnitMaterialHandle->ReleaseHandle();
-	UnitLoadCompleted(LOAD_MAT);
+	UnitLoadCompleted(ASSET_MAT);
 }
 
 void AURRCharacterMecha::UnitLoadCompleted(int part)

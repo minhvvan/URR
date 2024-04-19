@@ -32,6 +32,8 @@ protected:
 	int MonsterID;
 	int MonsterNum;
 
+	float MonsterSpawnTerm;
+
 	void StartSpawnMonster();
 	void CheckSpawnMonster();
 };

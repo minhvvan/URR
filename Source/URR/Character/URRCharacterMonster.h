@@ -20,8 +20,11 @@ public:
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
 protected:
-	UPROPERTY()
-	TObjectPtr<UStaticMeshComponent> WeaponMesh;
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<UStaticMeshComponent> WeaponMesh;	
+	
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<UStaticMeshComponent> ShieldMesh;
 
 	UPROPERTY(EditAnywhere, Category=UI)
 	TObjectPtr<class UURRGASWidgetComponent> HpBarComp;
@@ -32,6 +35,9 @@ public:
 	void StartMove();
 	void SetSpawner(class AURRMonsterSpawner* spawner);
 	AURRMonsterSpawner* GetSpawner() { return Spawner; }
+
+	UFUNCTION(BlueprintCallable)
+	bool GetbMove() { return bMove; }
 
 	virtual void Tick(float DeltaTime) override;
 
@@ -52,8 +58,12 @@ protected:
 	TSharedPtr<FStreamableHandle> MonsterMeshHandle;
 
 	UPROPERTY(config)
-	TMap<int, FSoftObjectPath> WeaponMeshes;
+	TArray<FSoftObjectPath> WeaponMeshes;
 	TSharedPtr<FStreamableHandle> WeaponMeshHandle;
+
+	UPROPERTY(config)
+	FSoftObjectPath ShieldMeshPath;
+	TSharedPtr<FStreamableHandle> ShieldMeshHandle;
 
 	UPROPERTY(config)
 	TArray<FSoftObjectPath> MonsterMaterials;
@@ -64,15 +74,21 @@ protected:
 	TSharedPtr<FStreamableHandle> AnimInstanceHandle;
 
 	FName WeaponSocketName;
+	FName ShieldSocketName;
 
 	UPROPERTY()
 	TObjectPtr<AURRMonsterSpawner> Spawner;
 
+	UPROPERTY(EditAnywhere, Category=Spawn)
+	TArray<int> NeedWeapon;
+
 protected:
 	int MonsterID;
+	bool bMove;
 
 protected:
 	void MonsterMeshLoadCompleted();
 	void WeaponMeshLoadCompleted();
 	void AnimInstanceLoadCompleted();
+	void ShieldMeshLoadCompleted();
 };

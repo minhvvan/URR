@@ -9,7 +9,8 @@
 #include "AbilitySystemComponent.h"
 
 // Sets default values
-AURRMonsterSpawner::AURRMonsterSpawner()
+AURRMonsterSpawner::AURRMonsterSpawner():
+	currentIdx(0)
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;

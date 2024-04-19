@@ -16,7 +16,10 @@ struct FMonsterInfo
 	int MonsterID;
 
 	UPROPERTY(EditAnywhere)
-	int MonsterNum;
+	int MonsterNum;	
+	
+	UPROPERTY(EditAnywhere)
+	int MonsterSpawnTerm;
 };
 
 UCLASS()
@@ -44,10 +47,10 @@ protected:
 	UPROPERTY(EditAnywhere, Category = GAS)
 	TMap<int, TSubclassOf<class UGameplayAbility>> StartAbilities;
 
-	UPROPERTY(EditAnywhere)
+	UPROPERTY(EditAnywhere, Category = Spawn)
 	TArray<FMonsterInfo> MonsterWaves;
 
-	UPROPERTY(VisibleAnywhere)
+	UPROPERTY(VisibleAnywhere, Category = Spawn)
 	TArray<TObjectPtr<class AURRCharacterMonster>> SpawnedMonsters;
 
 	int currentIdx;

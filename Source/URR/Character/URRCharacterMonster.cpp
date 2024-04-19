@@ -10,12 +10,19 @@
 #include "Engine/AssetManager.h"
 #include "URR.h"
 
-AURRCharacterMonster::AURRCharacterMonster()
+AURRCharacterMonster::AURRCharacterMonster() : MonsterID(0), bMove(false)
 {
     MonsterAttributeSet = CreateDefaultSubobject<UMonsterAttributeSet>(TEXT("MonsterAttributeSet"));
 	HpBarComp = CreateDefaultSubobject<UURRGASWidgetComponent>(TEXT("HpBarComp"));
+	WeaponMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("WeaponMesh"));
+	ShieldMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ShieldMesh"));
 
+	WeaponMesh->SetupAttachment(RootComponent);
+	ShieldMesh->SetupAttachment(RootComponent);
 	HpBarComp->SetupAttachment(RootComponent);
+
+	WeaponMesh->SetHiddenInGame(true);
+	ShieldMesh->SetHiddenInGame(true);
 
 	ConstructorHelpers::FClassFinder<UUserWidget> WidgetRef(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/URR/UI/WBP_HpBar.WBP_HpBar_C'"));
 	if (WidgetRef.Succeeded())
@@ -30,6 +37,12 @@ AURRCharacterMonster::AURRCharacterMonster()
     AutoPossessAI = EAutoPossessAI::PlacedInWorldOrSpawned;
 
     WeaponSocketName = FName(TEXT("SKT_Weapon"));
+	ShieldSocketName = FName(TEXT("SKT_Shield"));
+
+	NeedWeapon.Add(2);
+	NeedWeapon.Add(3);
+	NeedWeapon.Add(8);
+	NeedWeapon.Add(9);
 }
 
 UAbilitySystemComponent* AURRCharacterMonster::GetAbilitySystemComponent() const
@@ -49,6 +62,7 @@ void AURRCharacterMonster::StartMove()
 		FGameplayAbilitySpec* Spec = ASC->FindAbilitySpecFromInputID(0);
 		if (Spec)
 		{
+			bMove = true;
 			ASC->TryActivateAbility(Spec->Handle);
 		}
 	}
@@ -63,7 +77,7 @@ void AURRCharacterMonster::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	URR_LOG(LogURR, Log, TEXT("%s"), *GetActorLocation().ToString());
+	//URR_LOG(LogURR, Log, TEXT("%s"), *GetActorLocation().ToString());
 }
 
 void AURRCharacterMonster::BeginPlay()
@@ -98,11 +112,20 @@ void AURRCharacterMonster::PostInitializeComponents()
 
     MonsterMeshHandle = UAssetManager::Get().GetStreamableManager().RequestAsyncLoad(MonsterMeshes[MonsterID], FStreamableDelegate::CreateUObject(this, &AURRCharacterMonster::MonsterMeshLoadCompleted));
 	AnimInstanceHandle = UAssetManager::Get().GetStreamableManager().RequestAsyncLoad(AnimInstances[MonsterID], FStreamableDelegate::CreateUObject(this, &AURRCharacterMonster::AnimInstanceLoadCompleted));
-    
-    if (WeaponMeshes.Contains(MonsterID))
-    {
-        WeaponMeshHandle = UAssetManager::Get().GetStreamableManager().RequestAsyncLoad(WeaponMeshes[MonsterID], FStreamableDelegate::CreateUObject(this, &AURRCharacterMonster::WeaponMeshLoadCompleted));
-    }
+	
+	for (int idx = 0; idx < NeedWeapon.Num(); idx++)
+	{
+		if (NeedWeapon[idx] == MonsterID)
+		{
+			WeaponMeshHandle = UAssetManager::Get().GetStreamableManager().RequestAsyncLoad(WeaponMeshes[idx], FStreamableDelegate::CreateUObject(this, &AURRCharacterMonster::WeaponMeshLoadCompleted));
+			break;
+		}
+	}
+
+	if (MonsterID == 8)
+	{
+		ShieldMeshHandle = UAssetManager::Get().GetStreamableManager().RequestAsyncLoad(ShieldMeshPath, FStreamableDelegate::CreateUObject(this, &AURRCharacterMonster::ShieldMeshLoadCompleted));
+	}
 }
 
 void AURRCharacterMonster::PossessedBy(AController* NewController)
@@ -146,10 +169,26 @@ void AURRCharacterMonster::AnimInstanceLoadCompleted()
 {
 	if (AnimInstanceHandle.IsValid())
 	{
-		UAnimInstance* Anim = Cast<UAnimInstance>(AnimInstanceHandle->GetLoadedAsset());
+		UClass* Anim = Cast<UClass>(AnimInstanceHandle->GetLoadedAsset());
 		if (Anim && GetMesh())
 		{
-			//GetMesh()->AnimBlueprintGeneratedClass = Anim;
+			GetMesh()->SetAnimInstanceClass(Anim);
+		}
+	}
+
+	AnimInstanceHandle->ReleaseHandle();
+}
+
+void AURRCharacterMonster::ShieldMeshLoadCompleted()
+{
+	if (ShieldMeshHandle.IsValid())
+	{
+		UStaticMesh* Shield = Cast<UStaticMesh>(ShieldMeshHandle->GetLoadedAsset());
+		if (Shield && GetMesh())
+		{
+			ShieldMesh->SetStaticMesh(Shield);
+			ShieldMesh->AttachToComponent(GetMesh(), FAttachmentTransformRules::KeepRelativeTransform, ShieldSocketName);
+			ShieldMesh->SetHiddenInGame(false);
 		}
 	}
 
