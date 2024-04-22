@@ -48,7 +48,7 @@ protected:
 
 protected:
 	UPROPERTY()
-	TObjectPtr<class UMonsterAttributeSet> MonsterAttributeSet;
+	TObjectPtr<class UURRMonsterAttributeSet> URRMonsterAttributeSet;
 
 	UPROPERTY(EditAnywhere, Category = GAS)
 	TSubclassOf<class UGameplayEffect> InitStatEffect;

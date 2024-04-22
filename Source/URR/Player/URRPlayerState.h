@@ -25,5 +25,5 @@ public:
 	TObjectPtr<class UAbilitySystemComponent> ASC;
 
 	UPROPERTY(EditAnywhere, Category = GAS)
-	TObjectPtr<class UPlayerAttributeSet> PlayerAttributeSet;
+	TObjectPtr<class UURRPlayerAttributeSet> URRPlayerAttributeSet;
 };

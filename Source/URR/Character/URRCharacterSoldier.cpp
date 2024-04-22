@@ -3,7 +3,7 @@
 #include "Character/URRCharacterSoldier.h"
 #include "Engine/AssetManager.h"
 
-enum EAssetType
+enum EAssetType : uint8
 {
 	ASSET_MAT,
 	ASSET_WEAPON,
@@ -13,7 +13,7 @@ enum EAssetType
 };
 
 
-enum EAdditiveMeshEnum
+enum EAdditiveMeshEnum : uint8
 {
 	MESH_Helmet,
 	MESH_Mask,

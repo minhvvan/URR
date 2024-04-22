@@ -4,7 +4,7 @@
 #include "UI/URRHpBarWidget.h"
 #include "Components/ProgressBar.h"
 #include "AbilitySystemComponent.h"
-#include "Attribute/PlayerAttributeSet.h"
+#include "Attribute/URRPlayerAttributeSet.h"
 
 void UURRHpBarWidget::SetAbilitySystemComponent(AActor* InOwner)
 {
@@ -12,10 +12,10 @@ void UURRHpBarWidget::SetAbilitySystemComponent(AActor* InOwner)
 
 	if (ASC)
 	{
-		ASC->GetGameplayAttributeValueChangeDelegate(UPlayerAttributeSet::GetHealthAttribute()).AddUObject(this, &UURRHpBarWidget::OnHealthChanged);
-		ASC->GetGameplayAttributeValueChangeDelegate(UPlayerAttributeSet::GetMaxHealthAttribute()).AddUObject(this, &UURRHpBarWidget::OnMaxHealthChanged);
+		ASC->GetGameplayAttributeValueChangeDelegate(UURRPlayerAttributeSet::GetHealthAttribute()).AddUObject(this, &UURRHpBarWidget::OnHealthChanged);
+		ASC->GetGameplayAttributeValueChangeDelegate(UURRPlayerAttributeSet::GetMaxHealthAttribute()).AddUObject(this, &UURRHpBarWidget::OnMaxHealthChanged);
 
-		const UPlayerAttributeSet* CurrentAttributeSet = ASC->GetSet<UPlayerAttributeSet>();
+		const UURRPlayerAttributeSet* CurrentAttributeSet = ASC->GetSet<UURRPlayerAttributeSet>();
 		if (CurrentAttributeSet)
 		{
 			CurrentHealth = CurrentAttributeSet->GetHealth();

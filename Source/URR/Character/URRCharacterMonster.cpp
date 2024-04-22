@@ -3,7 +3,7 @@
 
 #include "Character/URRCharacterMonster.h"
 #include "AbilitySystemComponent.h"
-#include "Attribute/MonsterAttributeSet.h"
+#include "Attribute/URRMonsterAttributeSet.h"
 #include "AI/URRMonsterAIController.h"
 #include "UI/URRGASWidgetComponent.h"
 #include "UI/URRHudWidget.h"
@@ -12,7 +12,7 @@
 
 AURRCharacterMonster::AURRCharacterMonster() : MonsterID(0), bMove(false)
 {
-    MonsterAttributeSet = CreateDefaultSubobject<UMonsterAttributeSet>(TEXT("MonsterAttributeSet"));
+	URRMonsterAttributeSet = CreateDefaultSubobject<UURRMonsterAttributeSet>(TEXT("URRMonsterAttributeSet"));
 	HpBarComp = CreateDefaultSubobject<UURRGASWidgetComponent>(TEXT("HpBarComp"));
 	WeaponMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("WeaponMesh"));
 	ShieldMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("ShieldMesh"));

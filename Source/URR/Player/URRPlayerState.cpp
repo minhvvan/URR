@@ -3,12 +3,12 @@
 
 #include "Player/URRPlayerState.h"
 #include "AbilitySystemComponent.h"
-#include "Attribute/PlayerAttributeSet.h"
+#include "Attribute/URRPlayerAttributeSet.h"
 
 AURRPlayerState::AURRPlayerState()
 {
 	ASC = CreateDefaultSubobject<UAbilitySystemComponent>(TEXT("ASC"));
-	PlayerAttributeSet = CreateDefaultSubobject<UPlayerAttributeSet>(TEXT("PlayerAttributeSet"));
+	URRPlayerAttributeSet = CreateDefaultSubobject<UURRPlayerAttributeSet>(TEXT("URRPlayerAttributeSet"));
 }
 
 UAbilitySystemComponent* AURRPlayerState::GetAbilitySystemComponent() const

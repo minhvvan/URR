@@ -1,18 +1,18 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "Attribute/PlayerAttributeSet.h"
+#include "Attribute/URRPlayerAttributeSet.h"
 #include "GameplayEffectExtension.h"
 #include "Tag/URRGameplayTag.h"
 
-UPlayerAttributeSet::UPlayerAttributeSet() :
+UURRPlayerAttributeSet::UURRPlayerAttributeSet() :
 	Coin(1000),
 	Health(2048),
 	MaxHealth(2048)
 {
 }
 
-void UPlayerAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
+void UURRPlayerAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
 {
 	Super::PostGameplayEffectExecute(Data);
 

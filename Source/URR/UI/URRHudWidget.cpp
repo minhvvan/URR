@@ -7,7 +7,7 @@
 #include "Components/ProgressBar.h"
 #include "Character/URRBoard.h"
 #include "AbilitySystemComponent.h"
-#include "Attribute/PlayerAttributeSet.h"
+#include "Attribute/URRPlayerAttributeSet.h"
 
 void UURRHudWidget::SetAbilitySystemComponent(AActor* InOwner)
 {
@@ -16,11 +16,11 @@ void UURRHudWidget::SetAbilitySystemComponent(AActor* InOwner)
 
 	if (ASC)
 	{
-		ASC->GetGameplayAttributeValueChangeDelegate(UPlayerAttributeSet::GetCoinAttribute()).AddUObject(this, &UURRHudWidget::OnCoinChanged);
-		ASC->GetGameplayAttributeValueChangeDelegate(UPlayerAttributeSet::GetHealthAttribute()).AddUObject(this, &UURRHudWidget::OnCoinChanged);
+		ASC->GetGameplayAttributeValueChangeDelegate(UURRPlayerAttributeSet::GetCoinAttribute()).AddUObject(this, &UURRHudWidget::OnCoinChanged);
+		ASC->GetGameplayAttributeValueChangeDelegate(UURRPlayerAttributeSet::GetHealthAttribute()).AddUObject(this, &UURRHudWidget::OnCoinChanged);
 		//ASC->RegisterGameplayTagEvent(ABTAG_CHARACTER_INVINSIBLE, EGameplayTagEventType::NewOrRemoved).AddUObject(this, &UABGASHpBarUserWidget::OnInvinsibleTagChanged);
 
-		const UPlayerAttributeSet* CurrentAttributeSet = ASC->GetSet<UPlayerAttributeSet>();
+		const UURRPlayerAttributeSet* CurrentAttributeSet = ASC->GetSet<UURRPlayerAttributeSet>();
 		if (CurrentAttributeSet)
 		{
 			CurrentCoin = CurrentAttributeSet->GetCoin();

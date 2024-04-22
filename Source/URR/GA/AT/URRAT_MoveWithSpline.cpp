@@ -6,8 +6,9 @@
 #include "GameFramework/CharacterMovementComponent.h"
 #include "Actor/URRMonsterSpawner.h"
 #include "AbilitySystemComponent.h"
-#include "Attribute/MonsterAttributeSet.h"
+#include "Attribute/URRMonsterAttributeSet.h"
 #include "Engine/World.h"
+#include "URR.h"
 
 
 UURRAT_MoveWithSpline::UURRAT_MoveWithSpline()
@@ -64,16 +65,21 @@ void UURRAT_MoveWithSpline::TickTask(float DeltaTime)
 			CharMoveComp->SetMovementMode(MOVE_Custom, 0);
 		}
 
-		const UMonsterAttributeSet* MonsterAttributeSet = MyCharacter->GetAbilitySystemComponent()->GetSet<UMonsterAttributeSet>();
-		if (MonsterAttributeSet)
+		UAbilitySystemComponent* ASC = MyCharacter->GetAbilitySystemComponent();
+		if (ASC)
 		{
-			float Speed = MonsterAttributeSet->GetSpeed();
-			Distance += DeltaTime * Speed;
+			const UURRMonsterAttributeSet* URRMonsterAttributeSet = ASC->GetSet<UURRMonsterAttributeSet>();
+			if (URRMonsterAttributeSet)
+			{
+				float Speed = URRMonsterAttributeSet->GetSpeed();
+				Distance += DeltaTime * Speed;
 
-			AURRMonsterSpawner* Spanwer = MyCharacter->GetSpawner();
-			FTransform newTransform = Spanwer->GetPathTransform(Distance);
+				AURRMonsterSpawner* Spanwer = MyCharacter->GetSpawner();
+				FTransform newTransform = Spanwer->GetPathTransform(Distance);
 
-			MyCharacter->SetActorTransform(newTransform);
+				ASC->ApplyModToAttribute(URRMonsterAttributeSet->GetDistanceAttribute(), EGameplayModOp::Override, Distance);
+				MyCharacter->SetActorTransform(newTransform);
+			}
 		}
 	}
 	else
@@ -85,18 +91,11 @@ void UURRAT_MoveWithSpline::TickTask(float DeltaTime)
 
 void UURRAT_MoveWithSpline::OnDestroy(bool AbilityIsEnding)
 {
-	AActor* MyActor = GetAvatarActor();
-	if (MyActor)
+	ACharacter* MyCharacter = CastChecked<ACharacter>(GetAvatarActor());
+	UCharacterMovementComponent* CharMoveComp = Cast<UCharacterMovementComponent>(MyCharacter->GetMovementComponent());
+	if (CharMoveComp && CharMoveComp->MovementMode == MOVE_Custom)
 	{
-		ACharacter* MyCharacter = Cast<ACharacter>(MyActor);
-		if (MyCharacter)
-		{
-			UCharacterMovementComponent* CharMoveComp = Cast<UCharacterMovementComponent>(MyCharacter->GetMovementComponent());
-			if (CharMoveComp && CharMoveComp->MovementMode == MOVE_Custom)
-			{
-				CharMoveComp->SetMovementMode(MOVE_Falling);
-			}
-		}
+		CharMoveComp->SetMovementMode(MOVE_Falling);
 	}
 
 	Super::OnDestroy(AbilityIsEnding);

@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "AttributeSet.h"
 #include "AbilitySystemComponent.h"
-#include "PlayerAttributeSet.generated.h"
+#include "URRMonsterAttributeSet.generated.h"
 
 #define ATTRIBUTE_ACCESSORS(ClassName, PropertyName) \
 	GAMEPLAYATTRIBUTE_PROPERTY_GETTER(ClassName, PropertyName) \
@@ -13,25 +13,23 @@
 	GAMEPLAYATTRIBUTE_VALUE_SETTER(PropertyName) \
 	GAMEPLAYATTRIBUTE_VALUE_INITTER(PropertyName)
 
-/**
- * 
- */
 UCLASS()
-class URR_API UPlayerAttributeSet : public UAttributeSet
+class URR_API UURRMonsterAttributeSet : public UAttributeSet
 {
 	GENERATED_BODY()
-
+	
 public:
-	UPlayerAttributeSet();
+	UURRMonsterAttributeSet();
 
-	ATTRIBUTE_ACCESSORS(UPlayerAttributeSet, Coin);
-	ATTRIBUTE_ACCESSORS(UPlayerAttributeSet, Health);
-	ATTRIBUTE_ACCESSORS(UPlayerAttributeSet, MaxHealth);
-	ATTRIBUTE_ACCESSORS(UPlayerAttributeSet, Cost);
+	ATTRIBUTE_ACCESSORS(UURRMonsterAttributeSet, ID);
+	ATTRIBUTE_ACCESSORS(UURRMonsterAttributeSet, Health);
+	ATTRIBUTE_ACCESSORS(UURRMonsterAttributeSet, MaxHealth);
+	ATTRIBUTE_ACCESSORS(UURRMonsterAttributeSet, Speed);
+	ATTRIBUTE_ACCESSORS(UURRMonsterAttributeSet, Distance);
 
 protected:
 	UPROPERTY(BlueprintReadOnly, Category = Stat, meta = (AllowPrivateAccess = true))
-	FGameplayAttributeData Coin;
+	FGameplayAttributeData ID;
 
 	UPROPERTY(BlueprintReadOnly, Category = Stat, meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData Health;
@@ -40,8 +38,8 @@ protected:
 	FGameplayAttributeData MaxHealth;
 
 	UPROPERTY(BlueprintReadOnly, Category = Stat, meta = (AllowPrivateAccess = true))
-	FGameplayAttributeData Cost;
-public:
-	virtual void PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data) override;
+	FGameplayAttributeData Speed;
 
+	UPROPERTY(BlueprintReadOnly, Category = Stat, meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData Distance;
 };

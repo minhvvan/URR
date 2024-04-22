@@ -56,6 +56,12 @@ void AURRCharacterUnit::PostInitializeComponents()
 		{
 			ASC->TryActivateAbility(Spec->Handle);
 		}
+
+		FGameplayAbilitySpec* AttackSpec = ASC->FindAbilitySpecFromInputID(1);
+		if (AttackSpec)
+		{
+			ASC->TryActivateAbility(AttackSpec->Handle);
+		}
 	}
 }
 
