@@ -5,7 +5,9 @@
 #include "GA/TA/URRTA_FirstSingle.h"
 #include "GA/TA/URRTA_Trace.h"
 #include "AbilitySystemComponent.h"
+#include "AbilitySystemBlueprintLibrary.h"
 #include "Tag/URRGameplayTag.h"
+#include "Kismet/KismetMathLibrary.h"
 #include "URR.h"
 
 UURRAT_FindTarget::UURRAT_FindTarget()
@@ -73,11 +75,27 @@ void UURRAT_FindTarget::FinalizeTargetActor()
 
 void UURRAT_FindTarget::OnTargetDataReadyCallback(const FGameplayAbilityTargetDataHandle& DataHnadle)
 {
-	UAbilitySystemComponent* ASC = AbilitySystemComponent.Get();
-	if (ASC)
+	if (UAbilitySystemBlueprintLibrary::TargetDataHasHitResult(DataHnadle, 0))
 	{
-		FGameplayTagContainer Tag;
-		Tag.AddTag(URRTAG_UNIT_ATTACK);
-		ASC->TryActivateAbilitiesByTag(Tag);
+		UAbilitySystemComponent* ASC = AbilitySystemComponent.Get();
+		if (ASC)
+		{
+			FHitResult HitResult = UAbilitySystemBlueprintLibrary::GetHitResultFromTargetData(DataHnadle, 0);
+
+			AActor* Unit = ASC->GetAvatarActor();
+			FVector TargetPos = HitResult.GetActor()->GetActorLocation();
+
+			FRotator NewRot = Unit->GetActorRotation();
+			NewRot.Yaw = UKismetMathLibrary::FindLookAtRotation(Unit->GetActorLocation(), TargetPos).Yaw;
+
+			Unit->SetActorRotation(NewRot);
+
+			FGameplayTagContainer Tag;
+			Tag.AddTag(URRTAG_UNIT_ATTACK);
+			ASC->TryActivateAbilitiesByTag(Tag);
+		}
+	}
+	else
+	{
 	}
 }

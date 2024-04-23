@@ -38,7 +38,6 @@ void UURRGA_Attack::ApplyCooldown(const FGameplayAbilitySpecHandle Handle, const
 		if (Attribute)
 		{
 
-			URR_LOG(LogURR, Log, TEXT("cool: %f"), 1.f / Attribute->GetAttackSpeed());
 			FGameplayEffectModifierMagnitude CooldownMagnitude(1.f / Attribute->GetAttackSpeed());
 			CooldownGE->DurationMagnitude = CooldownMagnitude;
 		}
