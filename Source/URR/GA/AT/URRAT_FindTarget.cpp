@@ -4,10 +4,11 @@
 #include "GA/AT/URRAT_FindTarget.h"
 #include "GA/TA/URRTA_FirstSingle.h"
 #include "GA/TA/URRTA_Trace.h"
+#include "Character/URRCharacterMonster.h"
 #include "AbilitySystemComponent.h"
 #include "AbilitySystemBlueprintLibrary.h"
-#include "Tag/URRGameplayTag.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "Tag/URRGameplayTag.h"
 #include "URR.h"
 
 UURRAT_FindTarget::UURRAT_FindTarget()
@@ -16,10 +17,11 @@ UURRAT_FindTarget::UURRAT_FindTarget()
 	bSimulatedTask = true;
 }
 
-UURRAT_FindTarget* UURRAT_FindTarget::FindTarget(UGameplayAbility* OwningAbility, FName TaskInstanceName, TSubclassOf<class AURRTA_Trace> TargetActorClass)
+UURRAT_FindTarget* UURRAT_FindTarget::FindTarget(UGameplayAbility* OwningAbility, FName TaskInstanceName, TSubclassOf<class AURRTA_Trace> TargetActorClass, TSubclassOf<UGameplayEffect> AttackDamageEffect)
 {
 	UURRAT_FindTarget* NewTask = NewAbilityTask<UURRAT_FindTarget>(OwningAbility, TaskInstanceName);
 	NewTask->TAClass = TargetActorClass;
+	NewTask->AttackDamageEffect = AttackDamageEffect;
 	return NewTask;
 }
 
@@ -73,26 +75,30 @@ void UURRAT_FindTarget::FinalizeTargetActor()
 	}
 }
 
-void UURRAT_FindTarget::OnTargetDataReadyCallback(const FGameplayAbilityTargetDataHandle& DataHnadle)
+void UURRAT_FindTarget::OnTargetDataReadyCallback(const FGameplayAbilityTargetDataHandle& DataHandle)
 {
-	if (UAbilitySystemBlueprintLibrary::TargetDataHasHitResult(DataHnadle, 0))
+	if (UAbilitySystemBlueprintLibrary::TargetDataHasHitResult(DataHandle, 0))
 	{
 		UAbilitySystemComponent* ASC = AbilitySystemComponent.Get();
 		if (ASC)
 		{
-			FHitResult HitResult = UAbilitySystemBlueprintLibrary::GetHitResultFromTargetData(DataHnadle, 0);
-
+			FHitResult HitResult = UAbilitySystemBlueprintLibrary::GetHitResultFromTargetData(DataHandle, 0);
+			AURRCharacterMonster* TargetMonster = CastChecked<AURRCharacterMonster>(HitResult.GetActor());
 			AActor* Unit = ASC->GetAvatarActor();
-			FVector TargetPos = HitResult.GetActor()->GetActorLocation();
 
-			FRotator NewRot = Unit->GetActorRotation();
-			NewRot.Yaw = UKismetMathLibrary::FindLookAtRotation(Unit->GetActorLocation(), TargetPos).Yaw;
+			if (Unit && TargetMonster)
+			{
+				FVector TargetPos = TargetMonster->GetActorLocation();
 
-			Unit->SetActorRotation(NewRot);
+				FRotator NewRot = Unit->GetActorRotation();
+				NewRot.Yaw = UKismetMathLibrary::FindLookAtRotation(Unit->GetActorLocation(), TargetPos).Yaw;
 
-			FGameplayTagContainer Tag;
-			Tag.AddTag(URRTAG_UNIT_ATTACK);
-			ASC->TryActivateAbilitiesByTag(Tag);
+				Unit->SetActorRotation(NewRot);
+
+				FGameplayEventData PayloadData;
+				PayloadData.TargetData = DataHandle;
+				UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(Unit, URRTAG_UNIT_ATTACK, PayloadData);
+			}
 		}
 	}
 	else

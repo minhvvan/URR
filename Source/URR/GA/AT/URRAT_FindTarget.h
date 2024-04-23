@@ -6,7 +6,11 @@
 #include "Abilities/Tasks/AbilityTask.h"
 #include "URRAT_FindTarget.generated.h"
 
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FTraceResultDelegate, const FGameplayAbilityTargetDataHandle&, TargetDataHandle);
+
 /**
+* 
  * 
  */
 UCLASS()
@@ -17,7 +21,7 @@ class URR_API UURRAT_FindTarget : public UAbilityTask
 public:
 	UURRAT_FindTarget();
 
-	static UURRAT_FindTarget* FindTarget(UGameplayAbility* OwningAbility, FName TaskInstanceName, TSubclassOf<class AURRTA_Trace> TargetActorClass);
+	static UURRAT_FindTarget* FindTarget(UGameplayAbility* OwningAbility, FName TaskInstanceName, TSubclassOf<class AURRTA_Trace> TargetActorClass, TSubclassOf<UGameplayEffect> AttackDamageEffect);
 
 	virtual void InitSimulatedTask(UGameplayTasksComponent& InGameplayTasksComponent) override;
 	virtual void Activate() override;
@@ -29,12 +33,19 @@ public:
 	void SpawnAndInitializeTargetActor();
 	void FinalizeTargetActor();
 
+public:
+	UPROPERTY(BlueprintAssignable)
+	FTraceResultDelegate OnComplete;
+
 protected:
 	UFUNCTION()
-	void OnTargetDataReadyCallback(const FGameplayAbilityTargetDataHandle& DataHnadle);
+	void OnTargetDataReadyCallback(const FGameplayAbilityTargetDataHandle& DataHandle);
 
-	UPROPERTY(EditAnywhere)
-	TSubclassOf<class AURRTA_Trace> TAClass;
+	UPROPERTY(EditAnywhere, category = "GAS")
+	TSubclassOf<AURRTA_Trace> TAClass;
+
+	UPROPERTY(EditAnywhere, category = "GAS")
+	TSubclassOf<UGameplayEffect> AttackDamageEffect;
 
 	UPROPERTY()
 	TObjectPtr<AURRTA_Trace> SpawnedTargetActor;

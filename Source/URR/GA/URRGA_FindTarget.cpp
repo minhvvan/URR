@@ -14,6 +14,6 @@ void UURRGA_FindTarget::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
 	//AT »ý¼º
-	UURRAT_FindTarget* FindTargetAT = UURRAT_FindTarget::FindTarget(this, TEXT("FindTarget"), TargetActorClass);
+	UURRAT_FindTarget* FindTargetAT = UURRAT_FindTarget::FindTarget(this, TEXT("FindTarget"), TargetActorClass, AttackDamageEffect);
 	FindTargetAT->ReadyForActivation();
 }

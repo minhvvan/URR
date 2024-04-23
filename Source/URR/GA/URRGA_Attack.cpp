@@ -3,20 +3,26 @@
 
 #include "GA/URRGA_Attack.h"
 #include "Character/URRCharacterUnit.h"
+#include "GA/AT/URRAT_FindTarget.h"
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
 #include "AbilitySystemBlueprintLibrary.h"
 #include "Attribute/URRUnitAttributeSet.h"
+#include "AbilitySystemBlueprintLibrary.h"
+#include "Character/URRCharacterMonster.h"
 #include "URR.h"
 
 UURRGA_Attack::UURRGA_Attack()
 {
+	InstancingPolicy = EGameplayAbilityInstancingPolicy::InstancedPerActor;
 }
 
 void UURRGA_Attack::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
-	AURRCharacterUnit* Unit = CastChecked<AURRCharacterUnit>(ActorInfo->AvatarActor.Get());
+	BP_ApplyGameplayEffectToTarget(TriggerEventData->TargetData, AttackDamageEffect);
+	
+	AURRCharacterUnit* Unit = Cast<AURRCharacterUnit>(ActorInfo->AvatarActor.Get());
 
 	UAbilityTask_PlayMontageAndWait* MontageAT = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(this, TEXT("PlayMontage"), Unit->GetAttackMontage(), 1.f);
 	MontageAT->OnCompleted.AddDynamic(this, &UURRGA_Attack::OnCompleteCallback);
@@ -37,7 +43,6 @@ void UURRGA_Attack::ApplyCooldown(const FGameplayAbilitySpecHandle Handle, const
 		const UURRUnitAttributeSet* Attribute = ASC->GetSet<UURRUnitAttributeSet>();
 		if (Attribute)
 		{
-
 			FGameplayEffectModifierMagnitude CooldownMagnitude(1.f / Attribute->GetAttackSpeed());
 			CooldownGE->DurationMagnitude = CooldownMagnitude;
 		}

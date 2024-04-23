@@ -13,6 +13,8 @@
 	GAMEPLAYATTRIBUTE_VALUE_SETTER(PropertyName) \
 	GAMEPLAYATTRIBUTE_VALUE_INITTER(PropertyName)
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOutOfHealthDelegate);
+
 UCLASS()
 class URR_API UURRMonsterAttributeSet : public UAttributeSet
 {
@@ -26,6 +28,12 @@ public:
 	ATTRIBUTE_ACCESSORS(UURRMonsterAttributeSet, MaxHealth);
 	ATTRIBUTE_ACCESSORS(UURRMonsterAttributeSet, Speed);
 	ATTRIBUTE_ACCESSORS(UURRMonsterAttributeSet, Distance);
+	ATTRIBUTE_ACCESSORS(UURRMonsterAttributeSet, Damage);
+
+	virtual bool PreGameplayEffectExecute(struct FGameplayEffectModCallbackData& Data);
+	virtual void PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data) override;
+
+	mutable FOutOfHealthDelegate OnOutOfHealth;
 
 protected:
 	UPROPERTY(BlueprintReadOnly, Category = Stat, meta = (AllowPrivateAccess = true))
@@ -41,5 +49,11 @@ protected:
 	FGameplayAttributeData Speed;
 
 	UPROPERTY(BlueprintReadOnly, Category = Stat, meta = (AllowPrivateAccess = true))
-	FGameplayAttributeData Distance;
+	FGameplayAttributeData Distance;	
+	
+	UPROPERTY(BlueprintReadOnly, Category = Stat, meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData Damage;
+
+	bool bOutOfHealth = false;
+
 };
