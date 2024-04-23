@@ -5,6 +5,7 @@
 #include "Attribute/URRUnitAttributeSet.h"
 #include "AbilitySystemComponent.h"
 #include "Engine/AssetManager.h"
+#include "Tag/URRGameplayTag.h"
 #include "URR.h"
 
 AURRCharacterUnit::AURRCharacterUnit() : Rank(0)
@@ -38,6 +39,7 @@ void AURRCharacterUnit::BeginPlay()
 void AURRCharacterUnit::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
+	AttackMontageHandle = UAssetManager::Get().GetStreamableManager().RequestAsyncLoad(AttackMontages[Rank], FStreamableDelegate::CreateUObject(this, &AURRCharacterUnit::AttackMontageLoadCompleted));
 
 	if (ASC)
 	{
@@ -72,5 +74,14 @@ void AURRCharacterUnit::Init(int rank)
 
 void AURRCharacterUnit::AttackMontageLoadCompleted()
 {
+	if (AttackMontageHandle.IsValid())
+	{
+		AttackActionMontage = CastChecked<UAnimMontage>(AttackMontageHandle->GetLoadedAsset());
+	}
 
+	AttackMontageHandle->ReleaseHandle();
+}
+
+void AURRCharacterUnit::UnitLoadCompleted(int part)
+{
 }

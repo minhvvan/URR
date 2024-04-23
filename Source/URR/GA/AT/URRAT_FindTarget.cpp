@@ -78,7 +78,6 @@ void UURRAT_FindTarget::OnTargetDataReadyCallback(const FGameplayAbilityTargetDa
 	{
 		FGameplayTagContainer Tag;
 		Tag.AddTag(URRTAG_UNIT_ATTACK);
-
 		ASC->TryActivateAbilitiesByTag(Tag);
 	}
 }

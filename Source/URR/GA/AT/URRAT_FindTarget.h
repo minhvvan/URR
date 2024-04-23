@@ -30,6 +30,7 @@ public:
 	void FinalizeTargetActor();
 
 protected:
+	UFUNCTION()
 	void OnTargetDataReadyCallback(const FGameplayAbilityTargetDataHandle& DataHnadle);
 
 	UPROPERTY(EditAnywhere)

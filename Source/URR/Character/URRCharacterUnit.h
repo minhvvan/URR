@@ -39,14 +39,20 @@ public:
 	void AttackMontageLoadCompleted();
 
 	FORCEINLINE class UAnimMontage* GetPlacedActionMontage() const { return PlacedActionMontage; }
+	FORCEINLINE class UAnimMontage* GetAttackMontage() const { return AttackActionMontage; }
 
 	FOnLoadCompleted OnLoadCompleteDelegate;
 
 protected:
 	int Rank;
 
+	virtual void UnitLoadCompleted(int part);
+
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animation)
-	TObjectPtr<class UAnimMontage> PlacedActionMontage;
+	TObjectPtr<class UAnimMontage> PlacedActionMontage;	
+	
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animation)
+	TObjectPtr<class UAnimMontage> AttackActionMontage;
 
 	UPROPERTY(config)
 	TArray<FSoftObjectPath> AttackMontages;

@@ -6,6 +6,27 @@
 #include "Character/URRCharacterUnit.h"
 #include "URRCharacterSoldier.generated.h"
 
+UENUM()
+enum class EAdditiveMeshEnum : uint8
+{
+	MESH_Helmet,
+	MESH_Mask,
+	MESH_BackPack,
+	MESH_Mattress,
+	MESH_BodyKit,
+};
+
+UENUM()
+enum class EAssetType : uint8
+{
+	ASSET_MAT,
+	ASSET_WEAPON,
+	ASSET_HEAD,
+	ASSET_BODY,
+	ASSET_ACC,
+};
+
+
 UCLASS(config = URR)
 class URR_API AURRCharacterSoldier : public AURRCharacterUnit
 {
@@ -45,7 +66,7 @@ protected:
 	void BodyKitMaterialLoadCompleted();
 	void BackPackMaterialLoadCompleted();
 
-	void UnitLoadCompleted(int part);
+	virtual void UnitLoadCompleted(int part);
 
 protected:
 	TArray<bool> LoadCompletedPart;
