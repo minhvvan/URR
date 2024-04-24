@@ -29,6 +29,9 @@ protected:
 	UPROPERTY(EditAnywhere, Category=UI)
 	TObjectPtr<class UURRGASWidgetComponent> HpBarComp;
 
+	UPROPERTY(EditAnywhere, Category=Animation)
+	TObjectPtr<class UAnimMontage> DeadMontage;
+
 public:
 	void InitMonster(int monsterID);
 
@@ -41,17 +44,23 @@ public:
 
 	virtual void Tick(float DeltaTime) override;
 
+	UFUNCTION()
+	virtual void OnOutOfHealth();
+
 protected:
 	virtual void BeginPlay() override;
 	virtual void PostInitializeComponents() override;
 	virtual void PossessedBy(AController* NewController) override;
 
 protected:
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<class UURRMonsterAttributeSet> URRMonsterAttributeSet;
 
 	UPROPERTY(EditAnywhere, Category = GAS)
 	TSubclassOf<class UGameplayEffect> InitStatEffect;
+
+	UPROPERTY(EditAnywhere, Category = GAS)
+	TSubclassOf<class UGameplayEffect> GiveCoinffect;
 
 	UPROPERTY(config)
 	TArray<FSoftObjectPath> MonsterMeshes;
@@ -73,6 +82,10 @@ protected:
 	TArray<FSoftObjectPath> AnimInstances;
 	TSharedPtr<FStreamableHandle> AnimInstanceHandle;
 
+	UPROPERTY(config)
+	TArray<FSoftObjectPath> DeadMontages;
+	TSharedPtr<FStreamableHandle> DeadMontageHandle;
+
 	FName WeaponSocketName;
 	FName ShieldSocketName;
 
@@ -91,4 +104,11 @@ protected:
 	void WeaponMeshLoadCompleted();
 	void AnimInstanceLoadCompleted();
 	void ShieldMeshLoadCompleted();
+	void DeadMontageLoadCompleted();
+
+	void SetDead();
+	void PlayDeadAnimation();
+
+	UFUNCTION()
+	void MontageEndCallback(UAnimMontage* Montage, bool bInterrupted);
 };

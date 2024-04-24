@@ -2,12 +2,17 @@
 
 
 #include "Character/URRCharacterMonster.h"
+#include "Character/URRBoard.h"
+#include "GameFramework/CharacterMovementComponent.h"
+#include "Animation/AnimMontage.h"
 #include "AbilitySystemComponent.h"
 #include "Attribute/URRMonsterAttributeSet.h"
 #include "AI/URRMonsterAIController.h"
 #include "UI/URRGASWidgetComponent.h"
 #include "UI/URRHudWidget.h"
 #include "Engine/AssetManager.h"
+#include "Kismet/GameplayStatics.h"
+#include "AbilitySystemBlueprintLibrary.h"
 #include "URR.h"
 
 AURRCharacterMonster::AURRCharacterMonster() : MonsterID(0), bMove(false)
@@ -93,6 +98,13 @@ void AURRCharacterMonster::PostInitializeComponents()
     {
         ASC->InitAbilityActorInfo(this, this);
 
+		const UURRMonsterAttributeSet* AttributeSet = ASC->GetSet<UURRMonsterAttributeSet>();
+		if (AttributeSet)
+		{
+			AttributeSet->OnOutOfHealth.AddDynamic(this, &AURRCharacterMonster::OnOutOfHealth);
+		}
+
+
 		FGameplayEffectContextHandle EffectContextHandle = ASC->MakeEffectContext();
 		EffectContextHandle.AddSourceObject(this);
 		FGameplayEffectSpecHandle EffectSpecHandle = ASC->MakeOutgoingSpec(InitStatEffect, MonsterID + 1, EffectContextHandle);
@@ -112,6 +124,7 @@ void AURRCharacterMonster::PostInitializeComponents()
 
     MonsterMeshHandle = UAssetManager::Get().GetStreamableManager().RequestAsyncLoad(MonsterMeshes[MonsterID], FStreamableDelegate::CreateUObject(this, &AURRCharacterMonster::MonsterMeshLoadCompleted));
 	AnimInstanceHandle = UAssetManager::Get().GetStreamableManager().RequestAsyncLoad(AnimInstances[MonsterID], FStreamableDelegate::CreateUObject(this, &AURRCharacterMonster::AnimInstanceLoadCompleted));
+	DeadMontageHandle = UAssetManager::Get().GetStreamableManager().RequestAsyncLoad(DeadMontages[MonsterID], FStreamableDelegate::CreateUObject(this, &AURRCharacterMonster::DeadMontageLoadCompleted));
 	
 	for (int idx = 0; idx < NeedWeapon.Num(); idx++)
 	{
@@ -131,7 +144,6 @@ void AURRCharacterMonster::PostInitializeComponents()
 void AURRCharacterMonster::PossessedBy(AController* NewController)
 {
     Super::PossessedBy(NewController);
-
 }
 
 void AURRCharacterMonster::MonsterMeshLoadCompleted()
@@ -193,4 +205,61 @@ void AURRCharacterMonster::ShieldMeshLoadCompleted()
 	}
 
 	AnimInstanceHandle->ReleaseHandle();
+}
+
+void AURRCharacterMonster::DeadMontageLoadCompleted()
+{
+	if (DeadMontageHandle.IsValid())
+	{
+		DeadMontage = Cast<UAnimMontage>(DeadMontageHandle->GetLoadedAsset());
+	}
+
+	DeadMontageHandle->ReleaseHandle();
+}
+
+void AURRCharacterMonster::OnOutOfHealth()
+{
+	SetDead();
+}
+
+void AURRCharacterMonster::SetDead()
+{
+	GetCharacterMovement()->SetMovementMode(EMovementMode::MOVE_None);
+	PlayDeadAnimation();
+	SetActorEnableCollision(false);
+
+	//Player에게 Coin주기
+	AURRBoard* PlayerPawn = Cast<AURRBoard>(UGameplayStatics::GetPlayerPawn(GetWorld(), 0));
+	if (PlayerPawn)
+	{
+		UAbilitySystemComponent* TargetASC = PlayerPawn->GetAbilitySystemComponent();
+		if (TargetASC && ASC)
+		{
+			FGameplayEffectContextHandle EffectContextHandle = ASC->MakeEffectContext();
+			FGameplayEffectSpecHandle EffectSpecHandle = ASC->MakeOutgoingSpec(GiveCoinffect, 0.f, EffectContextHandle);
+			if (EffectSpecHandle.IsValid())
+			{
+				ASC->BP_ApplyGameplayEffectSpecToTarget(EffectSpecHandle, TargetASC);
+			}
+		}
+	}
+}
+
+void AURRCharacterMonster::PlayDeadAnimation()
+{
+	if (DeadMontage)
+	{
+		UAnimInstance* AnimInstance = GetMesh()->GetAnimInstance();
+		AnimInstance->StopAllMontages(0.0f);
+		AnimInstance->Montage_Play(DeadMontage, 1.0f);
+		AnimInstance->OnMontageEnded.AddDynamic(this, &AURRCharacterMonster::MontageEndCallback);
+	}
+}
+
+void AURRCharacterMonster::MontageEndCallback(UAnimMontage* Montage, bool bInterrupted)
+{
+	if (Montage == DeadMontage)
+	{
+		Destroy();
+	}
 }

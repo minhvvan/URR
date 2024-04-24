@@ -3,12 +3,13 @@
 
 #include "Attribute/URRMonsterAttributeSet.h"
 #include "GameplayEffectExtension.h"
+#include "Tag/URRGameplayTag.h"
 #include "URR.h"
 
 UURRMonsterAttributeSet::UURRMonsterAttributeSet():
 	ID(0),
-	Health(0),
-	MaxHealth(0),
+	Health(1),
+	MaxHealth(1),
 	Speed(0),
 	Distance(0)
 {
@@ -37,7 +38,7 @@ void UURRMonsterAttributeSet::PostGameplayEffectExecute(const FGameplayEffectMod
 
 	if ((GetHealth() <= 0.f) && !bOutOfHealth)
 	{
-		//Data.Target.AddLooseGameplayTag(ABTAG_CHARACTER_ISDEAD);
+		Data.Target.AddLooseGameplayTag(URRTAG_MONSTER_ISDEAD);
 		OnOutOfHealth.Broadcast();
 	}
 

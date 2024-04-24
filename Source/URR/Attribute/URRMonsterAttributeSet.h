@@ -55,5 +55,4 @@ protected:
 	FGameplayAttributeData Damage;
 
 	bool bOutOfHealth = false;
-
 };
