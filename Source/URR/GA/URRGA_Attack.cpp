@@ -19,7 +19,6 @@ UURRGA_Attack::UURRGA_Attack()
 void UURRGA_Attack::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
-
 	BP_ApplyGameplayEffectToTarget(TriggerEventData->TargetData, AttackDamageEffect);
 	
 	AURRCharacterUnit* Unit = Cast<AURRCharacterUnit>(ActorInfo->AvatarActor.Get());

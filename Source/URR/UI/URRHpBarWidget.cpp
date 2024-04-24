@@ -4,7 +4,8 @@
 #include "UI/URRHpBarWidget.h"
 #include "Components/ProgressBar.h"
 #include "AbilitySystemComponent.h"
-#include "Attribute/URRPlayerAttributeSet.h"
+#include "Attribute/URRMonsterAttributeSet.h"
+#include "URR.h"
 
 void UURRHpBarWidget::SetAbilitySystemComponent(AActor* InOwner)
 {
@@ -12,10 +13,10 @@ void UURRHpBarWidget::SetAbilitySystemComponent(AActor* InOwner)
 
 	if (ASC)
 	{
-		ASC->GetGameplayAttributeValueChangeDelegate(UURRPlayerAttributeSet::GetHealthAttribute()).AddUObject(this, &UURRHpBarWidget::OnHealthChanged);
-		ASC->GetGameplayAttributeValueChangeDelegate(UURRPlayerAttributeSet::GetMaxHealthAttribute()).AddUObject(this, &UURRHpBarWidget::OnMaxHealthChanged);
+		ASC->GetGameplayAttributeValueChangeDelegate(UURRMonsterAttributeSet::GetHealthAttribute()).AddUObject(this, &UURRHpBarWidget::OnHealthChanged);
+		ASC->GetGameplayAttributeValueChangeDelegate(UURRMonsterAttributeSet::GetMaxHealthAttribute()).AddUObject(this, &UURRHpBarWidget::OnMaxHealthChanged);
 
-		const UURRPlayerAttributeSet* CurrentAttributeSet = ASC->GetSet<UURRPlayerAttributeSet>();
+		const UURRMonsterAttributeSet* CurrentAttributeSet = ASC->GetSet<UURRMonsterAttributeSet>();
 		if (CurrentAttributeSet)
 		{
 			CurrentHealth = CurrentAttributeSet->GetHealth();
@@ -28,6 +29,7 @@ void UURRHpBarWidget::SetAbilitySystemComponent(AActor* InOwner)
 void UURRHpBarWidget::OnHealthChanged(const FOnAttributeChangeData& ChangeData)
 {
 	CurrentHealth = ChangeData.NewValue;
+	URR_LOG(LogURR, Log, TEXT("Change: %f"), CurrentHealth);
 	UpdateHpBar();
 }
 
@@ -39,5 +41,6 @@ void UURRHpBarWidget::OnMaxHealthChanged(const FOnAttributeChangeData& ChangeDat
 
 void UURRHpBarWidget::UpdateHpBar()
 {
+	URR_LOG(LogURR, Log, TEXT("HP: %f"), CurrentHealth);
 	PBHealth->SetPercent(CurrentHealth / CurrentMaxHealth);
 }

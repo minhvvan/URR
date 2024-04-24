@@ -29,10 +29,11 @@ void UURRMonsterAttributeSet::PostGameplayEffectExecute(const FGameplayEffectMod
 	Super::PostGameplayEffectExecute(Data);
 	float MinimumHealth = 0.f;
 
-	URR_LOG(LogURR, Log, TEXT("PostGameplayEffectExecute"));
-
 	if (Data.EvaluatedData.Attribute == GetDamageAttribute())
 	{
+		URR_LOG(LogURR, Log, TEXT("CurrenHealth: %f"), GetHealth());
+		URR_LOG(LogURR, Log, TEXT("CurrentMaxHealth: %f"), GetMaxHealth());
+
 		SetHealth(FMath::Clamp(GetHealth() - GetDamage(), MinimumHealth, GetMaxHealth()));
 		SetDamage(0.f);
 	}

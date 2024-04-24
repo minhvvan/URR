@@ -14,13 +14,11 @@ void UURRAttackDamageExecutionCalc::Execute_Implementation(const FGameplayEffect
 
 	UAbilitySystemComponent* SourceASC = ExecutionParams.GetSourceAbilitySystemComponent();
 	UAbilitySystemComponent* TargetASC = ExecutionParams.GetTargetAbilitySystemComponent();
-	URR_LOG(LogURR, Log, TEXT("Execute"));
 
 	if (SourceASC && TargetASC)
 	{
 		AActor* SourceActor = SourceASC->GetAvatarActor();
 		AActor* TargetActor = TargetASC->GetAvatarActor();
-		URR_LOG(LogURR, Log, TEXT("ASC"));
 
 		if (SourceActor && TargetActor)
 		{

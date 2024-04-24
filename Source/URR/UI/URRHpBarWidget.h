@@ -28,6 +28,6 @@ protected:
 	void UpdateHpBar();
 
 protected:
-	int CurrentHealth;
-	int CurrentMaxHealth;
+	float CurrentHealth;
+	float CurrentMaxHealth;
 };
