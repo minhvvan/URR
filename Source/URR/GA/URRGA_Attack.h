@@ -27,6 +27,9 @@ protected:
 	UFUNCTION()
 	void OnInterruptedCallback();
 
+	UFUNCTION()
+	void OnCancelledCallback();
+
 	UPROPERTY(EditAnywhere, category = "GAS")
 	TSubclassOf<class AURRTA_Trace> TargetActorClass;
 

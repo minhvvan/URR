@@ -26,6 +26,7 @@ void UURRGA_Attack::ActivateAbility(const FGameplayAbilitySpecHandle Handle, con
 	UAbilityTask_PlayMontageAndWait* MontageAT = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(this, TEXT("PlayMontage"), Unit->GetAttackMontage(), 1.f);
 	MontageAT->OnCompleted.AddDynamic(this, &UURRGA_Attack::OnCompleteCallback);
 	MontageAT->OnInterrupted.AddDynamic(this, &UURRGA_Attack::OnInterruptedCallback);
+	MontageAT->OnCancelled.AddDynamic(this, &UURRGA_Attack::OnCancelledCallback);
 
 	MontageAT->ReadyForActivation();
 
@@ -62,6 +63,14 @@ void UURRGA_Attack::OnCompleteCallback()
 
 void UURRGA_Attack::OnInterruptedCallback()
 {
+	bool bReplicateEndAbility = true;
+	bool bWasCancelled = true;
+	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, bReplicateEndAbility, bWasCancelled);
+}
+
+void UURRGA_Attack::OnCancelledCallback()
+{
+	URR_LOG(LogURR, Log, TEXT("Cancelled"));
 	bool bReplicateEndAbility = true;
 	bool bWasCancelled = true;
 	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, bReplicateEndAbility, bWasCancelled);

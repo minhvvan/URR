@@ -95,6 +95,7 @@ void UURRAT_FindTarget::OnTargetDataReadyCallback(const FGameplayAbilityTargetDa
 
 				Unit->SetActorRotation(NewRot);
 
+				URR_LOG(LogURR, Log, TEXT("Find Target"));
 				FGameplayEventData PayloadData;
 				PayloadData.TargetData = DataHandle;
 				UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(Unit, URRTAG_UNIT_ATTACK, PayloadData);

@@ -29,7 +29,6 @@ void UURRHpBarWidget::SetAbilitySystemComponent(AActor* InOwner)
 void UURRHpBarWidget::OnHealthChanged(const FOnAttributeChangeData& ChangeData)
 {
 	CurrentHealth = ChangeData.NewValue;
-	URR_LOG(LogURR, Log, TEXT("Change: %f"), CurrentHealth);
 	UpdateHpBar();
 }
 
@@ -41,6 +40,5 @@ void UURRHpBarWidget::OnMaxHealthChanged(const FOnAttributeChangeData& ChangeDat
 
 void UURRHpBarWidget::UpdateHpBar()
 {
-	URR_LOG(LogURR, Log, TEXT("HP: %f"), CurrentHealth);
 	PBHealth->SetPercent(CurrentHealth / CurrentMaxHealth);
 }
