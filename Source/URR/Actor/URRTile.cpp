@@ -37,6 +37,12 @@ AURRTile::AURRTile(): isEmpty(true)
 	{
 		TileMesh->SetStaticMesh(TileMeshRef.Object);
 	}
+
+	ConstructorHelpers::FClassFinder<AURRCharacterUnit> UnitClassRef(TEXT("/Script/Engine.Blueprint'/Game/URR/Blueprint/BP_Unit.BP_Unit_C'"));
+	if (TileMeshRef.Succeeded())
+	{
+		UnitClass = UnitClassRef.Class;
+	}
 }
 
 // Called when the game starts or when spawned
@@ -93,14 +99,6 @@ void AURRTile::SpawnUnit(int rank)
 
 	TileMaterialHandle = UAssetManager::Get().GetStreamableManager().RequestAsyncLoad(TileMaterials[Rank], FStreamableDelegate::CreateUObject(this, &AURRTile::TileMaterialLoadCompleted));
 
-	int32 Idx;
-	if (rank < 4) Idx = 0;
-	else if (rank == 4) Idx = 1;
-	else if (rank == 5) Idx = 2;
-	else if (rank == 6) Idx = 3;
-	else Idx = 4;
-
-	UnitClass = UnitClasses[Idx].TryLoadClass<AURRCharacterUnit>();
 	if (UnitClass)
 	{
 		//Spawn Uit

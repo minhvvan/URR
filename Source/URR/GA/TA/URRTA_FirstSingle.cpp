@@ -93,7 +93,7 @@ FGameplayAbilityTargetDataHandle AURRTA_FirstSingle::MakeTargetData() const
 	}
 	else
 	{
-		URR_LOG(LogURR, Log, TEXT("No Debug"));
+		//URR_LOG(LogURR, Log, TEXT("No Debug"));
 	}
 
 #endif

@@ -15,7 +15,7 @@ void UURRGA_UnitPlaced::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 
 	AURRCharacterUnit* UnitCharacter = CastChecked<AURRCharacterUnit>(ActorInfo->AvatarActor.Get());
 
-	UAbilityTask_PlayMontageAndWait* PlayAttackTask = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(this, TEXT("PlayAttack"), UnitCharacter->GetPlacedActionMontage(), 1.f);
+	UAbilityTask_PlayMontageAndWait* PlayAttackTask = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(this, TEXT("PlayPlaced"), UnitCharacter->GetPlacedActionMontage(), 1.f);
 	PlayAttackTask->OnCompleted.AddDynamic(this, &UURRGA_UnitPlaced::OnCompleteCallback);
 	PlayAttackTask->OnInterrupted.AddDynamic(this, &UURRGA_UnitPlaced::OnInterruptedCallback);
 	PlayAttackTask->ReadyForActivation();

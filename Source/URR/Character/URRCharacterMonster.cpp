@@ -104,7 +104,6 @@ void AURRCharacterMonster::PostInitializeComponents()
 			AttributeSet->OnOutOfHealth.AddDynamic(this, &AURRCharacterMonster::OnOutOfHealth);
 		}
 
-
 		FGameplayEffectContextHandle EffectContextHandle = ASC->MakeEffectContext();
 		EffectContextHandle.AddSourceObject(this);
 		FGameplayEffectSpecHandle EffectSpecHandle = ASC->MakeOutgoingSpec(InitStatEffect, MonsterID + 1, EffectContextHandle);

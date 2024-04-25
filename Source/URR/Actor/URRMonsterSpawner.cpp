@@ -5,7 +5,6 @@
 #include "Character/URRCharacterMonster.h"
 #include "Components/BoxComponent.h"
 #include "Components/SplineComponent.h"
-#include "Character/URRCharacterMecha.h"
 #include "AbilitySystemComponent.h"
 
 // Sets default values

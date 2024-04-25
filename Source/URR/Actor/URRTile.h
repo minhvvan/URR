@@ -44,9 +44,6 @@ protected:
 	TSubclassOf<class AURRCharacterUnit> UnitClass;
 
 	UPROPERTY(config)
-	TArray<FSoftClassPath> UnitClasses;
-
-	UPROPERTY(config)
 	TArray<FSoftClassPath> TileMaterials;
 	TSharedPtr<FStreamableHandle> TileMaterialHandle;
 
