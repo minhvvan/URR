@@ -66,6 +66,12 @@ protected:
 	UPROPERTY(EditAnywhere, Category = GAS)
 	TSubclassOf<class UGameplayEffect> InitStatEffect;
 
+	UPROPERTY(EditAnywhere, Category = GAS)
+	TMap<int, TSubclassOf<class UGameplayAbility>> FindTargetAbilities;
+
+	UPROPERTY(EditAnywhere, Category = GAS)
+	TMap<int, TSubclassOf<class UGameplayAbility>> AttakAbilities;
+
 protected:
 	virtual void BeginPlay() override;
 	virtual void PostInitializeComponents() override;

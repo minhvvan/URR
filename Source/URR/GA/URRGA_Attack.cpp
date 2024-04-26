@@ -19,7 +19,6 @@ UURRGA_Attack::UURRGA_Attack()
 void UURRGA_Attack::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
-	BP_ApplyGameplayEffectToTarget(TriggerEventData->TargetData, AttackDamageEffect);
 	
 	AURRCharacterUnit* Unit = Cast<AURRCharacterUnit>(ActorInfo->AvatarActor.Get());
 
@@ -70,7 +69,6 @@ void UURRGA_Attack::OnInterruptedCallback()
 
 void UURRGA_Attack::OnCancelledCallback()
 {
-	URR_LOG(LogURR, Log, TEXT("Cancelled"));
 	bool bReplicateEndAbility = true;
 	bool bWasCancelled = true;
 	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, bReplicateEndAbility, bWasCancelled);

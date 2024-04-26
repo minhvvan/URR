@@ -17,11 +17,10 @@ UURRAT_FindTarget::UURRAT_FindTarget()
 	bSimulatedTask = true;
 }
 
-UURRAT_FindTarget* UURRAT_FindTarget::FindTarget(UGameplayAbility* OwningAbility, FName TaskInstanceName, TSubclassOf<class AURRTA_Trace> TargetActorClass, TSubclassOf<UGameplayEffect> AttackDamageEffect)
+UURRAT_FindTarget* UURRAT_FindTarget::FindTarget(UGameplayAbility* OwningAbility, FName TaskInstanceName, TSubclassOf<class AURRTA_Trace> TargetActorClass)
 {
 	UURRAT_FindTarget* NewTask = NewAbilityTask<UURRAT_FindTarget>(OwningAbility, TaskInstanceName);
 	NewTask->TAClass = TargetActorClass;
-	NewTask->AttackDamageEffect = AttackDamageEffect;
 	return NewTask;
 }
 
@@ -42,6 +41,8 @@ void UURRAT_FindTarget::TickTask(float DeltaTime)
 	Super::TickTask(DeltaTime);
 
 	//Make Target
+	//Attacking¿Ã∏È Pass
+
 	SpawnAndInitializeTargetActor();
 	FinalizeTargetActor();
 }
@@ -100,8 +101,5 @@ void UURRAT_FindTarget::OnTargetDataReadyCallback(const FGameplayAbilityTargetDa
 				UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(Unit, URRTAG_UNIT_ATTACK, PayloadData);
 			}
 		}
-	}
-	else
-	{
 	}
 }

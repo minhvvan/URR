@@ -65,6 +65,18 @@ void AURRCharacterUnit::PostInitializeComponents()
 	{
 		ASC->InitAbilityActorInfo(this, this);
 
+		//if (FindTargetAbilities[Rank])
+		//{
+		//	FGameplayAbilitySpec FindTargetSpec(FindTargetAbilities[Rank]);
+		//	ASC->GiveAbility(FindTargetSpec);
+		//}		
+		//
+		if (AttakAbilities[Rank])
+		{
+			FGameplayAbilitySpec AttackSpec(AttakAbilities[Rank]);
+			ASC->GiveAbility(AttackSpec);
+		}
+
 		FGameplayEffectContextHandle EffectContextHandle = ASC->MakeEffectContext();
 		EffectContextHandle.AddSourceObject(this);
 		FGameplayEffectSpecHandle EffectSpecHandle = ASC->MakeOutgoingSpec(InitStatEffect, Rank + 1, EffectContextHandle);
@@ -79,6 +91,7 @@ void AURRCharacterUnit::PostInitializeComponents()
 			ASC->TryActivateAbility(Spec->Handle);
 		}
 
+		//FindTarget
 		FGameplayAbilitySpec* AttackSpec = ASC->FindAbilitySpecFromInputID(1);
 		if (AttackSpec)
 		{

@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "GA/TA/URRTA_FirstSingle.h"
+#include "GA/TA/URRTA_ArcMulti.h"
 #include "Abilities/GameplayAbility.h"
 #include "Character/URRCharacterMonster.h"
 #include "Components/CapsuleComponent.h"
@@ -13,8 +13,7 @@
 #include "URR.h"
 #include "Physics/URRCollision.h"
 
-
-FGameplayAbilityTargetDataHandle AURRTA_FirstSingle::MakeTargetData() const
+FGameplayAbilityTargetDataHandle AURRTA_ArcMulti::MakeTargetData() const
 {
 	ACharacter* Character = CastChecked<ACharacter>(SourceActor);
 
@@ -33,28 +32,7 @@ FGameplayAbilityTargetDataHandle AURRTA_FirstSingle::MakeTargetData() const
 	bool bHitDetected = GetWorld()->SweepMultiByChannel(OutHitResults, Center, Center, FQuat::Identity, CCHANNEL_URRATTACK, FCollisionShape::MakeSphere(AttackRange), Params);
 
 	FGameplayAbilityTargetDataHandle DataHandle;
-	if (bHitDetected)
-	{
-		FHitResult Target;
-		float MaxDist = 0;
-
-		for (FHitResult& hitResult : OutHitResults)
-		{
-			//선두 고르기
-			AURRCharacterMonster* Monster = CastChecked<AURRCharacterMonster>(hitResult.GetActor());
-			const UURRMonsterAttributeSet* MonsterAttributeSet = Monster->GetAbilitySystemComponent()->GetSet<UURRMonsterAttributeSet>();
-		
-			float dist = MonsterAttributeSet->GetDistance();
-			if (dist > MaxDist)
-			{
-				Target = hitResult;
-				MaxDist = dist;
-			}
-		}
-
-		FGameplayAbilityTargetData_SingleTargetHit* TargetData = new FGameplayAbilityTargetData_SingleTargetHit(Target);
-		DataHandle.Add(TargetData);
-	}
+	
 
 #if ENABLE_DRAW_DEBUG
 
@@ -62,7 +40,7 @@ FGameplayAbilityTargetDataHandle AURRTA_FirstSingle::MakeTargetData() const
 	{
 		FVector CapsuleOrigin = Center;
 		FColor DrawColor = bHitDetected ? FColor::Green : FColor::Red;
-		DrawDebugSphere(GetWorld(), CapsuleOrigin, AttackRange, 32, DrawColor, false, 5.f);
+		//DrawDebugCircleArc(GetWorld(), CapsuleOrigin, AttackRange, 32, DrawColor, false, 5.f);
 	}
 	else
 	{

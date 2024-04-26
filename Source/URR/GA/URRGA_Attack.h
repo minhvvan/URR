@@ -31,8 +31,5 @@ protected:
 	void OnCancelledCallback();
 
 	UPROPERTY(EditAnywhere, category = "GAS")
-	TSubclassOf<class AURRTA_Trace> TargetActorClass;
-
-	UPROPERTY(EditAnywhere, category = "GAS")
 	TSubclassOf<UGameplayEffect> AttackDamageEffect;
 };

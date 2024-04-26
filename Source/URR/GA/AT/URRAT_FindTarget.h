@@ -21,7 +21,7 @@ class URR_API UURRAT_FindTarget : public UAbilityTask
 public:
 	UURRAT_FindTarget();
 
-	static UURRAT_FindTarget* FindTarget(UGameplayAbility* OwningAbility, FName TaskInstanceName, TSubclassOf<class AURRTA_Trace> TargetActorClass, TSubclassOf<UGameplayEffect> AttackDamageEffect);
+	static UURRAT_FindTarget* FindTarget(UGameplayAbility* OwningAbility, FName TaskInstanceName, TSubclassOf<class AURRTA_Trace> TargetActorClass);
 
 	virtual void InitSimulatedTask(UGameplayTasksComponent& InGameplayTasksComponent) override;
 	virtual void Activate() override;

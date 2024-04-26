@@ -1,7 +1,7 @@
 // Fill out your copyright notice in the Description page of Project Settings.
 
 
-#include "GA/TA/URRTA_FirstSingle.h"
+#include "GA/TA/URRTA_MinHPSingle.h"
 #include "Abilities/GameplayAbility.h"
 #include "Character/URRCharacterMonster.h"
 #include "Components/CapsuleComponent.h"
@@ -13,8 +13,7 @@
 #include "URR.h"
 #include "Physics/URRCollision.h"
 
-
-FGameplayAbilityTargetDataHandle AURRTA_FirstSingle::MakeTargetData() const
+FGameplayAbilityTargetDataHandle AURRTA_MinHPSingle::MakeTargetData() const
 {
 	ACharacter* Character = CastChecked<ACharacter>(SourceActor);
 
@@ -36,19 +35,19 @@ FGameplayAbilityTargetDataHandle AURRTA_FirstSingle::MakeTargetData() const
 	if (bHitDetected)
 	{
 		FHitResult Target;
-		float MaxDist = 0;
+		float MinHealth = 0;
 
 		for (FHitResult& hitResult : OutHitResults)
 		{
-			//선두 고르기
+			//max 고르기
 			AURRCharacterMonster* Monster = CastChecked<AURRCharacterMonster>(hitResult.GetActor());
 			const UURRMonsterAttributeSet* MonsterAttributeSet = Monster->GetAbilitySystemComponent()->GetSet<UURRMonsterAttributeSet>();
-		
-			float dist = MonsterAttributeSet->GetDistance();
-			if (dist > MaxDist)
+
+			float monsterHealth = MonsterAttributeSet->GetHealth();
+			if (monsterHealth < MinHealth)
 			{
 				Target = hitResult;
-				MaxDist = dist;
+				MinHealth = monsterHealth;
 			}
 		}
 

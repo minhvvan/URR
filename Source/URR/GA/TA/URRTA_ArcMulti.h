@@ -4,16 +4,16 @@
 
 #include "CoreMinimal.h"
 #include "GA/TA/URRTA_Trace.h"
-#include "URRTA_FirstSingle.generated.h"
+#include "URRTA_ArcMulti.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class URR_API AURRTA_FirstSingle : public AURRTA_Trace
+class URR_API AURRTA_ArcMulti : public AURRTA_Trace
 {
 	GENERATED_BODY()
-
+	
 protected:
 	virtual FGameplayAbilityTargetDataHandle MakeTargetData() const;
 };

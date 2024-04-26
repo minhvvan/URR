@@ -17,8 +17,12 @@ class URR_API AURRTA_Trace : public AGameplayAbilityTargetActor
 public:
 	AURRTA_Trace();
 
+	virtual void StartTargeting(UGameplayAbility* Ability) override;
+	virtual void ConfirmTargetingAndContinue() override;
+
 	virtual void SetShowDebug(bool InShowDebug) { bShowDebug = InShowDebug; };
 
 protected:
+	virtual FGameplayAbilityTargetDataHandle MakeTargetData() const;
 	bool bShowDebug;
 };
