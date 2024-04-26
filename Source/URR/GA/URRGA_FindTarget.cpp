@@ -3,6 +3,7 @@
 
 #include "GA/URRGA_FindTarget.h"
 #include "GA/AT/URRAT_FindTarget.h"
+#include "URR.h"
 
 UURRGA_FindTarget::UURRGA_FindTarget()
 {
@@ -13,7 +14,14 @@ void UURRGA_FindTarget::ActivateAbility(const FGameplayAbilitySpecHandle Handle,
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
-	//AT »ý¼º
 	UURRAT_FindTarget* FindTargetAT = UURRAT_FindTarget::FindTarget(this, TEXT("FindTarget"), TargetActorClass);
+	FindTargetAT->OnComplete.AddDynamic(this, &UURRGA_FindTarget::AbilityTaskCompleteCallback);
 	FindTargetAT->ReadyForActivation();
+}
+
+void UURRGA_FindTarget::AbilityTaskCompleteCallback()
+{
+	bool bReplicateEndAbility = true;
+	bool bWasCancelled = false;
+	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, bReplicateEndAbility, bWasCancelled);
 }

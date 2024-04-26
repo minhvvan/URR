@@ -12,5 +12,4 @@ void UURRGA_AttackSimple::ActivateAbility(const FGameplayAbilitySpecHandle Handl
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 	BP_ApplyGameplayEffectToTarget(TriggerEventData->TargetData, AttackDamageEffect);
-
 }

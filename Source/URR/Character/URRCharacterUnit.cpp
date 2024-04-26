@@ -2,11 +2,13 @@
 
 
 #include "Character/URRCharacterUnit.h"
+#include "Character/URRCharacterMonster.h"
 #include "Attribute/URRUnitAttributeSet.h"
 #include "AbilitySystemComponent.h"
 #include "Engine/AssetManager.h"
 #include "Tag/URRGameplayTag.h"
 #include "URR.h"
+#include "Kismet/KismetMathLibrary.h"
 
 AURRCharacterUnit::AURRCharacterUnit() : Rank(0)
 {
@@ -55,6 +57,7 @@ void AURRCharacterUnit::PossessedBy(AController* NewController)
 void AURRCharacterUnit::BeginPlay()
 {
 	Super::BeginPlay();
+	PrimaryActorTick.bCanEverTick = true;
 }
 
 void AURRCharacterUnit::PostInitializeComponents()
@@ -65,12 +68,13 @@ void AURRCharacterUnit::PostInitializeComponents()
 	{
 		ASC->InitAbilityActorInfo(this, this);
 
-		//if (FindTargetAbilities[Rank])
-		//{
-		//	FGameplayAbilitySpec FindTargetSpec(FindTargetAbilities[Rank]);
-		//	ASC->GiveAbility(FindTargetSpec);
-		//}		
-		//
+		if (FindTargetAbilities[Rank])
+		{
+			FGameplayAbilitySpec FindTargetSpec(FindTargetAbilities[Rank]);
+			FindTargetSpec.InputID = 1;
+			ASC->GiveAbility(FindTargetSpec);
+		}		
+		
 		if (AttakAbilities[Rank])
 		{
 			FGameplayAbilitySpec AttackSpec(AttakAbilities[Rank]);
@@ -91,14 +95,12 @@ void AURRCharacterUnit::PostInitializeComponents()
 			ASC->TryActivateAbility(Spec->Handle);
 		}
 
-		//FindTarget
-		FGameplayAbilitySpec* AttackSpec = ASC->FindAbilitySpecFromInputID(1);
-		if (AttackSpec)
+		FGameplayAbilitySpec* FindTargetSpec = ASC->FindAbilitySpecFromInputID(1);
+		if (FindTargetSpec)
 		{
-			ASC->TryActivateAbility(AttackSpec->Handle);
+			ASC->TryActivateAbility(FindTargetSpec->Handle);
 		}
 	}
-
 
 	auto CharacterMesh = GetMesh();
 	if (CharacterMesh)
@@ -116,7 +118,29 @@ void AURRCharacterUnit::PostInitializeComponents()
 			break;
 		}
 	}
+}
 
+void AURRCharacterUnit::TickActor(float DeltaTime, ELevelTick TickType, FActorTickFunction& ThisTickFunction)
+{
+	Super::TickActor(DeltaTime, TickType, ThisTickFunction);
+
+	if (TargetMonster && ASC->HasMatchingGameplayTag(URRTAG_UNIT_ATTACKING))
+	{
+		FVector TargetPos = TargetMonster->GetActorLocation();
+
+		FRotator NewRot = GetActorRotation();
+		NewRot.Yaw = UKismetMathLibrary::FindLookAtRotation(GetActorLocation(), TargetPos).Yaw;
+
+		SetActorRotation(NewRot);
+	}
+	else
+	{
+		FGameplayAbilitySpec* FindTargetSpec = ASC->FindAbilitySpecFromInputID(1);
+		if (FindTargetSpec)
+		{
+			ASC->TryActivateAbility(FindTargetSpec->Handle);
+		}
+	}
 }
 
 
@@ -204,6 +228,11 @@ void AURRCharacterUnit::Init(int rank)
 	}
 }
 
+void AURRCharacterUnit::SetTargetMonster(AURRCharacterMonster* target)
+{
+	if (target == nullptr) URR_LOG(LogURR, Log, TEXT("Make Null"));
+	TargetMonster = target;
+}
 
 void AURRCharacterUnit::UnitMeshLoadCompleted()
 {

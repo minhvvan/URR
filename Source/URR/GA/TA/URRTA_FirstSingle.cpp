@@ -28,7 +28,8 @@ FGameplayAbilityTargetDataHandle AURRTA_FirstSingle::MakeTargetData() const
 	const float AttackRange = AttrubuteSet->GetAttackRange();
 
 	FCollisionQueryParams Params(SCENE_QUERY_STAT(UURRAT_Trace), false, Character);
-	const FVector Center = Character->GetActorLocation();
+	FVector Center = Character->GetActorLocation();
+	Center.Z -= 400;
 
 	bool bHitDetected = GetWorld()->SweepMultiByChannel(OutHitResults, Center, Center, FQuat::Identity, CCHANNEL_URRATTACK, FCollisionShape::MakeSphere(AttackRange), Params);
 

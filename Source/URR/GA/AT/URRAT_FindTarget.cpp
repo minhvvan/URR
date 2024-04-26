@@ -4,6 +4,7 @@
 #include "GA/AT/URRAT_FindTarget.h"
 #include "GA/TA/URRTA_FirstSingle.h"
 #include "GA/TA/URRTA_Trace.h"
+#include "Character/URRCharacterUnit.h"
 #include "Character/URRCharacterMonster.h"
 #include "AbilitySystemComponent.h"
 #include "AbilitySystemBlueprintLibrary.h"
@@ -32,20 +33,15 @@ void UURRAT_FindTarget::InitSimulatedTask(UGameplayTasksComponent& InGameplayTas
 void UURRAT_FindTarget::Activate()
 {
 	Super::Activate();
-}
-
-void UURRAT_FindTarget::TickTask(float DeltaTime)
-{
-	if (!TAClass) return;
-
-	Super::TickTask(DeltaTime);
-
-	//Make Target
-	//AttackingÀÌ¸é Pass
 
 	SpawnAndInitializeTargetActor();
 	FinalizeTargetActor();
 }
+
+void UURRAT_FindTarget::TickTask(float DeltaTime)
+{
+	Super::TickTask(DeltaTime);
+}	
 
 void UURRAT_FindTarget::OnDestroy(bool AbilityIsEnding)
 {
@@ -58,7 +54,7 @@ void UURRAT_FindTarget::SpawnAndInitializeTargetActor()
 	if (SpawnedTargetActor)
 	{
 		SpawnedTargetActor->TargetDataReadyDelegate.AddUObject(this, &UURRAT_FindTarget::OnTargetDataReadyCallback);
-		//SpawnedTargetActor->SetShowDebug(true);
+		SpawnedTargetActor->SetShowDebug(true);
 	}
 }
 
@@ -84,22 +80,17 @@ void UURRAT_FindTarget::OnTargetDataReadyCallback(const FGameplayAbilityTargetDa
 		if (ASC)
 		{
 			FHitResult HitResult = UAbilitySystemBlueprintLibrary::GetHitResultFromTargetData(DataHandle, 0);
-			AURRCharacterMonster* TargetMonster = CastChecked<AURRCharacterMonster>(HitResult.GetActor());
-			AActor* Unit = ASC->GetAvatarActor();
+			AURRCharacterUnit* Unit = CastChecked<AURRCharacterUnit>(ASC->GetAvatarActor());
 
-			if (Unit && TargetMonster)
+			if (Unit)
 			{
-				FVector TargetPos = TargetMonster->GetActorLocation();
-
-				FRotator NewRot = Unit->GetActorRotation();
-				NewRot.Yaw = UKismetMathLibrary::FindLookAtRotation(Unit->GetActorLocation(), TargetPos).Yaw;
-
-				Unit->SetActorRotation(NewRot);
-
 				FGameplayEventData PayloadData;
 				PayloadData.TargetData = DataHandle;
 				UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(Unit, URRTAG_UNIT_ATTACK, PayloadData);
 			}
 		}
 	}
+
+	OnComplete.Broadcast();
+	EndTask();
 }

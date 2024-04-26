@@ -7,7 +7,7 @@
 #include "URRAT_FindTarget.generated.h"
 
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FTraceResultDelegate, const FGameplayAbilityTargetDataHandle&, TargetDataHandle);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FTraceResultDelegate);
 
 /**
 * 

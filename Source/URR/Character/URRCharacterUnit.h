@@ -75,6 +75,7 @@ protected:
 protected:
 	virtual void BeginPlay() override;
 	virtual void PostInitializeComponents() override;
+	virtual void TickActor(float DeltaTime, enum ELevelTick TickType, FActorTickFunction& ThisTickFunction);
 
 public:
 	virtual void Init(int rank);
@@ -83,6 +84,8 @@ public:
 	FORCEINLINE class UAnimMontage* GetAttackMontage() const { return AttackActionMontage; }
 
 	FOnLoadCompleted OnLoadCompleteDelegate;
+
+	void SetTargetMonster(class AURRCharacterMonster* target);
 
 protected:
 	void UnitMeshLoadCompleted();
@@ -112,6 +115,9 @@ protected:
 	
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animation)
 	TObjectPtr<class UAnimMontage> AttackActionMontage;
+
+	UPROPERTY()
+	TObjectPtr<AURRCharacterMonster> TargetMonster;
 
 protected:
 	TArray<bool> LoadCompletedPart;

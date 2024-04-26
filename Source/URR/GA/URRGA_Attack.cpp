@@ -3,6 +3,7 @@
 
 #include "GA/URRGA_Attack.h"
 #include "Character/URRCharacterUnit.h"
+#include "Character/URRCharacterMonster.h"
 #include "GA/AT/URRAT_FindTarget.h"
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
 #include "AbilitySystemBlueprintLibrary.h"
@@ -21,7 +22,11 @@ void UURRGA_Attack::ActivateAbility(const FGameplayAbilitySpecHandle Handle, con
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 	
 	AURRCharacterUnit* Unit = Cast<AURRCharacterUnit>(ActorInfo->AvatarActor.Get());
+	AURRCharacterMonster* Monster = CastChecked<AURRCharacterMonster>(UAbilitySystemBlueprintLibrary::GetHitResultFromTargetData(TriggerEventData->TargetData,0).GetActor());
 
+	Unit->SetTargetMonster(Monster);
+
+	URR_LOG(LogURR, Log, TEXT("Activete"));
 	UAbilityTask_PlayMontageAndWait* MontageAT = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(this, TEXT("PlayMontage"), Unit->GetAttackMontage(), 1.f);
 	MontageAT->OnCompleted.AddDynamic(this, &UURRGA_Attack::OnCompleteCallback);
 	MontageAT->OnInterrupted.AddDynamic(this, &UURRGA_Attack::OnInterruptedCallback);
@@ -51,6 +56,13 @@ void UURRGA_Attack::ApplyCooldown(const FGameplayAbilitySpecHandle Handle, const
 	{
 		ApplyGameplayEffectToOwner(Handle, ActorInfo, ActivationInfo, CooldownGE, GetAbilityLevel(Handle, ActorInfo));
 	}
+}
+
+void UURRGA_Attack::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
+{
+	AURRCharacterUnit* Unit = CastChecked<AURRCharacterUnit>(ActorInfo->AvatarActor.Get());
+
+	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 }
 
 void UURRGA_Attack::OnCompleteCallback()
