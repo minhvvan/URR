@@ -72,6 +72,9 @@ protected:
 	UPROPERTY(EditAnywhere, Category = GAS)
 	TMap<int, TSubclassOf<class UGameplayAbility>> AttakAbilities;
 
+	UPROPERTY(EditAnywhere, Category = GAS)
+	TMap<int, TSubclassOf<class AURRProjectile>> ProjectileClasses;
+
 protected:
 	virtual void BeginPlay() override;
 	virtual void PostInitializeComponents() override;
@@ -86,6 +89,8 @@ public:
 	FOnLoadCompleted OnLoadCompleteDelegate;
 
 	void SetTargetMonster(class AURRCharacterMonster* target);
+	AURRCharacterMonster* GetTargetMonster();
+	TSubclassOf<AURRProjectile> GetProjectileClass();
 
 protected:
 	void UnitMeshLoadCompleted();
@@ -118,6 +123,9 @@ protected:
 
 	UPROPERTY()
 	TObjectPtr<AURRCharacterMonster> TargetMonster;
+
+	UPROPERTY()
+	TSubclassOf<AURRProjectile> ProjectileClass;
 
 protected:
 	TArray<bool> LoadCompletedPart;

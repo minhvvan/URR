@@ -3,6 +3,7 @@
 
 #include "Character/URRCharacterUnit.h"
 #include "Character/URRCharacterMonster.h"
+#include "Actor/URRProjectile.h"
 #include "Attribute/URRUnitAttributeSet.h"
 #include "AbilitySystemComponent.h"
 #include "Engine/AssetManager.h"
@@ -177,12 +178,14 @@ void AURRCharacterUnit::Init(int rank)
 		AdditiveMeshHandles.Add((int)EAdditiveMeshEnum::MESH_Helmet, UAssetManager::Get().GetStreamableManager().RequestAsyncLoad(AdditiveMeshes[(int)EAdditiveMeshEnum::MESH_Helmet], FStreamableDelegate::CreateUObject(this, &AURRCharacterUnit::HelmetMeshLoadCompleted)));
 		AdditiveMeshHandles.Add((int)EAdditiveMeshEnum::MESH_BackPack, UAssetManager::Get().GetStreamableManager().RequestAsyncLoad(AdditiveMeshes[(int)EAdditiveMeshEnum::MESH_BackPack], FStreamableDelegate::CreateUObject(this, &AURRCharacterUnit::BackPackMeshLoadCompleted)));
 		AdditiveMeshHandles.Add((int)EAdditiveMeshEnum::MESH_Mattress, UAssetManager::Get().GetStreamableManager().RequestAsyncLoad(AdditiveMeshes[(int)EAdditiveMeshEnum::MESH_Mattress], FStreamableDelegate::CreateUObject(this, &AURRCharacterUnit::MattressMeshLoadCompleted)));
+		ProjectileClass = ProjectileClasses[0];
 		break;
 	case 3:
 		WeaponMeshHandle = UAssetManager::Get().GetStreamableManager().RequestAsyncLoad(WeaponMeshes[Rank], FStreamableDelegate::CreateUObject(this, &AURRCharacterUnit::WeaponMeshLoadCompleted));
 		AdditiveMeshHandles.Add((int)EAdditiveMeshEnum::MESH_Helmet, UAssetManager::Get().GetStreamableManager().RequestAsyncLoad(AdditiveMeshes[(int)EAdditiveMeshEnum::MESH_Helmet], FStreamableDelegate::CreateUObject(this, &AURRCharacterUnit::HelmetMeshLoadCompleted)));
 		AdditiveMeshHandles.Add((int)EAdditiveMeshEnum::MESH_BackPack, UAssetManager::Get().GetStreamableManager().RequestAsyncLoad(AdditiveMeshes[(int)EAdditiveMeshEnum::MESH_BackPack], FStreamableDelegate::CreateUObject(this, &AURRCharacterUnit::BackPackMeshLoadCompleted)));
 		LoadCompletedPart[(int)EAssetType::ASSET_ACC] = true;
+		ProjectileClass = ProjectileClasses[1];
 		break;
 	case 4:
 		LoadCompletedPart[(int)EAssetType::ASSET_WEAPON] = true;
@@ -232,6 +235,16 @@ void AURRCharacterUnit::SetTargetMonster(AURRCharacterMonster* target)
 {
 	if (target == nullptr) URR_LOG(LogURR, Log, TEXT("Make Null"));
 	TargetMonster = target;
+}
+
+AURRCharacterMonster* AURRCharacterUnit::GetTargetMonster()
+{
+	return TargetMonster;
+}
+
+TSubclassOf<AURRProjectile> AURRCharacterUnit::GetProjectileClass()
+{
+	return ProjectileClass;
 }
 
 void AURRCharacterUnit::UnitMeshLoadCompleted()
