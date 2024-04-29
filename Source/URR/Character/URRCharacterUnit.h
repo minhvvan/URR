@@ -72,7 +72,7 @@ protected:
 	UPROPERTY(EditAnywhere, Category = GAS)
 	TMap<int, TSubclassOf<class UGameplayAbility>> AttakAbilities;
 
-	UPROPERTY(EditAnywhere, Category = GAS)
+	UPROPERTY(EditAnywhere)
 	TMap<int, TSubclassOf<class AURRProjectile>> ProjectileClasses;
 
 protected:

@@ -5,6 +5,7 @@
 #include "Components/SphereComponent.h"
 #include "AbilitySystemComponent.h"
 #include "GameFramework/ProjectileMovementComponent.h"
+#include "Attribute/URRProjectileAttributeSet.h"
 
 
 // Sets default values
@@ -26,6 +27,8 @@ AURRProjectile::AURRProjectile()
 	ProjectileMovementComponent->SetUpdatedComponent(Capsule);
 	ProjectileMovementComponent->bRotationFollowsVelocity = true;
 	ProjectileMovementComponent->bShouldBounce = false;
+
+	ProjectileAttributeSet = CreateDefaultSubobject<UURRProjectileAttributeSet>(TEXT("ProjectileAttributeSet"));
 }
 
 UAbilitySystemComponent* AURRProjectile::GetAbilitySystemComponent() const
@@ -56,6 +59,7 @@ void AURRProjectile::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
 
+	ASC->InitAbilityActorInfo(this, this);
 	Capsule->OnComponentBeginOverlap.AddDynamic(this, &AURRProjectile::BeginOverlapCallback);
 }
 

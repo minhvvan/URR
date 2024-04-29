@@ -19,6 +19,24 @@ public:
 	virtual UAbilitySystemComponent* GetAbilitySystemComponent() const override;
 
 protected:
+	UPROPERTY(EditAnywhere, Category = GAS)
+	TObjectPtr<UAbilitySystemComponent> ASC;
+
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<class USphereComponent> Capsule;
+
+	UPROPERTY(EditAnywhere)
+	TObjectPtr<UStaticMeshComponent> Mesh;
+
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<class UProjectileMovementComponent> ProjectileMovementComponent;
+
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<class UURRProjectileAttributeSet> ProjectileAttributeSet;
+
+	UPROPERTY(EditAnywhere, Category = GAS)
+	TSubclassOf<class UGameplayEffect> AttackEffect;
+protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
@@ -34,16 +52,4 @@ protected:
 	UFUNCTION()
 	virtual void BeginOverlapCallback(class UPrimitiveComponent* OverlappedComp, class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
 
-protected:
-	UPROPERTY(EditAnywhere, Category = GAS)
-	TObjectPtr<UAbilitySystemComponent> ASC;
-
-	UPROPERTY(EditAnywhere)
-	TObjectPtr<class USphereComponent> Capsule;
-
-	UPROPERTY(EditAnywhere)
-	TObjectPtr<UStaticMeshComponent> Mesh;
-
-	UPROPERTY(VisibleAnywhere)
-	TObjectPtr<class UProjectileMovementComponent> ProjectileMovementComponent;
 };
