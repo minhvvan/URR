@@ -92,6 +92,8 @@ public:
 	AURRCharacterMonster* GetTargetMonster();
 	TSubclassOf<AURRProjectile> GetProjectileClass();
 
+	FTransform GetMuzzleTransform();
+
 protected:
 	void UnitMeshLoadCompleted();
 	void WeaponMeshLoadCompleted();
@@ -168,4 +170,7 @@ protected:
 
 	UPROPERTY(config)
 	TArray<FName> SocketName;
+
+	UPROPERTY(config)
+	TArray<FName> MuzzleSocketName;
 };

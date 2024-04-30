@@ -5,6 +5,7 @@
 #include "AbilitySystemBlueprintLibrary.h"
 #include "Character/URRCharacterUnit.h"
 #include "Character/URRCharacterMonster.h"
+#include "Attribute/URRUnitAttributeSet.h"
 #include "Actor/URRProjectile.h"
 #include "Kismet/GameplayStatics.h"
 #include "AbilitySystemComponent.h"
@@ -32,27 +33,22 @@ void UURRGA_AttackSpwanActor::ActivateAbility(const FGameplayAbilitySpecHandle H
 		TSubclassOf<AURRProjectile> Projectileclass = Unit->GetProjectileClass();
 		if (!Projectileclass || !TargetMonster) return;
 
-		FActorSpawnParameters params;
-		FVector SpawnLoc = Unit->GetActorLocation();
-		FVector EndLoc = TargetMonster->GetActorLocation();
-		float arcValue = .5f;
-
-		AURRProjectile* Projectile = GetWorld()->SpawnActor<AURRProjectile>(Projectileclass, SpawnLoc, FRotator::ZeroRotator, params);
-		if (!Projectile) return;
+		AURRProjectile* Projectile = GetWorld()->SpawnActorDeferred<AURRProjectile>(Projectileclass, FTransform::Identity, Unit, Unit, ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn);
 
 		//Projectile StatÃÊ±âÈ­
 		UAbilitySystemComponent* SourceASC = Unit->GetAbilitySystemComponent();
-		UAbilitySystemComponent* TargetASC = Projectile->GetAbilitySystemComponent();
-		if (!SourceASC || !TargetASC) return;
+		if (!SourceASC) return;
 
-		FGameplayEffectContextHandle EffectContextHandle = SourceASC->MakeEffectContext();
-		EffectContextHandle.AddSourceObject(this);
-		FGameplayEffectSpecHandle EffectSpecHandle = SourceASC->MakeOutgoingSpec(InitStatEffect, 0, EffectContextHandle);
-		if (EffectSpecHandle.IsValid())
-		{
-			EffectSpecHandle.Data->SetSetByCallerMagnitude(URRTAG_DATA_KNOCKBACK, 200.f);
-			SourceASC->BP_ApplyGameplayEffectSpecToTarget(EffectSpecHandle, TargetASC);
-		}
+		const UURRUnitAttributeSet* UnitAttribute = SourceASC->GetSet<UURRUnitAttributeSet>();
+		if (!UnitAttribute) return;
+
+		Projectile->SetAttackRate(UnitAttribute->GetAttackRate());
+		Projectile->FinishSpawning(Unit->GetMuzzleTransform());
+
+		FActorSpawnParameters params;
+		FVector SpawnLoc = Projectile->GetActorLocation();
+		FVector EndLoc = TargetMonster->GetActorLocation();
+		float arcValue = .5f;
 
 		FVector outVelocity;
 		if (UGameplayStatics::SuggestProjectileVelocity_CustomArc(GetWorld(), OUT outVelocity, SpawnLoc, EndLoc, GetWorld()->GetGravityZ(), arcValue))

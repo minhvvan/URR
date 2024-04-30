@@ -36,6 +36,5 @@ public:
 
 public:
 	bool bIsFinished;
-	float Distance;
 	FVector GatePos;
 };

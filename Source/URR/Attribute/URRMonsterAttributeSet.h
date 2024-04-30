@@ -29,6 +29,9 @@ public:
 	ATTRIBUTE_ACCESSORS(UURRMonsterAttributeSet, Speed);
 	ATTRIBUTE_ACCESSORS(UURRMonsterAttributeSet, Distance);
 	ATTRIBUTE_ACCESSORS(UURRMonsterAttributeSet, Damage);
+	ATTRIBUTE_ACCESSORS(UURRMonsterAttributeSet, KnockBackDistance);
+
+	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue);
 
 	virtual bool PreGameplayEffectExecute(struct FGameplayEffectModCallbackData& Data);
 	virtual void PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data) override;
@@ -53,6 +56,9 @@ protected:
 	
 	UPROPERTY(BlueprintReadOnly, Category = Stat, meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData Damage;
+
+	UPROPERTY(BlueprintReadOnly, Category = Stat, meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData KnockBackDistance;
 
 	bool bOutOfHealth = false;
 };

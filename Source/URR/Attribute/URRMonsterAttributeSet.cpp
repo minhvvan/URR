@@ -11,8 +11,14 @@ UURRMonsterAttributeSet::UURRMonsterAttributeSet():
 	Health(1),
 	MaxHealth(1),
 	Speed(0),
-	Distance(0)
+	Distance(0),
+	KnockBackDistance(0)
 {
+}
+
+void UURRMonsterAttributeSet::PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue)
+{
+	Super::PreAttributeChange(Attribute, NewValue);
 }
 
 bool UURRMonsterAttributeSet::PreGameplayEffectExecute(FGameplayEffectModCallbackData& Data)
@@ -29,11 +35,18 @@ void UURRMonsterAttributeSet::PostGameplayEffectExecute(const FGameplayEffectMod
 {
 	Super::PostGameplayEffectExecute(Data);
 	float MinimumHealth = 0.f;
+	float MinimumDistance = 0.f;
 
 	if (Data.EvaluatedData.Attribute == GetDamageAttribute())
 	{
 		SetHealth(FMath::Clamp(GetHealth() - GetDamage(), MinimumHealth, GetMaxHealth()));
 		SetDamage(0.f);
+	}
+	
+	if (Data.EvaluatedData.Attribute == GetKnockBackDistanceAttribute())
+	{
+		SetDistance(FMath::Clamp(GetDistance() - GetKnockBackDistance(), MinimumDistance, GetDistance()));
+		SetKnockBackDistance(0.f);
 	}
 
 	if ((GetHealth() <= 0.f) && !bOutOfHealth)

@@ -5,8 +5,9 @@
 #include "Components/SphereComponent.h"
 #include "Character/URRCharacterMonster.h"
 #include "Attribute/URRProjectileAttributeSet.h"
-#include "URR.h"
 #include "Physics/URRCollision.h"
+#include "Tag/URRGameplayTag.h"
+#include "URR.h"
 
 AURRMine::AURRMine()
 {
@@ -21,15 +22,21 @@ void AURRMine::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
 
-	Capsule->OnComponentHit.AddDynamic(this, &AURRMine::OnHitCallback);
+	FGameplayEffectContextHandle Context = ASC->MakeEffectContext();
+	FGameplayEffectSpecHandle Spec = ASC->MakeOutgoingSpec(InitStatEffect, 0, Context);
+	if (Spec.IsValid())
+	{
+		Spec.Data->SetSetByCallerMagnitude(URRTAG_DATA_ATTACKRANGE, 500.f);
+		Spec.Data->SetSetByCallerMagnitude(URRTAG_DATA_ATTACKRATE, AttackRate);
+		Spec.Data->SetSetByCallerMagnitude(URRTAG_DATA_KNOCKBACK, 200.f);
+		Spec.Data->SetSetByCallerMagnitude(URRTAG_DATA_SLOW, 0.f);
+		ASC->BP_ApplyGameplayEffectSpecToSelf(Spec);
+	}
 }
 
 void AURRMine::BeginOverlapCallback(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	if (OtherActor == this) return;
-
-	//URR_LOG(LogURR, Log, TEXT("Overalp: %s"), *OtherActor->GetName());
-	//Monster -> Boom
+	if (OtherActor == this || OtherActor == GetOwner()) return;
 
 	float AttackRange = ProjectileAttributeSet->GetAttackRange();
 	TArray<FOverlapResult> OverlapResults;
@@ -45,11 +52,16 @@ void AURRMine::BeginOverlapCallback(UPrimitiveComponent* OverlappedComp, AActor*
 			if (!TargetASC) continue;
 
 			FGameplayEffectContextHandle Context = ASC->MakeEffectContext();
-			FGameplayEffectSpecHandle Spec = ASC->MakeOutgoingSpec(AttackEffect, 0, Context);
-			if (Spec.IsValid())
+			FGameplayEffectSpecHandle AttackSpec = ASC->MakeOutgoingSpec(AttackEffect, 0, Context);
+			if (AttackSpec.IsValid())
 			{
-				URR_LOG(LogURR, Log, TEXT("Overlap: %s"), *Monster->GetName());
-				ASC->BP_ApplyGameplayEffectSpecToTarget(Spec, Monster->GetAbilitySystemComponent());
+				ASC->BP_ApplyGameplayEffectSpecToTarget(AttackSpec, Monster->GetAbilitySystemComponent());
+			}
+
+			FGameplayEffectSpecHandle DebuffSpec = ASC->MakeOutgoingSpec(DebuffEffect, 0, Context);
+			if (DebuffSpec.IsValid())
+			{
+				ASC->BP_ApplyGameplayEffectSpecToTarget(DebuffSpec, Monster->GetAbilitySystemComponent());
 			}
 		}
 
@@ -60,6 +72,5 @@ void AURRMine::BeginOverlapCallback(UPrimitiveComponent* OverlappedComp, AActor*
 void AURRMine::OnHitCallback(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit)
 {
 	//Ground -> ¼³Ä¡
-	URR_LOG(LogURR, Log, TEXT("Hit: %s"), *OtherActor->GetName());
 	SetActorRotation(FQuat::Identity);
 }

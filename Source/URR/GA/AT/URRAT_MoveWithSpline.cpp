@@ -29,8 +29,6 @@ UURRAT_MoveWithSpline* UURRAT_MoveWithSpline::MoveToLocation(UGameplayAbility* O
 void UURRAT_MoveWithSpline::InitSimulatedTask(UGameplayTasksComponent& InGameplayTasksComponent)
 {
 	Super::InitSimulatedTask(InGameplayTasksComponent);
-	
-	Distance = 0;
 }
 
 
@@ -72,6 +70,7 @@ void UURRAT_MoveWithSpline::TickTask(float DeltaTime)
 			if (URRMonsterAttributeSet)
 			{
 				float Speed = URRMonsterAttributeSet->GetSpeed();
+				float Distance = URRMonsterAttributeSet->GetDistance();
 				Distance += DeltaTime * Speed;
 
 				AURRMonsterSpawner* Spanwer = MyCharacter->GetSpawner();

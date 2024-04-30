@@ -233,7 +233,6 @@ void AURRCharacterUnit::Init(int rank)
 
 void AURRCharacterUnit::SetTargetMonster(AURRCharacterMonster* target)
 {
-	if (target == nullptr) URR_LOG(LogURR, Log, TEXT("Make Null"));
 	TargetMonster = target;
 }
 
@@ -245,6 +244,20 @@ AURRCharacterMonster* AURRCharacterUnit::GetTargetMonster()
 TSubclassOf<AURRProjectile> AURRCharacterUnit::GetProjectileClass()
 {
 	return ProjectileClass;
+}
+
+FTransform AURRCharacterUnit::GetMuzzleTransform()
+{
+	if (Rank == 2)
+	{
+		return GetMesh()->GetSocketTransform(MuzzleSocketName[0]);
+	}
+	else if(Rank == 3)
+	{
+		return GetMesh()->GetSocketTransform(MuzzleSocketName[1]);
+	}
+
+	return FTransform::Identity;
 }
 
 void AURRCharacterUnit::UnitMeshLoadCompleted()
