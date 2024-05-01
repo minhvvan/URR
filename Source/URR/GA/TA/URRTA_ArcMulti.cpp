@@ -26,13 +26,26 @@ FGameplayAbilityTargetDataHandle AURRTA_ArcMulti::MakeTargetData() const
 	TArray<FHitResult> OutHitResults;
 	const float AttackRange = AttrubuteSet->GetAttackRange();
 
-	FCollisionQueryParams Params(SCENE_QUERY_STAT(UURRAT_Trace), false, Character);
+	FCollisionQueryParams Params(SCENE_QUERY_STAT(UURRAttack), false, Character);
 	const FVector Center = Character->GetActorLocation();
 
 	bool bHitDetected = GetWorld()->SweepMultiByChannel(OutHitResults, Center, Center, FQuat::Identity, CCHANNEL_URRATTACK, FCollisionShape::MakeSphere(AttackRange), Params);
 
+	TArray<TWeakObjectPtr<AActor>> HittedActors;
+	if (bHitDetected)
+	{
+		for (auto hitResult : OutHitResults)
+		{
+			AURRCharacterMonster* Monster = CastChecked<AURRCharacterMonster>(hitResult.GetActor());
+			HittedActors.Add(Monster);
+		}
+	}
+
 	FGameplayAbilityTargetDataHandle DataHandle;
-	
+	FGameplayAbilityTargetData_ActorArray* TargetData = new FGameplayAbilityTargetData_ActorArray();
+	TargetData->SetActors(HittedActors);
+
+	DataHandle.Add(TargetData);
 
 #if ENABLE_DRAW_DEBUG
 
@@ -40,11 +53,7 @@ FGameplayAbilityTargetDataHandle AURRTA_ArcMulti::MakeTargetData() const
 	{
 		FVector CapsuleOrigin = Center;
 		FColor DrawColor = bHitDetected ? FColor::Green : FColor::Red;
-		//DrawDebugCircleArc(GetWorld(), CapsuleOrigin, AttackRange, 32, DrawColor, false, 5.f);
-	}
-	else
-	{
-		//URR_LOG(LogURR, Log, TEXT("No Debug"));
+		DrawDebugSphere(GetWorld(), CapsuleOrigin, AttackRange, 32, DrawColor, false, 5.f);
 	}
 
 #endif

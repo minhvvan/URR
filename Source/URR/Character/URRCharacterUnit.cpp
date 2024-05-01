@@ -198,6 +198,7 @@ void AURRCharacterUnit::Init(int rank)
 		LoadCompletedPart[(int)EAssetType::ASSET_HEAD] = true;
 		LoadCompletedPart[(int)EAssetType::ASSET_BODY] = true;
 		LoadCompletedPart[(int)EAssetType::ASSET_ACC] = true;
+		ProjectileClass = ProjectileClasses[1];
 		break;
 	case 6:
 		LoadCompletedPart[(int)EAssetType::ASSET_WEAPON] = true;
@@ -255,6 +256,10 @@ FTransform AURRCharacterUnit::GetMuzzleTransform()
 	else if(Rank == 3)
 	{
 		return GetMesh()->GetSocketTransform(MuzzleSocketName[1]);
+	}
+	else if (Rank == 5)
+	{
+		return GetMesh()->GetSocketTransform(MuzzleSocketName[2]);
 	}
 
 	return FTransform::Identity;

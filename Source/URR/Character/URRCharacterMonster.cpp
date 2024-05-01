@@ -110,14 +110,14 @@ void AURRCharacterMonster::PostInitializeComponents()
 		if (EffectSpecHandle.IsValid())
 		{
 			ASC->BP_ApplyGameplayEffectSpecToSelf(EffectSpecHandle);
+		}
 
-			for (auto StartAbility : StartAbilities)
-			{
-				FGameplayAbilitySpec StartSpec(StartAbility.Value);
-				StartSpec.InputID = StartAbility.Key;
+		for (auto StartAbility : StartAbilities)
+		{
+			FGameplayAbilitySpec StartSpec(StartAbility.Value);
+			StartSpec.InputID = StartAbility.Key;
 
-				ASC->GiveAbility(StartSpec);
-			}
+			ASC->GiveAbility(StartSpec);
 		}
     }
 

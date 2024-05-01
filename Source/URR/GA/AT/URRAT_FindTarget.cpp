@@ -90,6 +90,22 @@ void UURRAT_FindTarget::OnTargetDataReadyCallback(const FGameplayAbilityTargetDa
 			}
 		}
 	}
+	else if (UAbilitySystemBlueprintLibrary::TargetDataHasActor(DataHandle, 0))
+	{
+		UAbilitySystemComponent* ASC = AbilitySystemComponent.Get();
+		if (ASC)
+		{
+			TArray<AActor*> HittedActors = UAbilitySystemBlueprintLibrary::GetActorsFromTargetData(DataHandle, 0);
+			AURRCharacterUnit* Unit = CastChecked<AURRCharacterUnit>(ASC->GetAvatarActor());
+
+			if (Unit)
+			{
+				FGameplayEventData PayloadData;
+				PayloadData.TargetData = DataHandle;
+				UAbilitySystemBlueprintLibrary::SendGameplayEventToActor(Unit, URRTAG_UNIT_ATTACK, PayloadData);
+			}
+		}
+	}
 
 	OnComplete.Broadcast();
 	EndTask();

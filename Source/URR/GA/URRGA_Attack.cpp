@@ -22,7 +22,15 @@ void UURRGA_Attack::ActivateAbility(const FGameplayAbilitySpecHandle Handle, con
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 	
 	AURRCharacterUnit* Unit = Cast<AURRCharacterUnit>(ActorInfo->AvatarActor.Get());
-	AURRCharacterMonster* Monster = CastChecked<AURRCharacterMonster>(UAbilitySystemBlueprintLibrary::GetHitResultFromTargetData(TriggerEventData->TargetData,0).GetActor());
+	AURRCharacterMonster* Monster = Cast<AURRCharacterMonster>(UAbilitySystemBlueprintLibrary::GetHitResultFromTargetData(TriggerEventData->TargetData, 0).GetActor());
+	
+	if (UAbilitySystemBlueprintLibrary::TargetDataHasActor(TriggerEventData->TargetData, 0))
+	{
+		TArray<AActor*> Monsters = (UAbilitySystemBlueprintLibrary::GetActorsFromTargetData(TriggerEventData->TargetData, 0));
+		Monster = CastChecked<AURRCharacterMonster>(Monsters[0]);
+	}
+
+	if (!Monster) return;
 
 	Unit->SetTargetMonster(Monster);
 

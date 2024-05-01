@@ -20,7 +20,7 @@ void UURRGA_SpawnUnit::ActivateAbility(const FGameplayAbilitySpecHandle Handle, 
 	if (Tile)
 	{
 		int temp = FMath::Rand() % 100;
-		int rank = 2;
+		int rank = 9;
 		//if (temp < 70) rank = 0;
 		//else if (temp < 90) rank = 1;
 		//else if (temp < 98) rank = 2;

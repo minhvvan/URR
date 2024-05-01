@@ -71,5 +71,5 @@ public:
 
 	void AddSpawnedMonster(AURRCharacterMonster* monster);
 
-	FTransform GetPathTransform(float DeltaTime);
+	FTransform GetPathTransform(float Distance);
 };

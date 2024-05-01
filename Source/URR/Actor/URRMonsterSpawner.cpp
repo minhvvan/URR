@@ -97,11 +97,11 @@ void AURRMonsterSpawner::AddSpawnedMonster(AURRCharacterMonster* monster)
 	monster->SetSpawner(this);
 }
 
-FTransform AURRMonsterSpawner::GetPathTransform(float DeltaTime)
+FTransform AURRMonsterSpawner::GetPathTransform(float Distance)
 {
 	if (PathSpline)
 	{
-		return PathSpline->GetTransformAtDistanceAlongSpline(DeltaTime, ESplineCoordinateSpace::World);
+		return PathSpline->GetTransformAtDistanceAlongSpline(Distance, ESplineCoordinateSpace::World);
 	}
 
 	return FTransform();
