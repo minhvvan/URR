@@ -43,6 +43,8 @@ void UURRGA_AttackSpwanActor::ActivateAbility(const FGameplayAbilitySpecHandle H
 		if (!UnitAttribute) return;
 
 		Projectile->SetAttackRate(UnitAttribute->GetAttackRate());
+		Projectile->SetKnockBackDist(UnitAttribute->GetKnockBackDist());
+		Projectile->SetSlowRate(UnitAttribute->GetSlowRate());
 		Projectile->FinishSpawning(Unit->GetMuzzleTransform());
 
 		FActorSpawnParameters params;

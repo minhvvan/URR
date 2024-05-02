@@ -30,6 +30,8 @@ public:
 	ATTRIBUTE_ACCESSORS(UURRUnitAttributeSet, AttackSpeed);
 	ATTRIBUTE_ACCESSORS(UURRUnitAttributeSet, CriticalProbability);
 	ATTRIBUTE_ACCESSORS(UURRUnitAttributeSet, CriticalAttackRate);
+	ATTRIBUTE_ACCESSORS(UURRUnitAttributeSet, KnockBackDist);
+	ATTRIBUTE_ACCESSORS(UURRUnitAttributeSet, SlowRate);
 
 protected:
 	UPROPERTY(BlueprintReadOnly, Category = Stat, meta = (AllowPrivateAccess = true))
@@ -49,4 +51,10 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, Category = Stat, meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData CriticalAttackRate;
+
+	UPROPERTY(BlueprintReadOnly, Category = Stat, meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData KnockBackDist;
+
+	UPROPERTY(BlueprintReadOnly, Category = Stat, meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData SlowRate;
 };

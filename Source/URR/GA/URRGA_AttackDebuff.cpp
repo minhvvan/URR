@@ -2,6 +2,8 @@
 
 
 #include "GA/URRGA_AttackDebuff.h"
+#include "AbilitySystemComponent.h"
+#include "Tag/URRGameplayTag.h"
 #include "URR.h"
 
 UURRGA_AttackDebuff::UURRGA_AttackDebuff()
@@ -13,6 +15,12 @@ void UURRGA_AttackDebuff::ActivateAbility(const FGameplayAbilitySpecHandle Handl
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
-	BP_ApplyGameplayEffectToTarget(TriggerEventData->TargetData, AttackDamageEffect);
-	BP_ApplyGameplayEffectToTarget(TriggerEventData->TargetData, DebuffEffect);
+}
+
+void UURRGA_AttackDebuff::OnCompleteCallback()
+{
+	BP_ApplyGameplayEffectToTarget(CurrentEventData.TargetData, DebuffEffect);
+	BP_ApplyGameplayEffectToTarget(CurrentEventData.TargetData, AttackDamageEffect);
+
+	Super::OnCompleteCallback();
 }

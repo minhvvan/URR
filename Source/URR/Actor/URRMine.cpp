@@ -21,17 +21,6 @@ UAbilitySystemComponent* AURRMine::GetAbilitySystemComponent() const
 void AURRMine::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
-
-	FGameplayEffectContextHandle Context = ASC->MakeEffectContext();
-	FGameplayEffectSpecHandle Spec = ASC->MakeOutgoingSpec(InitStatEffect, 0, Context);
-	if (Spec.IsValid())
-	{
-		Spec.Data->SetSetByCallerMagnitude(URRTAG_DATA_ATTACKRANGE, 500.f);
-		Spec.Data->SetSetByCallerMagnitude(URRTAG_DATA_ATTACKRATE, AttackRate);
-		Spec.Data->SetSetByCallerMagnitude(URRTAG_DATA_KNOCKBACK, 200.f);
-		Spec.Data->SetSetByCallerMagnitude(URRTAG_DATA_SLOW, 0.f);
-		ASC->BP_ApplyGameplayEffectSpecToSelf(Spec);
-	}
 }
 
 void AURRMine::BeginOverlapCallback(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)

@@ -67,8 +67,6 @@ void UURRGA_Attack::ApplyCooldown(const FGameplayAbilitySpecHandle Handle, const
 
 void UURRGA_Attack::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
 {
-	AURRCharacterUnit* Unit = CastChecked<AURRCharacterUnit>(ActorInfo->AvatarActor.Get());
-
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
 }
 

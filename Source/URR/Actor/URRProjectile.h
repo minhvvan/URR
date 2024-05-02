@@ -46,6 +46,15 @@ protected:
 protected:
 	float AttackRate;
 
+	UPROPERTY(EditAnywhere, Category = STAT)
+	float ExplosionRange;
+
+	UPROPERTY(EditAnywhere, Category = STAT)
+	float KnockBackDist;
+
+	UPROPERTY(EditAnywhere, Category = STAT)
+	float SlowRate;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -58,6 +67,8 @@ public:
 
 	void FireInDirection(FVector vel);
 	void SetAttackRate(float attackRate) { AttackRate = attackRate; }
+	void SetSlowRate(float slow) { SlowRate = slow; }
+	void SetKnockBackDist(float knockBack) { KnockBackDist = knockBack; }
 
 protected:
 	UFUNCTION()

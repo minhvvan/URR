@@ -227,6 +227,7 @@ void AURRCharacterUnit::Init(int rank)
 	case 10:
 		WeaponMeshHandle = UAssetManager::Get().GetStreamableManager().RequestAsyncLoad(WeaponMeshes[Rank-3], FStreamableDelegate::CreateUObject(this, &AURRCharacterUnit::WeaponMeshLoadCompleted));
 		AdditiveMeshHandles.Add((int)EAdditiveMeshEnum::MESH_BackPack, UAssetManager::Get().GetStreamableManager().RequestAsyncLoad(AdditiveMeshes[(int)EAdditiveMeshEnum::MESH_BackPack], FStreamableDelegate::CreateUObject(this, &AURRCharacterUnit::BackPackMeshLoadCompleted)));
+		LoadCompletedPart[(int)EAssetType::ASSET_HEAD] = true;
 		LoadCompletedPart[(int)EAssetType::ASSET_ACC] = true;
 		break;
 	}
