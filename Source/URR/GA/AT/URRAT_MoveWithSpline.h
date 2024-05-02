@@ -23,7 +23,7 @@ public:
 	FMoveToLocationDelegate OnTargetLocationReached;
 
 	UFUNCTION(BlueprintCallable, Category = "Ability|Tasks", meta = (HidePin = "OwningAbility", DefaultToSelf = "OwningAbility", BlueprintInternalUseOnly = "TRUE"))
-	static UURRAT_MoveWithSpline* MoveToLocation(UGameplayAbility* OwningAbility, FName TaskInstanceName, FVector Location);
+	static UURRAT_MoveWithSpline* MoveToLocation(UGameplayAbility* OwningAbility, FName TaskInstanceName);
 
 	virtual void InitSimulatedTask(UGameplayTasksComponent& InGameplayTasksComponent) override;
 	

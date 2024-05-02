@@ -29,15 +29,27 @@ void UURRPlayerAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModC
 	}
 	else if (Data.EvaluatedData.Attribute == GetCostAttribute())
 	{
-		float cost = GetCoin() - GetCost();
-		if (cost < 0) cost = 0.f;
+		float newCoin = GetCoin() - GetCost();
+		if (newCoin < 0) newCoin = 0.f;
 
-		SetCoin(cost);
+		SetCoin(newCoin);
 		SetCost(0.f);
 
 		if (GetCoin() < 10)
 		{
 			Data.Target.RemoveLooseGameplayTag(URRTAG_PLAYER_CANSPAWN);
+		}
+	}
+	else if (Data.EvaluatedData.Attribute == GetDamageAttribute())
+	{
+		float MinHealth = 0.f;
+
+		SetHealth(FMath::Clamp(GetHealth() - GetDamage(), MinHealth, GetMaxHealth()));
+		SetDamage(0.f);
+
+		if (GetHealth() < 0.f)
+		{
+			//Data.Target.RemoveLooseGameplayTag(URRTAG_PLAYER_CANSPAWN);
 		}
 	}
 }

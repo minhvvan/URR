@@ -106,3 +106,8 @@ FTransform AURRMonsterSpawner::GetPathTransform(float Distance)
 
 	return FTransform();
 }
+
+FVector AURRMonsterSpawner::GetGatePos()
+{
+	return PathSpline->GetWorldLocationAtSplinePoint(5);
+}

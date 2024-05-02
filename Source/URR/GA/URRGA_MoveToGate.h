@@ -22,6 +22,4 @@ protected:
 
 	UFUNCTION()
 	void GateReachedCallback();
-
-	FVector GatePos;
 };

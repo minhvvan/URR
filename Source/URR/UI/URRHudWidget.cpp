@@ -17,7 +17,7 @@ void UURRHudWidget::SetAbilitySystemComponent(AActor* InOwner)
 	if (ASC)
 	{
 		ASC->GetGameplayAttributeValueChangeDelegate(UURRPlayerAttributeSet::GetCoinAttribute()).AddUObject(this, &UURRHudWidget::OnCoinChanged);
-		ASC->GetGameplayAttributeValueChangeDelegate(UURRPlayerAttributeSet::GetHealthAttribute()).AddUObject(this, &UURRHudWidget::OnCoinChanged);
+		ASC->GetGameplayAttributeValueChangeDelegate(UURRPlayerAttributeSet::GetHealthAttribute()).AddUObject(this, &UURRHudWidget::OnHealthChanged);
 		//ASC->RegisterGameplayTagEvent(ABTAG_CHARACTER_INVINSIBLE, EGameplayTagEventType::NewOrRemoved).AddUObject(this, &UABGASHpBarUserWidget::OnInvinsibleTagChanged);
 
 		const UURRPlayerAttributeSet* CurrentAttributeSet = ASC->GetSet<UURRPlayerAttributeSet>();

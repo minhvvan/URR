@@ -30,17 +30,24 @@ protected:
 	TObjectPtr<class UURRGASWidgetComponent> HpBarComp;
 
 	UPROPERTY(EditAnywhere, Category=Animation)
-	TObjectPtr<class UAnimMontage> DeadMontage;
+	TObjectPtr<class UAnimMontage> DeadMontage;	
+	
+	UPROPERTY(EditAnywhere, Category=Animation)
+	TObjectPtr<class UAnimMontage> AttackMontage;
 
 public:
 	void InitMonster(int monsterID);
 
 	void StartMove();
+	void StartAttack();
 	void SetSpawner(class AURRMonsterSpawner* spawner);
 	AURRMonsterSpawner* GetSpawner() { return Spawner; }
+	UAnimMontage* GetAttackMontage();
 
 	UFUNCTION(BlueprintCallable)
 	bool GetbMove() { return bMove; }
+
+	void SetbMove(bool newMove) { bMove = newMove; }
 
 	virtual void Tick(float DeltaTime) override;
 
@@ -84,7 +91,11 @@ protected:
 
 	UPROPERTY(config)
 	TArray<FSoftObjectPath> DeadMontages;
-	TSharedPtr<FStreamableHandle> DeadMontageHandle;
+	TSharedPtr<FStreamableHandle> DeadMontageHandle;	
+	
+	UPROPERTY(config)
+	TArray<FSoftObjectPath> AttackMontages;
+	TSharedPtr<FStreamableHandle> AttackMontageHandle;
 
 	FName WeaponSocketName;
 	FName ShieldSocketName;
@@ -105,6 +116,7 @@ protected:
 	void AnimInstanceLoadCompleted();
 	void ShieldMeshLoadCompleted();
 	void DeadMontageLoadCompleted();
+	void AttackMontageLoadCompleted();
 
 	void SetDead();
 	void PlayDeadAnimation();

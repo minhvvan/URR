@@ -18,11 +18,10 @@ UURRAT_MoveWithSpline::UURRAT_MoveWithSpline()
 	bIsFinished = false;
 }
 
-UURRAT_MoveWithSpline* UURRAT_MoveWithSpline::MoveToLocation(UGameplayAbility* OwningAbility, FName TaskInstanceName, FVector Location)
+UURRAT_MoveWithSpline* UURRAT_MoveWithSpline::MoveToLocation(UGameplayAbility* OwningAbility, FName TaskInstanceName)
 {
 	UURRAT_MoveWithSpline* MyObj = NewAbilityTask<UURRAT_MoveWithSpline>(OwningAbility, TaskInstanceName);
 
-	MyObj->GatePos = Location;
 	return MyObj;
 }
 
@@ -48,7 +47,8 @@ void UURRAT_MoveWithSpline::TickTask(float DeltaTime)
 	AURRCharacterMonster* MyCharacter = Cast<AURRCharacterMonster>(GetAvatarActor());
 	if (MyCharacter)
 	{
-		if (MyCharacter->GetActorLocation() == GatePos)
+		AURRMonsterSpawner* Spanwer = MyCharacter->GetSpawner();
+		if (MyCharacter->GetActorLocation() == Spanwer->GetGatePos())
 		{
 			if (ShouldBroadcastAbilityTaskDelegates())
 			{
@@ -72,8 +72,7 @@ void UURRAT_MoveWithSpline::TickTask(float DeltaTime)
 				float Speed = URRMonsterAttributeSet->GetSpeed();
 				float Distance = URRMonsterAttributeSet->GetDistance();
 				Distance += DeltaTime * Speed;
-
-				AURRMonsterSpawner* Spanwer = MyCharacter->GetSpawner();
+				
 				FTransform newTransform = Spanwer->GetPathTransform(Distance);
 
 				ASC->ApplyModToAttribute(URRMonsterAttributeSet->GetDistanceAttribute(), EGameplayModOp::Override, Distance);

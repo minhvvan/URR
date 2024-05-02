@@ -51,6 +51,6 @@ protected:
 
 	int CurrentCoin;
 
-	int CurrentHealth;
-	int CurrentMaxHealth;
+	float CurrentHealth;
+	float CurrentMaxHealth;
 };

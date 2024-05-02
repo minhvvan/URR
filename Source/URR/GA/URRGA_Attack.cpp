@@ -8,8 +8,6 @@
 #include "Abilities/Tasks/AbilityTask_PlayMontageAndWait.h"
 #include "AbilitySystemBlueprintLibrary.h"
 #include "Attribute/URRUnitAttributeSet.h"
-#include "AbilitySystemBlueprintLibrary.h"
-#include "Character/URRCharacterMonster.h"
 #include "URR.h"
 
 UURRGA_Attack::UURRGA_Attack()

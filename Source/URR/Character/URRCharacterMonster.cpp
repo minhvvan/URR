@@ -73,9 +73,26 @@ void AURRCharacterMonster::StartMove()
 	}
 }
 
+void AURRCharacterMonster::StartAttack()
+{
+	if (ASC)
+	{
+		FGameplayAbilitySpec* Spec = ASC->FindAbilitySpecFromInputID(1);
+		if (Spec)
+		{
+			ASC->TryActivateAbility(Spec->Handle);
+		}
+	}
+}
+
 void AURRCharacterMonster::SetSpawner(AURRMonsterSpawner* spawner)
 {
 	Spawner = spawner;
+}
+
+UAnimMontage* AURRCharacterMonster::GetAttackMontage()
+{
+	return AttackMontage;
 }
 
 void AURRCharacterMonster::Tick(float DeltaTime)
@@ -124,6 +141,7 @@ void AURRCharacterMonster::PostInitializeComponents()
     MonsterMeshHandle = UAssetManager::Get().GetStreamableManager().RequestAsyncLoad(MonsterMeshes[MonsterID], FStreamableDelegate::CreateUObject(this, &AURRCharacterMonster::MonsterMeshLoadCompleted));
 	AnimInstanceHandle = UAssetManager::Get().GetStreamableManager().RequestAsyncLoad(AnimInstances[MonsterID], FStreamableDelegate::CreateUObject(this, &AURRCharacterMonster::AnimInstanceLoadCompleted));
 	DeadMontageHandle = UAssetManager::Get().GetStreamableManager().RequestAsyncLoad(DeadMontages[MonsterID], FStreamableDelegate::CreateUObject(this, &AURRCharacterMonster::DeadMontageLoadCompleted));
+	AttackMontageHandle = UAssetManager::Get().GetStreamableManager().RequestAsyncLoad(AttackMontages[MonsterID], FStreamableDelegate::CreateUObject(this, &AURRCharacterMonster::AttackMontageLoadCompleted));
 	
 	for (int idx = 0; idx < NeedWeapon.Num(); idx++)
 	{
@@ -214,6 +232,16 @@ void AURRCharacterMonster::DeadMontageLoadCompleted()
 	}
 
 	DeadMontageHandle->ReleaseHandle();
+}
+
+void AURRCharacterMonster::AttackMontageLoadCompleted()
+{
+	if (AttackMontageHandle.IsValid())
+	{
+		AttackMontage = Cast<UAnimMontage>(AttackMontageHandle->GetLoadedAsset());
+	}
+
+	AttackMontageHandle->ReleaseHandle();
 }
 
 void AURRCharacterMonster::OnOutOfHealth()

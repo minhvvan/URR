@@ -72,4 +72,6 @@ public:
 	void AddSpawnedMonster(AURRCharacterMonster* monster);
 
 	FTransform GetPathTransform(float Distance);
+
+	FVector GetGatePos();
 };

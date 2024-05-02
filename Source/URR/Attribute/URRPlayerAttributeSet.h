@@ -28,6 +28,7 @@ public:
 	ATTRIBUTE_ACCESSORS(UURRPlayerAttributeSet, Health);
 	ATTRIBUTE_ACCESSORS(UURRPlayerAttributeSet, MaxHealth);
 	ATTRIBUTE_ACCESSORS(UURRPlayerAttributeSet, Cost);
+	ATTRIBUTE_ACCESSORS(UURRPlayerAttributeSet, Damage);
 
 protected:
 	UPROPERTY(BlueprintReadOnly, Category = Stat, meta = (AllowPrivateAccess = true))
@@ -40,7 +41,11 @@ protected:
 	FGameplayAttributeData MaxHealth;
 
 	UPROPERTY(BlueprintReadOnly, Category = Stat, meta = (AllowPrivateAccess = true))
-	FGameplayAttributeData Cost;
+	FGameplayAttributeData Cost;	
+	
+	UPROPERTY(BlueprintReadOnly, Category = Stat, meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData Damage;
+
 public:
 	virtual void PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data) override;
 
