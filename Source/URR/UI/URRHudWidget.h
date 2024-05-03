@@ -34,6 +34,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, meta = (BindWidget))
 	class UTextBlock* TxtMaxHealth;
 
+	UPROPERTY(VisibleAnywhere)
+	TObjectPtr<class UWidgetAnimation> WaveNotifyAnim;
+
 protected:
 	virtual void NativeOnInitialized() override;
 

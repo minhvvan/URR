@@ -5,22 +5,9 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "AbilitySystemInterface.h"
+#include "URRGameMode.h"
+#include "Framework/URRGameInstance.h"
 #include "URRMonsterSpawner.generated.h"
-
-USTRUCT(BlueprintType)
-struct FMonsterInfo 
-{
-	GENERATED_BODY()
-
-	UPROPERTY(EditAnywhere)
-	int MonsterID;
-
-	UPROPERTY(EditAnywhere)
-	int MonsterNum;	
-	
-	UPROPERTY(EditAnywhere)
-	int MonsterSpawnTerm;
-};
 
 UCLASS()
 class URR_API AURRMonsterSpawner : public AActor, public IAbilitySystemInterface
@@ -59,10 +46,13 @@ protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
+	virtual void PostInitializeComponents();
+
+	void SetWaveInfo(TArray<FMonsterInfo> Waves);
 	void SpawnMonster();
 
 	UFUNCTION()
-	void MonsterDeathCallback(AURRCharacterMonster* monster);
+	void MonsterDeathCallback(AActor* monster);
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
@@ -74,4 +64,6 @@ public:
 	FTransform GetPathTransform(float Distance);
 
 	FVector GetGatePos();
+
+	friend AURRGameMode;
 };

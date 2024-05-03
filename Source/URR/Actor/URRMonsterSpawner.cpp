@@ -6,6 +6,7 @@
 #include "Components/BoxComponent.h"
 #include "Components/SplineComponent.h"
 #include "AbilitySystemComponent.h"
+#include "Tag/URRGameplayTag.h"
 
 // Sets default values
 AURRMonsterSpawner::AURRMonsterSpawner():
@@ -36,6 +37,15 @@ UAbilitySystemComponent* AURRMonsterSpawner::GetAbilitySystemComponent() const
 void AURRMonsterSpawner::BeginPlay()
 {
 	Super::BeginPlay();
+	//UI Alert
+
+	//Spawn
+	//SpawnMonster();
+}
+
+void AURRMonsterSpawner::PostInitializeComponents()
+{
+	Super::PostInitializeComponents();
 
 	if (ASC)
 	{
@@ -49,11 +59,11 @@ void AURRMonsterSpawner::BeginPlay()
 			ASC->GiveAbility(StartSpec);
 		}
 	}
+}
 
-	//UI Alert
-
-	//Spawn
-	SpawnMonster();
+void AURRMonsterSpawner::SetWaveInfo(TArray<FMonsterInfo> Waves)
+{
+	MonsterWaves = Waves;
 }
 
 void AURRMonsterSpawner::SpawnMonster()
@@ -67,14 +77,10 @@ void AURRMonsterSpawner::SpawnMonster()
 	}
 }
 
-void AURRMonsterSpawner::MonsterDeathCallback(AURRCharacterMonster* monster)
+void AURRMonsterSpawner::MonsterDeathCallback(AActor* monster)
 {
-	SpawnedMonsters.Remove(monster);
-
-	if (SpawnedMonsters.Num() == 0)
-	{
-		SpawnMonster();
-	}
+	AURRCharacterMonster* Target = Cast<AURRCharacterMonster>(monster);
+	SpawnedMonsters.Remove(Target);
 }
 
 // Called every frame
@@ -82,16 +88,29 @@ void AURRMonsterSpawner::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	if (SpawnedMonsters.Num() == 0 && !ASC->HasMatchingGameplayTag(URRTAG_MONSTER_SPAWNING))
+	{
+		SpawnMonster();
+	}
 }
 
 FMonsterInfo AURRMonsterSpawner::GetCurrentMonsterInfo()
 {
-	return MonsterWaves[currentIdx++];
+	if (MonsterWaves.IsValidIndex(currentIdx))
+	{
+		return MonsterWaves[currentIdx++];
+	}
+	else
+	{
+		//Clear Stage
+		return FMonsterInfo();
+	}
 }
 
 void AURRMonsterSpawner::AddSpawnedMonster(AURRCharacterMonster* monster)
 {
 	//monster Die Delegate Bind
+	monster->OnDestroyed.AddDynamic(this, &AURRMonsterSpawner::MonsterDeathCallback);
 
 	SpawnedMonsters.Add(monster);
 	monster->SetSpawner(this);

@@ -20,9 +20,46 @@ enum class EUnitType : uint8
 	UT_MechaSniper UMETA(DisplayName = "MechaSniper"),
 };
 
+
+USTRUCT(BlueprintType)
+struct FMonsterInfo
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere)
+	int MonsterID;
+
+	UPROPERTY(EditAnywhere)
+	int MonsterNum;
+
+	UPROPERTY(EditAnywhere)
+	int MonsterSpawnTerm;
+};
+
+USTRUCT()
+struct FStageWaveInfo : public FTableRowBase
+{
+	GENERATED_BODY()
+public:
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	int Stage;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<FMonsterInfo> Waves;
+};
+
+
 UCLASS()
 class URR_API UURRGameInstance : public UGameInstance
 {
 	GENERATED_BODY()
 	
+public:
+	UURRGameInstance();
+
+	TArray<FMonsterInfo> GetWaveInfo(int stageNum);
+
+protected:
+	UPROPERTY()
+	TObjectPtr<UDataTable> StageWaveInfo;
 };

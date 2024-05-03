@@ -8,6 +8,7 @@
 #include "Character/URRBoard.h"
 #include "AbilitySystemComponent.h"
 #include "Attribute/URRPlayerAttributeSet.h"
+#include "Animation/WidgetAnimation.h"
 
 void UURRHudWidget::SetAbilitySystemComponent(AActor* InOwner)
 {

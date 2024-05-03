@@ -13,4 +13,7 @@ class AURRGameMode : public AGameModeBase
 
 public:
 	AURRGameMode();
+
+protected:
+	virtual void BeginPlay() override;
 };
