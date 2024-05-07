@@ -88,6 +88,7 @@ void AURRMonsterSpawner::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
+	//Wave Control
 	if (SpawnedMonsters.Num() == 0 && !ASC->HasMatchingGameplayTag(URRTAG_MONSTER_SPAWNING))
 	{
 		SpawnMonster();
