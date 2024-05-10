@@ -54,7 +54,7 @@ void UURRAT_FindTarget::SpawnAndInitializeTargetActor()
 	if (SpawnedTargetActor)
 	{
 		SpawnedTargetActor->TargetDataReadyDelegate.AddUObject(this, &UURRAT_FindTarget::OnTargetDataReadyCallback);
-		SpawnedTargetActor->SetShowDebug(true);
+		SpawnedTargetActor->SetShowDebug(false);
 	}
 }
 

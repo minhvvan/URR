@@ -40,7 +40,10 @@ void AURRMonsterSpawner::BeginPlay()
 	//UI Alert
 
 	//Spawn
-	//SpawnMonster();
+	if (!WaveManager) WaveManager = Cast<UURRWaveManager>(GEngine->GameSingleton);
+
+	SetWaveInfo(WaveManager->GetWaveInfo(1/*Stage Level*/));
+	SpawnMonster();
 }
 
 void AURRMonsterSpawner::PostInitializeComponents()
@@ -91,7 +94,8 @@ void AURRMonsterSpawner::Tick(float DeltaTime)
 	//Wave Control
 	if (SpawnedMonsters.Num() == 0 && !ASC->HasMatchingGameplayTag(URRTAG_MONSTER_SPAWNING))
 	{
-		SpawnMonster();
+		if (!WaveManager) WaveManager = Cast<UURRWaveManager>(GEngine->GameSingleton);
+		WaveManager->PrepareNextWave();
 	}
 }
 

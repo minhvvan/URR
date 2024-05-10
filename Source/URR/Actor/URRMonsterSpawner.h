@@ -6,7 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "AbilitySystemInterface.h"
 #include "URRGameMode.h"
-#include "Framework/URRGameInstance.h"
+#include "Framework/URRWaveManager.h"
 #include "URRMonsterSpawner.generated.h"
 
 UCLASS()
@@ -40,6 +40,9 @@ protected:
 	UPROPERTY(VisibleAnywhere, Category = Spawn)
 	TArray<TObjectPtr<class AURRCharacterMonster>> SpawnedMonsters;
 
+	UPROPERTY()
+	TObjectPtr<class UURRWaveManager> WaveManager;
+
 	int currentIdx;
 
 protected:
@@ -65,5 +68,5 @@ public:
 
 	FVector GetGatePos();
 
-	friend AURRGameMode;
+	friend UURRWaveManager;
 };
