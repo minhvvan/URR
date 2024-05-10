@@ -5,6 +5,7 @@
 #include "Components/ListView.h"
 #include "Data/URRAugmentData.h"
 #include "Framework/URRWaveManager.h"
+#include "URR.h"
 
 void UURRAugmentWidget::AddItem(FAugment* augment)
 {
@@ -14,4 +15,32 @@ void UURRAugmentWidget::AddItem(FAugment* augment)
 	NewItem->Icon = augment->Icon;
 
 	LVAugment->AddItem(NewItem);
+}
+
+void UURRAugmentWidget::NativeOnInitialized()
+{
+	Super::NativeOnInitialized();
+	URR_LOG(LogURR, Log, TEXT("NativeOnInitialized"));
+
+	LVAugment->OnItemClicked().AddUObject(this, &UURRAugmentWidget::ItemClickCallback);
+}
+
+void UURRAugmentWidget::ItemClickCallback(UObject* item)
+{
+	UURRAugmentData* Data = Cast<UURRAugmentData>(item);
+
+	if (Data)
+	{
+		URR_LOG(LogURR, Log, TEXT("Success"));
+
+		//증강 적용
+		
+		//Delegate to parent
+
+		RemoveFromParent();
+	}
+	else
+	{
+		URR_LOG(LogURR, Log, TEXT("Fail"));
+	}
 }

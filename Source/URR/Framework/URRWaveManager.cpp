@@ -51,7 +51,9 @@ void UURRWaveManager::PrepareNextWave()
 	if (Augments.Num() == 0) SetUpAllAugment();
 
 	//¡ı∞≠ UI PopUp
-	if (!AugmentWidget) AugmentWidget = CreateWidget<UURRAugmentWidget>(GEngine->GameViewport->GetWorld(), AugmentWidgetClass);
+	//if (!AugmentWidget) 
+		
+	AugmentWidget = CreateWidget<UURRAugmentWidget>(GEngine->GameViewport->GetWorld(), AugmentWidgetClass);
 	if (AugmentWidget)
 	{
 		AugmentWidget->AddToViewport();

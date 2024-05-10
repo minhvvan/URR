@@ -20,4 +20,10 @@ protected:
 
 public:
 	void AddItem(struct FAugment* augment);
+
+public:
+	virtual void NativeOnInitialized();
+
+protected:
+	void ItemClickCallback(UObject* item);
 };
