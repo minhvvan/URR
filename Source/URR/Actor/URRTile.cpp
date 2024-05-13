@@ -6,6 +6,8 @@
 #include "UI/URRGASWidgetComponent.h"
 #include "UI/URRTileRankWidget.h"
 #include "Engine/AssetManager.h"
+#include "GameplayEffect.h"
+#include "AbilitySystemComponent.h"
 #include "Urr.h"
 
 // Sets default values
@@ -144,4 +146,16 @@ void AURRTile::DestroyUnit()
 int AURRTile::GetRank()
 {
 	return Rank;
+}
+
+void AURRTile::ApplyAugment(TSubclassOf<UGameplayEffect> GE)
+{
+	if (!UnitCharacter) return;
+
+	UAbilitySystemComponent* ASC = UnitCharacter->GetAbilitySystemComponent();
+	if (!ASC) return;
+
+	FGameplayEffectContextHandle EffectContext = ASC->MakeEffectContext();
+	ASC->BP_ApplyGameplayEffectToSelf(GE, 0, EffectContext);
+	URR_LOG(LogURR, Log, TEXT("ApplyAugment"));
 }

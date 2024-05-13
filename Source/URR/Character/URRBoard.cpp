@@ -468,3 +468,17 @@ AURRTile* AURRBoard::GetEmptyTile()
 	int rand = FMath::Rand() % EmptyTiles.Num();
 	return EmptyTiles[rand];
 }
+
+void AURRBoard::ApplyAugment(TSubclassOf<UGameplayEffect> GE, TArray<int> Targets)
+{
+	for (auto& Row : Tiles)
+	{
+		for (auto& tile : Row)
+		{
+			if (Targets.Contains(tile->GetRank()))
+			{
+				tile->ApplyAugment(GE);
+			}
+		}
+	}
+}

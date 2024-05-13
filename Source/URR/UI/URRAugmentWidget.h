@@ -6,6 +6,7 @@
 #include "UI/URRGASWidget.h"
 #include "URRAugmentWidget.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnAugmentSelected, TSubclassOf<UGameplayEffect>, GE, TArray<int>, Targets);
 /**
  * 
  */
@@ -17,6 +18,9 @@ class URR_API UURRAugmentWidget : public UURRGASWidget
 protected:
 	UPROPERTY(VisibleAnywhere, meta=(BindWidget))
 	TObjectPtr<class UListView> LVAugment;
+
+public:
+	FOnAugmentSelected OnAugmentSelected;
 
 public:
 	void AddItem(struct FAugment* augment);

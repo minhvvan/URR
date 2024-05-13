@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Object.h"
+#include "GameplayEffect.h"
 #include "URRAugmentData.generated.h"
 
 /**
@@ -18,4 +19,6 @@ public:
 	FString Title;
 	FString Desc;
 	UTexture2D* Icon;
+	TSubclassOf<UGameplayEffect> GE;
+	TArray<int> Targets;
 };

@@ -5,6 +5,7 @@
 #include "URR.h"
 #include "Kismet/GameplayStatics.h"
 #include "Actor/URRMonsterSpawner.h"
+#include "Character/URRBoard.h"
 #include "UI/URRAugmentWidget.h"
 #include "Kismet/KismetArrayLibrary.h"
 
@@ -50,12 +51,10 @@ void UURRWaveManager::PrepareNextWave()
 	UGameplayStatics::SetGamePaused(GEngine->GameViewport->GetWorld(), true);
 	if (Augments.Num() == 0) SetUpAllAugment();
 
-	//¡ı∞≠ UI PopUp
-	//if (!AugmentWidget) 
-		
 	AugmentWidget = CreateWidget<UURRAugmentWidget>(GEngine->GameViewport->GetWorld(), AugmentWidgetClass);
 	if (AugmentWidget)
 	{
+		AugmentWidget->OnAugmentSelected.AddDynamic(this, &UURRWaveManager::AugmentSelectedCallback);
 		AugmentWidget->AddToViewport();
 
 		//for (int i = 0; i < 3; i++)
@@ -73,6 +72,19 @@ void UURRWaveManager::StartNextWave()
 {
 	UGameplayStatics::SetGamePaused(GEngine->GameViewport->GetWorld(), false);
 
-	if(!Spawner) Spawner = Cast<AURRMonsterSpawner>(UGameplayStatics::GetActorOfClass(GetWorld(), AURRMonsterSpawner::StaticClass()));
+	if(!Spawner) Spawner = CastChecked<AURRMonsterSpawner>(UGameplayStatics::GetActorOfClass(GEngine->GameViewport->GetWorld(), AURRMonsterSpawner::StaticClass()));
 	Spawner->SpawnMonster();
+}
+
+void UURRWaveManager::AugmentSelectedCallback(TSubclassOf<UGameplayEffect> GE, TArray<int> Targets)
+{
+	UGameplayStatics::SetGamePaused(GEngine->GameViewport->GetWorld(), false);
+
+	AURRBoard* Board = Cast<AURRBoard>(UGameplayStatics::GetActorOfClass(GEngine->GameViewport->GetWorld(), AURRBoard::StaticClass()));
+	if (Board)
+	{
+		Board->ApplyAugment(GE, Targets);
+	}
+	
+	StartNextWave();
 }

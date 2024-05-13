@@ -13,6 +13,8 @@ void UURRAugmentWidget::AddItem(FAugment* augment)
 	NewItem->Title = augment->Title;
 	NewItem->Desc = augment->Desc;
 	NewItem->Icon = augment->Icon;
+	NewItem->GE = augment->GE;
+	NewItem->Targets = augment->Targets;
 
 	LVAugment->AddItem(NewItem);
 }
@@ -34,10 +36,13 @@ void UURRAugmentWidget::ItemClickCallback(UObject* item)
 		URR_LOG(LogURR, Log, TEXT("Success"));
 
 		//증강 적용
-		
-		//Delegate to parent
 		//GE를 전달 -> Board에서는 전달받은 GE를 적용 
 		//GE는 Rank -> 능력치 조정
+		UURRAugmentData* SelectedAugment = Cast<UURRAugmentData>(item);
+		if (SelectedAugment)
+		{
+			OnAugmentSelected.Broadcast(SelectedAugment->GE, SelectedAugment->Targets);
+		}
 
 		RemoveFromParent();
 	}

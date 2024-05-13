@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/Object.h"
+#include "GameplayEffect.h"
 #include "URRWaveManager.generated.h"
 
 USTRUCT(BlueprintType)
@@ -47,6 +48,12 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	UTexture2D* Icon;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TSubclassOf<UGameplayEffect> GE;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	TArray<int> Targets;
 };
 
 
@@ -65,6 +72,9 @@ public:
 
 protected:
 	void StartNextWave();
+
+	UFUNCTION()
+	void AugmentSelectedCallback(TSubclassOf<UGameplayEffect> GE, TArray<int> Targets);
 
 protected:
 	UPROPERTY()

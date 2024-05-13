@@ -61,4 +61,6 @@ public:
 	void DestroyUnit();
 
 	int GetRank();
+
+	void ApplyAugment(TSubclassOf<class UGameplayEffect> GE);
 };

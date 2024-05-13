@@ -11,9 +11,9 @@
 
 // Sets default values
 AURRProjectile::AURRProjectile(): 
+	ExplosionRange(500.f),
 	KnockBackDist(0),
-	SlowRate(0),
-	ExplosionRange(500.f)
+	SlowRate(0)
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;

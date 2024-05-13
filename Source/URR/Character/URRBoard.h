@@ -98,4 +98,6 @@ public:
 	void SpawnUnit();
 
 	class AURRTile* GetEmptyTile();
+
+	void ApplyAugment(TSubclassOf<UGameplayEffect> GE, TArray<int> Targets);
 };
