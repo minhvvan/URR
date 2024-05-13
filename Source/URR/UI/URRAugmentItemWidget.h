@@ -16,9 +16,6 @@ class URR_API UURRAugmentItemWidget : public UURRGASWidget, public IUserObjectLi
 	GENERATED_BODY()
 
 protected:
-	//UPROPERTY(VisibleAnywhere, meta=(BindWidget))
-	//TObjectPtr<class UButton> BtnAugment;
-	
 	UPROPERTY(VisibleAnywhere, meta=(BindWidget))
 	TObjectPtr<class UImage> ImgIcon;
 
@@ -31,4 +28,7 @@ protected:
 public:
 	virtual void NativeOnListItemObjectSet(UObject* ListItemObject) override;
 	virtual void NativeOnInitialized();
+
+protected:
+
 };

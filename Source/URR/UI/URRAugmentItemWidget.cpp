@@ -5,7 +5,8 @@
 #include "Data/URRAugmentData.h"
 #include "Components/Image.h"
 #include "Components/TextBlock.h"
-#include "Components/Button.h"
+#include "Components/Border.h"
+#include "URR.h"
 
 void UURRAugmentItemWidget::NativeOnListItemObjectSet(UObject* ListItemObject)
 {

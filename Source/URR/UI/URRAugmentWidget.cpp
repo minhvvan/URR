@@ -36,11 +36,9 @@ void UURRAugmentWidget::ItemClickCallback(UObject* item)
 		//증강 적용
 		
 		//Delegate to parent
+		//GE를 전달 -> Board에서는 전달받은 GE를 적용 
+		//GE는 Rank -> 능력치 조정
 
 		RemoveFromParent();
-	}
-	else
-	{
-		URR_LOG(LogURR, Log, TEXT("Fail"));
 	}
 }
