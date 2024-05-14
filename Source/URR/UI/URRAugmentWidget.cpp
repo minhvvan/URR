@@ -22,7 +22,6 @@ void UURRAugmentWidget::AddItem(FAugment* augment)
 void UURRAugmentWidget::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
-	URR_LOG(LogURR, Log, TEXT("NativeOnInitialized"));
 
 	LVAugment->OnItemClicked().AddUObject(this, &UURRAugmentWidget::ItemClickCallback);
 }

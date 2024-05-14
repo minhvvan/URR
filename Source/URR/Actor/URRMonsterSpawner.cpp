@@ -7,6 +7,8 @@
 #include "Components/SplineComponent.h"
 #include "AbilitySystemComponent.h"
 #include "Tag/URRGameplayTag.h"
+#include "UI/URRWaveAlertWidget.h"
+#include "URR.h"
 
 // Sets default values
 AURRMonsterSpawner::AURRMonsterSpawner():
@@ -26,6 +28,12 @@ AURRMonsterSpawner::AURRMonsterSpawner():
 	BoundBox->SetBoxExtent({ 300, 300 ,300 });
 
 	currentIdx = 0;
+
+	ConstructorHelpers::FClassFinder<UURRWaveAlertWidget> WidgetRef(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/URR/UI/WBP_WaveAlert.WBP_WaveAlert_C'"));
+	if (WidgetRef.Succeeded())
+	{
+		WaveAlertWidgetClass = WidgetRef.Class;
+	}
 }
 
 UAbilitySystemComponent* AURRMonsterSpawner::GetAbilitySystemComponent() const
@@ -71,8 +79,24 @@ void AURRMonsterSpawner::SetWaveInfo(TArray<FMonsterInfo> Waves)
 
 void AURRMonsterSpawner::SpawnMonster()
 {
+	if (!WaveAlertWidget)
+	{
+		WaveAlertWidget = CreateWidget<UURRWaveAlertWidget>(GetWorld(), WaveAlertWidgetClass);
+		WaveAlertWidget->AddToViewport();
+		WaveAlertWidget->OnAnimFinish.AddDynamic(this, &AURRMonsterSpawner::WaveAlertCallback);
+	}
+
+	WaveAlertWidget->SetWaveNum(currentIdx + 1);
+	WaveAlertWidget->SetMonsterInfo(MonsterWaves[currentIdx]);
+
+	WaveAlertWidget->PlayAlertAnim();
+}
+
+void AURRMonsterSpawner::WaveAlertCallback()
+{
 	if (!ASC) return;
 
+	URR_LOG(LogURR, Log, TEXT("Spawn"));
 	FGameplayAbilitySpec* Spec = ASC->FindAbilitySpecFromInputID(0);
 	if (Spec)
 	{
@@ -84,19 +108,18 @@ void AURRMonsterSpawner::MonsterDeathCallback(AActor* monster)
 {
 	AURRCharacterMonster* Target = Cast<AURRCharacterMonster>(monster);
 	SpawnedMonsters.Remove(Target);
+
+	if (SpawnedMonsters.Num() == 0 && !ASC->HasMatchingGameplayTag(URRTAG_MONSTER_SPAWNING))
+	{
+		if (!WaveManager) WaveManager = Cast<UURRWaveManager>(GEngine->GameSingleton);
+		WaveManager->PrepareNextWave();
+	}
 }
 
 // Called every frame
 void AURRMonsterSpawner::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-	//Wave Control
-	if (SpawnedMonsters.Num() == 0 && !ASC->HasMatchingGameplayTag(URRTAG_MONSTER_SPAWNING))
-	{
-		if (!WaveManager) WaveManager = Cast<UURRWaveManager>(GEngine->GameSingleton);
-		WaveManager->PrepareNextWave();
-	}
 }
 
 FMonsterInfo AURRMonsterSpawner::GetCurrentMonsterInfo()

@@ -45,6 +45,11 @@ protected:
 
 	int currentIdx;
 
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class UURRWaveAlertWidget> WaveAlertWidgetClass;
+
+	TObjectPtr<UURRWaveAlertWidget> WaveAlertWidget;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -53,6 +58,9 @@ protected:
 
 	void SetWaveInfo(TArray<FMonsterInfo> Waves);
 	void SpawnMonster();
+
+	UFUNCTION()
+	void WaveAlertCallback();
 
 	UFUNCTION()
 	void MonsterDeathCallback(AActor* monster);

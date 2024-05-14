@@ -157,5 +157,4 @@ void AURRTile::ApplyAugment(TSubclassOf<UGameplayEffect> GE)
 
 	FGameplayEffectContextHandle EffectContext = ASC->MakeEffectContext();
 	ASC->BP_ApplyGameplayEffectToSelf(GE, 0, EffectContext);
-	URR_LOG(LogURR, Log, TEXT("ApplyAugment"));
 }
