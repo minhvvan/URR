@@ -13,7 +13,7 @@ void UURRWaveAlertWidget::SetWaveNum(int num)
 
 void UURRWaveAlertWidget::SetMonsterInfo(FMonsterInfo monsters)
 {
-	//TODO: Img set
+	ImgMonster->SetBrushFromTexture(MonsterImages[monsters.MonsterID]);
 	TxtMonster->SetText(FText::AsNumber(monsters.MonsterNum));
 }
 

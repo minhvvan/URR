@@ -83,7 +83,7 @@ protected:
 
 	UPROPERTY(config)
 	TArray<FSoftObjectPath> MonsterMaterials;
-	TSharedPtr<FStreamableHandle> MonsterMaterialHandle;	
+	TSharedPtr<FStreamableHandle> MonsterMaterialHandle;
 	
 	UPROPERTY(config)
 	TArray<FSoftObjectPath> AnimInstances;

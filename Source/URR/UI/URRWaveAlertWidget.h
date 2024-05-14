@@ -30,6 +30,10 @@ protected:
 	UPROPERTY(VisibleAnywhere, Transient, meta = (BindWidgetAnim))
 	TObjectPtr<class UWidgetAnimation> WaveAnim;
 
+protected:
+	UPROPERTY(EditAnywhere)
+	TMap<int, UTexture2D*> MonsterImages;
+
 public:
 	void SetWaveNum(int num);
 	
