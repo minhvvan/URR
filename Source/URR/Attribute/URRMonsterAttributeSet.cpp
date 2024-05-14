@@ -12,7 +12,8 @@ UURRMonsterAttributeSet::UURRMonsterAttributeSet():
 	MaxHealth(1),
 	Speed(0),
 	Distance(0),
-	KnockBackDistance(0)
+	KnockBackDistance(0),
+	Reward(1)
 {
 }
 

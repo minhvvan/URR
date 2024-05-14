@@ -13,6 +13,7 @@
 #include "Engine/AssetManager.h"
 #include "Kismet/GameplayStatics.h"
 #include "AbilitySystemBlueprintLibrary.h"
+#include "Tag/URRGameplayTag.h"
 #include "URR.h"
 
 AURRCharacterMonster::AURRCharacterMonster() : MonsterID(0), bMove(false)
@@ -264,6 +265,11 @@ void AURRCharacterMonster::SetDead()
 		{
 			FGameplayEffectContextHandle EffectContextHandle = ASC->MakeEffectContext();
 			FGameplayEffectSpecHandle EffectSpecHandle = ASC->MakeOutgoingSpec(GiveCoinffect, 0.f, EffectContextHandle);
+
+			const UURRMonsterAttributeSet* Stat = ASC->GetSet<UURRMonsterAttributeSet>();
+			if (!Stat) return;
+
+			EffectSpecHandle.Data->SetSetByCallerMagnitude(URRTAG_PLAYER_GETCOIN, Stat->GetReward());
 			if (EffectSpecHandle.IsValid())
 			{
 				ASC->BP_ApplyGameplayEffectSpecToTarget(EffectSpecHandle, TargetASC);

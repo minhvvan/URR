@@ -68,9 +68,6 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, Meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UInputAction> DownAction;
 
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, Meta = (AllowPrivateAccess = "true"))
-	TObjectPtr<class UInputAction> TestAction;
-
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Widget, Meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UURRHudWidget> HudWidget;
 
@@ -81,7 +78,7 @@ protected:
 	TMap<int, TSubclassOf<class UGameplayAbility>> StartAbilities;
 
 	UPROPERTY(EditAnywhere, Category = GAS)
-	TSubclassOf<class UGameplayEffect> Testffect;
+	TSubclassOf<class UGameplayEffect> GetCoinEffect;
 
 protected:
 	void MoveInputPressed(int32 InputId);

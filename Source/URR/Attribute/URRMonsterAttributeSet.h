@@ -30,6 +30,7 @@ public:
 	ATTRIBUTE_ACCESSORS(UURRMonsterAttributeSet, Distance);
 	ATTRIBUTE_ACCESSORS(UURRMonsterAttributeSet, Damage);
 	ATTRIBUTE_ACCESSORS(UURRMonsterAttributeSet, KnockBackDistance);
+	ATTRIBUTE_ACCESSORS(UURRMonsterAttributeSet, Reward);
 
 	virtual void PreAttributeChange(const FGameplayAttribute& Attribute, float& NewValue);
 
@@ -59,6 +60,9 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, Category = Stat, meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData KnockBackDistance;
+
+	UPROPERTY(BlueprintReadOnly, Category = Stat, meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData Reward;
 
 	bool bOutOfHealth = false;
 };

@@ -96,7 +96,6 @@ void AURRMonsterSpawner::WaveAlertCallback()
 {
 	if (!ASC) return;
 
-	URR_LOG(LogURR, Log, TEXT("Spawn"));
 	FGameplayAbilitySpec* Spec = ASC->FindAbilitySpecFromInputID(0);
 	if (Spec)
 	{

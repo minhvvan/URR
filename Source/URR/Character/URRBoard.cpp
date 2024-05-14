@@ -11,6 +11,7 @@
 #include "UI/URRHudWidget.h"
 #include "Player/URRPlayerState.h"
 #include "GA/URRGA_SpawnUnit.h"
+#include "Tag/URRGameplayTag.h"
 #include "Urr.h"
 
 enum MoveDir
@@ -58,6 +59,12 @@ AURRBoard::AURRBoard()
 	if (TileClassRef.Succeeded())
 	{
 		TileClass = TileClassRef.Class;
+	}
+
+	ConstructorHelpers::FClassFinder<UGameplayEffect> GetCoinGERef(TEXT("/Script/Engine.Blueprint'/Game/URR/Blueprint/GE/BPGE_GetCoin.BPGE_GetCoin_C'"));
+	if (GetCoinGERef.Succeeded())
+	{
+		GetCoinEffect = GetCoinGERef.Class;
 	}
 }
 
@@ -135,6 +142,14 @@ void AURRBoard::BeginPlay()
 			HudWidget->SetAbilitySystemComponent(this);
 		}
 	}
+
+	FGameplayEffectContextHandle EffectContextHandle = ASC->MakeEffectContext();
+	FGameplayEffectSpecHandle EffectSpecHandle = ASC->MakeOutgoingSpec(GetCoinEffect, 0, EffectContextHandle);
+	EffectSpecHandle.Data->SetSetByCallerMagnitude(URRTAG_PLAYER_GETCOIN, 10.f);
+	if (EffectSpecHandle.IsValid())
+	{
+		ASC->BP_ApplyGameplayEffectSpecToSelf(EffectSpecHandle);
+	}
 }
 
 // Called every frame
@@ -154,7 +169,6 @@ void AURRBoard::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	EnhancedInputComponent->BindAction(RightAction, ETriggerEvent::Triggered, this, &AURRBoard::MoveInputPressed, 1);
 	EnhancedInputComponent->BindAction(UpAction, ETriggerEvent::Triggered, this, &AURRBoard::MoveInputPressed, 2);
 	EnhancedInputComponent->BindAction(DownAction, ETriggerEvent::Triggered, this, &AURRBoard::MoveInputPressed, 3);
-	EnhancedInputComponent->BindAction(TestAction, ETriggerEvent::Triggered, this, &AURRBoard::Test, 0);
 }
 
 void AURRBoard::MoveInputPressed(int32 InputId)
@@ -176,16 +190,6 @@ void AURRBoard::MoveInputPressed(int32 InputId)
 	}
 }
 
-void AURRBoard::Test(int32 InputId)
-{
-	FGameplayEffectContextHandle EffectContextHandle = ASC->MakeEffectContext();
-	EffectContextHandle.AddSourceObject(this);
-	FGameplayEffectSpecHandle EffectSpecHandle = ASC->MakeOutgoingSpec(Testffect, 0, EffectContextHandle);
-	if (EffectSpecHandle.IsValid())
-	{
-		ASC->BP_ApplyGameplayEffectSpecToSelf(EffectSpecHandle);
-	}
-}
 
 bool AURRBoard::IsValidIdx(int y, int x)
 {
