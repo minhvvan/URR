@@ -3,8 +3,12 @@
 
 #include "GA/URRGA_SpawnMonster.h"
 #include "Character/URRCharacterMonster.h"
+#include "Character/URRBoard.h"
 #include "Actor/URRMonsterSpawner.h"
 #include "Abilities/Tasks/AbilityTask_SpawnActor.h"
+#include "AbilitySystemBlueprintLibrary.h"
+#include "Attribute/URRPlayerAttributeSet.h"
+#include "Kismet/GameplayStatics.h"
 #include "URR.h"
 
 UURRGA_SpawnMonster::UURRGA_SpawnMonster():
@@ -25,6 +29,14 @@ void UURRGA_SpawnMonster::ActivateAbility(const FGameplayAbilitySpecHandle Handl
 
 	Spawner = CastChecked<AURRMonsterSpawner>(ActorInfo->AvatarActor.Get());
 	FMonsterInfo CurrentMonsterInfo = Spawner->GetCurrentMonsterInfo();
+
+	AURRBoard* Board = Cast<AURRBoard>(UGameplayStatics::GetActorOfClass(GEngine->GameViewport->GetWorld(), AURRBoard::StaticClass()));
+	if (Board)
+	{
+		UAbilitySystemComponent* BoardASC = UAbilitySystemBlueprintLibrary::GetAbilitySystemComponent(Board);
+		const UURRPlayerAttributeSet* PlayerAttribute = BoardASC->GetSet<UURRPlayerAttributeSet>();
+		RewardLevel = PlayerAttribute->GetRewardLevel();
+	}
 
 	//CurrentMonsterInfo.Num만큼 스폰
 	MonsterID = CurrentMonsterInfo.MonsterID;
@@ -47,7 +59,7 @@ void UURRGA_SpawnMonster::StartSpawnMonster()
 	AURRCharacterMonster* Monster = Spawner->GetWorld()->SpawnActorDeferred<AURRCharacterMonster>(MonsterClass, FTransform::Identity, nullptr, nullptr, ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn);
 	if (Monster)
 	{
-		Monster->InitMonster(MonsterID);
+		Monster->InitMonster(MonsterID, RewardLevel);
 		Monster->FinishSpawning(Spawner->GetActorTransform());
 		Monster->StartMove();
 

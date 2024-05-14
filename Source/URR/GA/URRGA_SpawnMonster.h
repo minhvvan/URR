@@ -30,6 +30,7 @@ protected:
 	TObjectPtr<class AURRMonsterSpawner> Spawner;
 	
 	int MonsterID;
+	float RewardLevel;
 	int MonsterNum;
 
 	float MonsterSpawnTerm;

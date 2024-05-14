@@ -7,6 +7,14 @@
 #include "GameplayEffect.h"
 #include "URRWaveManager.generated.h"
 
+UENUM(BlueprintType)
+enum class EAugmentType : uint8
+{
+	AUG_Unit UMETA(DisplayName = "Unit"),
+	AUG_Util UMETA(DisplayName = "Util"),
+};
+
+
 USTRUCT(BlueprintType)
 struct FMonsterInfo
 {
@@ -54,6 +62,9 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	TArray<int> Targets;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	EAugmentType AugmentType;
 };
 
 
@@ -74,7 +85,7 @@ protected:
 	void StartNextWave();
 
 	UFUNCTION()
-	void AugmentSelectedCallback(TSubclassOf<UGameplayEffect> GE, TArray<int> Targets);
+	void AugmentSelectedCallback(TSubclassOf<UGameplayEffect> GE, TArray<int> Targets, EAugmentType AugmentType);
 
 protected:
 	UPROPERTY()

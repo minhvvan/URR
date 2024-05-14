@@ -36,7 +36,7 @@ protected:
 	TObjectPtr<class UAnimMontage> AttackMontage;
 
 public:
-	void InitMonster(int monsterID);
+	void InitMonster(int monsterID, float rewardLevel);
 
 	void StartMove();
 	void StartAttack();
@@ -64,7 +64,10 @@ protected:
 	TObjectPtr<class UURRMonsterAttributeSet> URRMonsterAttributeSet;
 
 	UPROPERTY(EditAnywhere, Category = GAS)
-	TSubclassOf<class UGameplayEffect> InitStatEffect;
+	TSubclassOf<class UGameplayEffect> InitStatEffect;	
+	
+	UPROPERTY(EditAnywhere, Category = GAS)
+	TSubclassOf<class UGameplayEffect> InitRewardEffect;
 
 	UPROPERTY(EditAnywhere, Category = GAS)
 	TSubclassOf<class UGameplayEffect> GiveCoinffect;
@@ -108,6 +111,7 @@ protected:
 
 protected:
 	int MonsterID;
+	int RewardLevel;
 	bool bMove;
 
 protected:

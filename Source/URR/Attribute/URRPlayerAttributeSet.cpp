@@ -8,7 +8,8 @@
 UURRPlayerAttributeSet::UURRPlayerAttributeSet() :
 	Coin(0),
 	Health(2048),
-	MaxHealth(2048)
+	MaxHealth(2048),
+	RewardLevel(1)
 {
 }
 

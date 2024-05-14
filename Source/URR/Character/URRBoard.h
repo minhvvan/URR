@@ -96,5 +96,6 @@ public:
 
 	class AURRTile* GetEmptyTile();
 
-	void ApplyAugment(TSubclassOf<UGameplayEffect> GE, TArray<int> Targets);
+	void ApplyAugmentToUnit(TSubclassOf<UGameplayEffect> GE, TArray<int> Targets);
+	void ApplyAugmentToSelf(TSubclassOf<UGameplayEffect> GE);
 };

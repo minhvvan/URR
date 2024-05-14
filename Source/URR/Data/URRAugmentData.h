@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "UObject/Object.h"
 #include "GameplayEffect.h"
+#include "Framework/URRWaveManager.h"
 #include "URRAugmentData.generated.h"
 
 /**
@@ -21,4 +22,5 @@ public:
 	UTexture2D* Icon;
 	TSubclassOf<UGameplayEffect> GE;
 	TArray<int> Targets;
+	EAugmentType AugmentType;
 };

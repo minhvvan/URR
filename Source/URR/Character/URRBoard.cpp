@@ -473,7 +473,7 @@ AURRTile* AURRBoard::GetEmptyTile()
 	return EmptyTiles[rand];
 }
 
-void AURRBoard::ApplyAugment(TSubclassOf<UGameplayEffect> GE, TArray<int> Targets)
+void AURRBoard::ApplyAugmentToUnit(TSubclassOf<UGameplayEffect> GE, TArray<int> Targets)
 {
 	for (auto& Row : Tiles)
 	{
@@ -484,5 +484,17 @@ void AURRBoard::ApplyAugment(TSubclassOf<UGameplayEffect> GE, TArray<int> Target
 				tile->ApplyAugment(GE);
 			}
 		}
+	}
+}
+
+void AURRBoard::ApplyAugmentToSelf(TSubclassOf<UGameplayEffect> GE)
+{
+	if (!ASC) return;
+
+	FGameplayEffectContextHandle EffectContextHandle = ASC->MakeEffectContext();
+	FGameplayEffectSpecHandle EffectSpecHandle = ASC->MakeOutgoingSpec(GE, 0, EffectContextHandle);
+	if (EffectSpecHandle.IsValid())
+	{
+		ASC->BP_ApplyGameplayEffectSpecToSelf(EffectSpecHandle);
 	}
 }

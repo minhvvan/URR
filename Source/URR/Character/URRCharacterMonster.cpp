@@ -16,7 +16,7 @@
 #include "Tag/URRGameplayTag.h"
 #include "URR.h"
 
-AURRCharacterMonster::AURRCharacterMonster() : MonsterID(0), bMove(false)
+AURRCharacterMonster::AURRCharacterMonster() : MonsterID(0), bMove(false), RewardLevel(0)
 {
 	URRMonsterAttributeSet = CreateDefaultSubobject<UURRMonsterAttributeSet>(TEXT("URRMonsterAttributeSet"));
 	HpBarComp = CreateDefaultSubobject<UURRGASWidgetComponent>(TEXT("HpBarComp"));
@@ -56,9 +56,10 @@ UAbilitySystemComponent* AURRCharacterMonster::GetAbilitySystemComponent() const
     return ASC;
 }
 
-void AURRCharacterMonster::InitMonster(int monsterID)
+void AURRCharacterMonster::InitMonster(int monsterID, float rewardLevel)
 {
     MonsterID = monsterID;
+	RewardLevel = rewardLevel;
 }
 
 void AURRCharacterMonster::StartMove()
@@ -100,7 +101,6 @@ void AURRCharacterMonster::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
 
-	//URR_LOG(LogURR, Log, TEXT("%s"), *GetActorLocation().ToString());
 }
 
 void AURRCharacterMonster::BeginPlay()
@@ -123,11 +123,16 @@ void AURRCharacterMonster::PostInitializeComponents()
 		}
 
 		FGameplayEffectContextHandle EffectContextHandle = ASC->MakeEffectContext();
-		EffectContextHandle.AddSourceObject(this);
 		FGameplayEffectSpecHandle EffectSpecHandle = ASC->MakeOutgoingSpec(InitStatEffect, MonsterID + 1, EffectContextHandle);
 		if (EffectSpecHandle.IsValid())
 		{
 			ASC->BP_ApplyGameplayEffectSpecToSelf(EffectSpecHandle);
+		}
+
+		FGameplayEffectSpecHandle RewardEffectSpecHandle = ASC->MakeOutgoingSpec(InitRewardEffect, RewardLevel, EffectContextHandle);
+		if (RewardEffectSpecHandle.IsValid())
+		{
+			ASC->BP_ApplyGameplayEffectSpecToSelf(RewardEffectSpecHandle);
 		}
 
 		for (auto StartAbility : StartAbilities)

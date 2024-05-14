@@ -4,9 +4,10 @@
 
 #include "CoreMinimal.h"
 #include "UI/URRGASWidget.h"
+#include "Framework/URRWaveManager.h"
 #include "URRAugmentWidget.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnAugmentSelected, TSubclassOf<UGameplayEffect>, GE, TArray<int>, Targets);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnAugmentSelected, TSubclassOf<UGameplayEffect>, GE, TArray<int>, Targets, EAugmentType, AugmentType);
 /**
  * 
  */

@@ -27,6 +27,7 @@ public:
 	ATTRIBUTE_ACCESSORS(UURRPlayerAttributeSet, Coin);
 	ATTRIBUTE_ACCESSORS(UURRPlayerAttributeSet, Health);
 	ATTRIBUTE_ACCESSORS(UURRPlayerAttributeSet, MaxHealth);
+	ATTRIBUTE_ACCESSORS(UURRPlayerAttributeSet, RewardLevel);
 	ATTRIBUTE_ACCESSORS(UURRPlayerAttributeSet, Cost);
 	ATTRIBUTE_ACCESSORS(UURRPlayerAttributeSet, Damage);
 
@@ -39,6 +40,9 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, Category = Stat, meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData MaxHealth;
+
+	UPROPERTY(BlueprintReadOnly, Category = Stat, meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData RewardLevel;
 
 	UPROPERTY(BlueprintReadOnly, Category = Stat, meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData Cost;	

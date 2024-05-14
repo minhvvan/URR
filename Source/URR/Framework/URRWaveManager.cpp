@@ -57,7 +57,7 @@ void UURRWaveManager::PrepareNextWave()
 		AugmentWidget->OnAugmentSelected.AddDynamic(this, &UURRWaveManager::AugmentSelectedCallback);
 		AugmentWidget->AddToViewport();
 
-		//for (int i = 0; i < 3; i++)
+		for (int i = 0; i < 2; i++)
 		{
 			int idx = FMath::RandRange(0, Augments.Num()-1);
 			FAugment* augment = Augments[idx];
@@ -76,15 +76,22 @@ void UURRWaveManager::StartNextWave()
 	Spawner->SpawnMonster();
 }
 
-void UURRWaveManager::AugmentSelectedCallback(TSubclassOf<UGameplayEffect> GE, TArray<int> Targets)
+void UURRWaveManager::AugmentSelectedCallback(TSubclassOf<UGameplayEffect> GE, TArray<int> Targets, EAugmentType AugmentType)
 {
 	UGameplayStatics::SetGamePaused(GEngine->GameViewport->GetWorld(), false);
-
 	AURRBoard* Board = Cast<AURRBoard>(UGameplayStatics::GetActorOfClass(GEngine->GameViewport->GetWorld(), AURRBoard::StaticClass()));
+
 	if (Board)
 	{
-		Board->ApplyAugment(GE, Targets);
+		if (AugmentType == EAugmentType::AUG_Unit)
+		{
+			Board->ApplyAugmentToUnit(GE, Targets);
+		}
+		else if (AugmentType == EAugmentType::AUG_Util)
+		{
+			Board->ApplyAugmentToSelf(GE);
+		}
 	}
-	
+
 	StartNextWave();
 }
