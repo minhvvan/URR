@@ -7,15 +7,17 @@
 #include "Blueprint/IUserObjectListEntry.h"
 #include "URRAugmentItemWidget.generated.h"
 
-/**
- * 
- */
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnSelectedItem, class UURRAugmentData*, Data);
+
 UCLASS()
 class URR_API UURRAugmentItemWidget : public UURRGASWidget, public IUserObjectListEntry
 {
 	GENERATED_BODY()
 
 protected:
+	UPROPERTY(VisibleAnywhere, meta=(BindWidget))
+	TObjectPtr<class UButton> BtnAugment;
+
 	UPROPERTY(VisibleAnywhere, meta=(BindWidget))
 	TObjectPtr<class UImage> ImgIcon;
 
@@ -29,6 +31,17 @@ public:
 	virtual void NativeOnListItemObjectSet(UObject* ListItemObject) override;
 	virtual void NativeOnInitialized();
 
-protected:
+	void SetWidgetInfo(class UURRAugmentData* augmentData);
 
+	FOnSelectedItem OnSelected;
+
+	UFUNCTION()
+	void OnClicked();
+
+protected:
+	void SetIcon(UTexture2D* icon);
+	void SetTitle(FString title);
+	void SetDesc(FString desc);
+
+	UURRAugmentData* AugmentData;
 };

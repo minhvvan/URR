@@ -2,46 +2,44 @@
 
 
 #include "UI/URRAugmentWidget.h"
+#include "UI/URRAugmentItemWidget.h"
 #include "Components/ListView.h"
 #include "Data/URRAugmentData.h"
 #include "Framework/URRWaveManager.h"
 #include "URR.h"
 
-void UURRAugmentWidget::AddItem(FAugment* augment)
+void UURRAugmentWidget::AddItem(FAugment* augment, int i)
 {
-	UURRAugmentData* NewItem = NewObject<UURRAugmentData>();
-	NewItem->Title = augment->Title;
-	NewItem->Desc = augment->Desc;
-	NewItem->Icon = augment->Icon;
-	NewItem->GE = augment->GE;
-	NewItem->Targets = augment->Targets;
-	NewItem->AugmentType = augment->AugmentType;
+	UURRAugmentItemWidget* Target = Augment1;
 
-	LVAugment->AddItem(NewItem);
+	switch (i)
+	{
+	case 0:
+		Target = Augment1;
+		break;
+	case 1:
+		Target = Augment2;
+		break;
+	case 2:
+		Target = Augment3;
+		break;
+	}
+
+	UURRAugmentData* NewItem = NewObject<UURRAugmentData>();
+	NewItem->AugmentData = augment;
+
+	Target->SetWidgetInfo(NewItem);
+	Target->OnSelected.AddDynamic(this, &UURRAugmentWidget::ItemClickCallback);
 }
 
 void UURRAugmentWidget::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
 
-	LVAugment->OnItemClicked().AddUObject(this, &UURRAugmentWidget::ItemClickCallback);
 }
 
-void UURRAugmentWidget::ItemClickCallback(UObject* item)
+void UURRAugmentWidget::ItemClickCallback(UURRAugmentData* augment)
 {
-	UURRAugmentData* Data = Cast<UURRAugmentData>(item);
-
-	if (Data)
-	{
-		//증강 적용
-		//GE를 전달 -> Board에서는 전달받은 GE를 적용 
-		//GE는 Rank -> 능력치 조정
-		UURRAugmentData* SelectedAugment = Cast<UURRAugmentData>(item);
-		if (SelectedAugment)
-		{
-			OnAugmentSelected.Broadcast(SelectedAugment->GE, SelectedAugment->Targets, SelectedAugment->AugmentType);
-		}
-
-		RemoveFromParent();
-	}
+	OnAugmentSelected.Broadcast(augment);
+	RemoveFromParent();
 }

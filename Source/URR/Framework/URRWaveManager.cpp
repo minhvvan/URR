@@ -4,6 +4,7 @@
 #include "Framework/URRWaveManager.h"
 #include "URR.h"
 #include "Kismet/GameplayStatics.h"
+#include "Data/URRAugmentData.h"
 #include "Actor/URRMonsterSpawner.h"
 #include "Character/URRBoard.h"
 #include "UI/URRAugmentWidget.h"
@@ -57,13 +58,14 @@ void UURRWaveManager::PrepareNextWave()
 		AugmentWidget->OnAugmentSelected.AddDynamic(this, &UURRWaveManager::AugmentSelectedCallback);
 		AugmentWidget->AddToViewport();
 
-		for (int i = 0; i < 2; i++)
+		for (int i = 0; i < 3; i++)
 		{
 			int idx = FMath::RandRange(0, Augments.Num()-1);
 			FAugment* augment = Augments[idx];
 			Augments.Remove(augment);
+			CurrentShowAugments.Add(augment);
 
-			AugmentWidget->AddItem(augment);
+			AugmentWidget->AddItem(augment, i);
 		}
 	}
 }
@@ -76,21 +78,29 @@ void UURRWaveManager::StartNextWave()
 	Spawner->SpawnMonster();
 }
 
-void UURRWaveManager::AugmentSelectedCallback(TSubclassOf<UGameplayEffect> GE, TArray<int> Targets, EAugmentType AugmentType)
+void UURRWaveManager::AugmentSelectedCallback(UURRAugmentData* augment)
 {
 	UGameplayStatics::SetGamePaused(GEngine->GameViewport->GetWorld(), false);
 	AURRBoard* Board = Cast<AURRBoard>(UGameplayStatics::GetActorOfClass(GEngine->GameViewport->GetWorld(), AURRBoard::StaticClass()));
 
 	if (Board)
 	{
-		if (AugmentType == EAugmentType::AUG_Unit)
+		EAugmentType type = augment->AugmentData->AugmentType;
+
+		if (type == EAugmentType::AUG_Unit)
 		{
-			Board->ApplyAugmentToUnit(GE, Targets);
+			Board->ApplyAugmentToUnit(augment->AugmentData->GE, augment->AugmentData->Targets);
 		}
-		else if (AugmentType == EAugmentType::AUG_Util)
+		else if (type == EAugmentType::AUG_Util)
 		{
-			Board->ApplyAugmentToSelf(GE);
+			Board->ApplyAugmentToSelf(augment->AugmentData->GE);
 		}
+	}
+
+	CurrentShowAugments.Remove(augment->AugmentData);
+	while (!CurrentShowAugments.IsEmpty())
+	{
+		Augments.Add(CurrentShowAugments.Pop());
 	}
 
 	StartNextWave();

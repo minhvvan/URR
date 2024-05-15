@@ -111,8 +111,8 @@ protected:
 
 protected:
 	int MonsterID;
-	int RewardLevel;
 	bool bMove;
+	int RewardLevel;
 
 protected:
 	void MonsterMeshLoadCompleted();

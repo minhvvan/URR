@@ -85,7 +85,7 @@ protected:
 	void StartNextWave();
 
 	UFUNCTION()
-	void AugmentSelectedCallback(TSubclassOf<UGameplayEffect> GE, TArray<int> Targets, EAugmentType AugmentType);
+	void AugmentSelectedCallback(class UURRAugmentData* augment);
 
 protected:
 	UPROPERTY()
@@ -102,4 +102,5 @@ protected:
 	TObjectPtr<class UURRAugmentWidget> AugmentWidget;
 
 	TArray<FAugment*> Augments;
+	TArray<FAugment*> CurrentShowAugments;
 };

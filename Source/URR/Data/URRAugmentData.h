@@ -17,10 +17,5 @@ class URR_API UURRAugmentData : public UObject
 	GENERATED_BODY()
 	
 public:
-	FString Title;
-	FString Desc;
-	UTexture2D* Icon;
-	TSubclassOf<UGameplayEffect> GE;
-	TArray<int> Targets;
-	EAugmentType AugmentType;
+	FAugment* AugmentData;
 };

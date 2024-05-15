@@ -7,7 +7,7 @@
 #include "Framework/URRWaveManager.h"
 #include "URRAugmentWidget.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_ThreeParams(FOnAugmentSelected, TSubclassOf<UGameplayEffect>, GE, TArray<int>, Targets, EAugmentType, AugmentType);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnAugmentSelected, class UURRAugmentData* , AugmentData);
 /**
  * 
  */
@@ -18,17 +18,24 @@ class URR_API UURRAugmentWidget : public UURRGASWidget
 	
 protected:
 	UPROPERTY(VisibleAnywhere, meta=(BindWidget))
-	TObjectPtr<class UListView> LVAugment;
+	TObjectPtr<class UURRAugmentItemWidget> Augment1;
+
+	UPROPERTY(VisibleAnywhere, meta = (BindWidget))
+	TObjectPtr<class UURRAugmentItemWidget> Augment2;
+
+	UPROPERTY(VisibleAnywhere, meta = (BindWidget))
+	TObjectPtr<class UURRAugmentItemWidget> Augment3;
 
 public:
 	FOnAugmentSelected OnAugmentSelected;
 
 public:
-	void AddItem(struct FAugment* augment);
+	void AddItem(struct FAugment* augment, int i);
 
 public:
 	virtual void NativeOnInitialized();
 
 protected:
-	void ItemClickCallback(UObject* item);
+	UFUNCTION()
+	void ItemClickCallback(class UURRAugmentData* augment);
 };
