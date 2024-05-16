@@ -202,14 +202,12 @@ void AURRBoard::OnClicked()
 	FHitResult result;
 	if (PC->GetHitResultUnderCursor(CCHANNEL_URRCLICK, true, result))
 	{
+		if(SelectedUnit) SelectedUnit->SetShowRangeIndicator(false);
 		SelectedUnit = Cast<AURRCharacterUnit>(result.GetActor());
 		if (!SelectedUnit) return;
 
 		SelectedUnit->SetShowRangeIndicator(true);
-		/*
-		Unit->OnClicked
-		HUD->SetInfo
-		*/
+		HudWidget->ShowUnitInfo(SelectedUnit);
 	}
 	else
 	{
@@ -217,6 +215,7 @@ void AURRBoard::OnClicked()
 		SelectedUnit->SetShowRangeIndicator(false);
 
 		SelectedUnit = nullptr;
+		HudWidget->HideUnitInfo();
 	}
 }
 

@@ -20,6 +20,24 @@ enum class EUnitType : uint8
 	UT_MechaSniper UMETA(DisplayName = "MechaSniper"),
 };
 
+UENUM(BlueprintType)
+enum class EFindTargetType : uint8
+{
+	FT_First UMETA(DisplayName = "First"),
+	FT_Last UMETA(DisplayName = "Last"),
+	FT_MaxHP UMETA(DisplayName = "MaxHP"),
+	FT_MinHP UMETA(DisplayName = "MinHP"),
+};
+
+USTRUCT()
+struct FFindTargetText : public FTableRowBase
+{
+	GENERATED_BODY()
+
+	UPROPERTY(EditAnywhere)
+	FString Text;
+};
+
 UCLASS()
 class URR_API UURRGameInstance : public UGameInstance
 {
@@ -27,4 +45,7 @@ class URR_API UURRGameInstance : public UGameInstance
 	
 public:
 	UURRGameInstance();
+
+protected:
+
 };

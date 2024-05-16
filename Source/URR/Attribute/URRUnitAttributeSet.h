@@ -32,6 +32,7 @@ public:
 	ATTRIBUTE_ACCESSORS(UURRUnitAttributeSet, CriticalAttackRate);
 	ATTRIBUTE_ACCESSORS(UURRUnitAttributeSet, KnockBackDist);
 	ATTRIBUTE_ACCESSORS(UURRUnitAttributeSet, SlowRate);
+	ATTRIBUTE_ACCESSORS(UURRUnitAttributeSet, FindTargetType);
 
 protected:
 	UPROPERTY(BlueprintReadOnly, Category = Stat, meta = (AllowPrivateAccess = true))
@@ -57,4 +58,7 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, Category = Stat, meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData SlowRate;
+
+	UPROPERTY(BlueprintReadOnly, Category = Stat, meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData FindTargetType;
 };
