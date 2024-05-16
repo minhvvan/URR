@@ -12,6 +12,9 @@
 #include "Player/URRPlayerState.h"
 #include "GA/URRGA_SpawnUnit.h"
 #include "Tag/URRGameplayTag.h"
+#include "Framework/URRPlayerController.h"
+#include "Character/URRCharacterUnit.h"
+#include "Physics/URRCollision.h"
 #include "Urr.h"
 
 enum MoveDir
@@ -169,6 +172,7 @@ void AURRBoard::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	EnhancedInputComponent->BindAction(RightAction, ETriggerEvent::Triggered, this, &AURRBoard::MoveInputPressed, 1);
 	EnhancedInputComponent->BindAction(UpAction, ETriggerEvent::Triggered, this, &AURRBoard::MoveInputPressed, 2);
 	EnhancedInputComponent->BindAction(DownAction, ETriggerEvent::Triggered, this, &AURRBoard::MoveInputPressed, 3);
+	EnhancedInputComponent->BindAction(ClickAction, ETriggerEvent::Triggered, this, &AURRBoard::OnClicked);
 }
 
 void AURRBoard::MoveInputPressed(int32 InputId)
@@ -187,6 +191,32 @@ void AURRBoard::MoveInputPressed(int32 InputId)
 	case MoveDir::MOVE_DOWN:
 		MoveDown();
 		break;
+	}
+}
+
+void AURRBoard::OnClicked()
+{
+	AURRPlayerController* PC = Cast<AURRPlayerController>(GetController());
+	if (!PC) return;
+
+	FHitResult result;
+	if (PC->GetHitResultUnderCursor(CCHANNEL_URRCLICK, true, result))
+	{
+		SelectedUnit = Cast<AURRCharacterUnit>(result.GetActor());
+		if (!SelectedUnit) return;
+
+		SelectedUnit->SetShowRangeIndicator(true);
+		/*
+		Unit->OnClicked
+		HUD->SetInfo
+		*/
+	}
+	else
+	{
+		if (!SelectedUnit) return;
+		SelectedUnit->SetShowRangeIndicator(false);
+
+		SelectedUnit = nullptr;
 	}
 }
 

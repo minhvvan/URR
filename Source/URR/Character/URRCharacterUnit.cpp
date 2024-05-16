@@ -40,6 +40,10 @@ AURRCharacterUnit::AURRCharacterUnit() : Rank(0)
 	AccMesh->SetLeaderPoseComponent(GetMesh());
 	AccMesh->SetHiddenInGame(true);
 
+	RangeIndicator = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("RangeIndicator"));
+	RangeIndicator->SetupAttachment(RootComponent);
+	RangeIndicator->SetHiddenInGame(true);
+
 	UnitAttributeSet = CreateDefaultSubobject<UURRUnitAttributeSet>(TEXT("UnitAttributeSet"));
 
 	LoadCompletedPart.Init(false, 8);
@@ -100,23 +104,6 @@ void AURRCharacterUnit::PostInitializeComponents()
 		if (FindTargetSpec)
 		{
 			ASC->TryActivateAbility(FindTargetSpec->Handle);
-		}
-	}
-
-	auto CharacterMesh = GetMesh();
-	if (CharacterMesh)
-	{
-		switch (Rank)
-		{
-		case 4:
-			CharacterMesh->SetWorldScale3D(FVector(2.1f, 2.1f, 2.1f));
-			break;
-		case 5:
-			CharacterMesh->SetWorldScale3D(FVector(1.6f, 1.6f, 1.6f));
-			break;
-		case 6:
-			CharacterMesh->SetWorldScale3D(FVector(1.3f, 1.3f, 1.3f));
-			break;
 		}
 	}
 }
@@ -231,6 +218,24 @@ void AURRCharacterUnit::Init(int rank)
 		LoadCompletedPart[(int)EAssetType::ASSET_ACC] = true;
 		break;
 	}
+
+	switch (Rank)
+	{
+	case 4:
+		SetActorScale3D(FVector(2.1f));
+		break;
+	case 5:
+		SetActorScale3D(FVector(1.6f));
+		break;
+	case 6:
+		SetActorScale3D(FVector(1.3f));
+		break;
+	default:
+		SetActorScale3D(FVector(2.3f));
+		break;
+	}
+
+	URR_LOG(LogURR, Log, TEXT("Init"));
 }
 
 void AURRCharacterUnit::SetTargetMonster(AURRCharacterMonster* target)
@@ -264,6 +269,17 @@ FTransform AURRCharacterUnit::GetMuzzleTransform()
 	}
 
 	return FTransform::Identity;
+}
+
+void AURRCharacterUnit::SetShowRangeIndicator(bool bShow)
+{
+	if (!ASC) return;
+
+	const UURRUnitAttributeSet* Attribute = ASC->GetSet<UURRUnitAttributeSet>();
+	float AttackRange = Attribute->GetAttackRange();
+
+	RangeIndicator->SetHiddenInGame(!bShow);
+	RangeIndicator->SetRelativeScale3D(FVector(AttackRange/40));
 }
 
 void AURRCharacterUnit::UnitMeshLoadCompleted()
@@ -333,7 +349,6 @@ void AURRCharacterUnit::MaskMeshLoadCompleted()
 
 	AdditiveMeshHandles[(int)EAdditiveMeshEnum::MESH_Mask]->ReleaseHandle();
 	AdditiveMeshHandles.Remove((int)EAdditiveMeshEnum::MESH_Mask);
-
 	UnitLoadCompleted((int)EAssetType::ASSET_HEAD);
 }
 

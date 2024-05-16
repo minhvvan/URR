@@ -9,6 +9,8 @@
 #include "GameplayEffect.h"
 #include "AbilitySystemComponent.h"
 #include "Urr.h"
+#include "Components/CapsuleComponent.h"
+#include "Physics/URRCollision.h"
 
 // Sets default values
 AURRTile::AURRTile(): isEmpty(true)
@@ -56,10 +58,23 @@ void AURRTile::BeginPlay()
 
 void AURRTile::UnitLoadCompleteCallback()
 {
-	FVector SpawnLoc = GetActorLocation();
-	SpawnLoc.Z += 138;
-	FTransform FinalTransform = FTransform(FRotator(0.f, 180.f, 0.f), SpawnLoc);
-	UnitCharacter->FinishSpawning(FinalTransform);
+	FVector StartLoc = GetActorLocation();
+	StartLoc.Z += 500;
+	FVector EndLoc = GetActorLocation();
+	EndLoc.Z -= 500;
+
+	FHitResult hitResult;
+	if (GetWorld()->LineTraceSingleByChannel(hitResult, StartLoc, EndLoc, CCHANNEL_URRFINDSPAWN))
+	{
+		float halfHeight = UnitCharacter->GetCapsuleComponent()->GetScaledCapsuleHalfHeight();
+		FVector SpawnLoc = hitResult.ImpactPoint;
+		URR_LOG(LogURR, Log, TEXT("ImpactPoint: %s"), *SpawnLoc.ToString());
+		URR_LOG(LogURR, Log, TEXT("halfHeight: %f"), halfHeight);
+		SpawnLoc.Z += halfHeight;
+
+		FTransform FinalTransform = FTransform(FRotator(0.f, 180.f, 0.f), SpawnLoc);
+		UnitCharacter->FinishSpawning(FinalTransform);
+	}
 }
 
 void AURRTile::TileMaterialLoadCompleted()
@@ -104,9 +119,6 @@ void AURRTile::SpawnUnit(int rank)
 	if (UnitClass)
 	{
 		//Spawn Uit
-		FVector SpawnLoc = GetActorLocation();
-		SpawnLoc.Z += 138;
-
 		FActorSpawnParameters params;
 		params.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AdjustIfPossibleButAlwaysSpawn;
 

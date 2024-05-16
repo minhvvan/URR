@@ -5,6 +5,7 @@
 #include "Player/URRPlayerState.h"
 #include "Kismet/GameplayStatics.h"
 #include "Framework/URRGameInstance.h"
+#include "Framework/URRPlayerController.h"
 #include "URR.h"
 
 AURRGameMode::AURRGameMode()
@@ -16,6 +17,7 @@ AURRGameMode::AURRGameMode()
 		DefaultPawnClass = PlayerPawnBPClass.Class;
 	}
 
+	PlayerControllerClass = AURRPlayerController::StaticClass();
 	PlayerStateClass = AURRPlayerState::StaticClass();
 }
 

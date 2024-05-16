@@ -68,6 +68,9 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, Meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UInputAction> DownAction;
 
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input, Meta = (AllowPrivateAccess = "true"))
+	TObjectPtr<class UInputAction> ClickAction;
+
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Widget, Meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UURRHudWidget> HudWidget;
 
@@ -82,7 +85,7 @@ protected:
 
 protected:
 	void MoveInputPressed(int32 InputId);
-	void Test(int32 InputId);
+	void OnClicked();
 
 	bool IsValidIdx(int y, int x);
 
@@ -90,6 +93,8 @@ protected:
 	void MoveRight();
 	void MoveUp();
 	void MoveDown();
+
+	TObjectPtr<class AURRCharacterUnit> SelectedUnit;
 
 public:
 	void SpawnUnit();

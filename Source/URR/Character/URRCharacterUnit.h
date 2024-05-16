@@ -59,6 +59,9 @@ protected:
 	UPROPERTY(EditAnywhere, Category = Mesh)
 	TObjectPtr<USkeletalMeshComponent> AccMesh;
 
+	UPROPERTY(EditAnywhere, Category = Mesh)
+	TObjectPtr<UStaticMeshComponent> RangeIndicator;
+
 protected:
 	UPROPERTY()
 	TObjectPtr<class UURRUnitAttributeSet> UnitAttributeSet;
@@ -93,6 +96,8 @@ public:
 	TSubclassOf<AURRProjectile> GetProjectileClass();
 
 	FTransform GetMuzzleTransform();
+
+	void SetShowRangeIndicator(bool bShow);
 
 protected:
 	void UnitMeshLoadCompleted();
