@@ -40,9 +40,9 @@ AURRCharacterUnit::AURRCharacterUnit() : Rank(0)
 	AccMesh->SetLeaderPoseComponent(GetMesh());
 	AccMesh->SetHiddenInGame(true);
 
-	RangeIndicator = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("RangeIndicator"));
-	RangeIndicator->SetupAttachment(RootComponent);
-	RangeIndicator->SetHiddenInGame(true);
+	Indicator = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("Indicator"));
+	Indicator->SetupAttachment(RootComponent);
+	Indicator->SetHiddenInGame(true);
 
 	UnitAttributeSet = CreateDefaultSubobject<UURRUnitAttributeSet>(TEXT("UnitAttributeSet"));
 
@@ -278,8 +278,10 @@ void AURRCharacterUnit::SetShowRangeIndicator(bool bShow)
 	const UURRUnitAttributeSet* Attribute = ASC->GetSet<UURRUnitAttributeSet>();
 	float AttackRange = Attribute->GetAttackRange();
 
-	RangeIndicator->SetHiddenInGame(!bShow);
-	RangeIndicator->SetRelativeScale3D(FVector(AttackRange/40));
+	float newScale = (AttackRange*2) / (GetActorScale().X * 100);
+
+	Indicator->SetHiddenInGame(!bShow);
+	Indicator->SetRelativeScale3D(FVector(newScale, newScale, 1));
 }
 
 void AURRCharacterUnit::UnitMeshLoadCompleted()

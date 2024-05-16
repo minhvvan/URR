@@ -60,7 +60,7 @@ protected:
 	TObjectPtr<USkeletalMeshComponent> AccMesh;
 
 	UPROPERTY(EditAnywhere, Category = Mesh)
-	TObjectPtr<UStaticMeshComponent> RangeIndicator;
+	TObjectPtr<UStaticMeshComponent> Indicator;
 
 protected:
 	UPROPERTY()
