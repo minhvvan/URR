@@ -52,7 +52,7 @@ void UURRGA_Attack::ApplyCooldown(const FGameplayAbilitySpecHandle Handle, const
 		const UURRUnitAttributeSet* Attribute = ASC->GetSet<UURRUnitAttributeSet>();
 		if (Attribute)
 		{
-			FGameplayEffectModifierMagnitude CooldownMagnitude(1.f / Attribute->GetAttackSpeed());
+			FGameplayEffectModifierMagnitude CooldownMagnitude(Attribute->GetAttackSpeed());
 			CooldownGE->DurationMagnitude = CooldownMagnitude;
 		}
 	}
