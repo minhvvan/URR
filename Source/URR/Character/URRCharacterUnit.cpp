@@ -3,6 +3,7 @@
 
 #include "Character/URRCharacterUnit.h"
 #include "Character/URRCharacterMonster.h"
+#include "Components/CapsuleComponent.h"
 #include "Actor/URRProjectile.h"
 #include "Attribute/URRUnitAttributeSet.h"
 #include "AbilitySystemComponent.h"

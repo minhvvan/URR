@@ -25,9 +25,6 @@ void UURRGA_AttackSpwanActor::ActivateAbility(const FGameplayAbilitySpecHandle H
 	{
 		FHitResult HitResult = UAbilitySystemBlueprintLibrary::GetHitResultFromTargetData(TriggerEventData->TargetData, 0);
 
-		FVector TargetLoc = HitResult.GetActor()->GetActorLocation();
-		//actor spawn
-
 		AURRCharacterUnit* Unit = CastChecked<AURRCharacterUnit>(ActorInfo->AvatarActor.Get());
 		AURRCharacterMonster* TargetMonster = Unit->GetTargetMonster();
 		TSubclassOf<AURRProjectile> Projectileclass = Unit->GetProjectileClass();

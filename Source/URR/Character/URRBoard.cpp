@@ -168,31 +168,13 @@ void AURRBoard::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 	UEnhancedInputComponent* EnhancedInputComponent = CastChecked<UEnhancedInputComponent>(InputComponent);
 	
-	EnhancedInputComponent->BindAction(LeftAction, ETriggerEvent::Triggered, this, &AURRBoard::MoveInputPressed, 0);
-	EnhancedInputComponent->BindAction(RightAction, ETriggerEvent::Triggered, this, &AURRBoard::MoveInputPressed, 1);
-	EnhancedInputComponent->BindAction(UpAction, ETriggerEvent::Triggered, this, &AURRBoard::MoveInputPressed, 2);
-	EnhancedInputComponent->BindAction(DownAction, ETriggerEvent::Triggered, this, &AURRBoard::MoveInputPressed, 3);
+	EnhancedInputComponent->BindAction(LeftAction, ETriggerEvent::Triggered, this, &AURRBoard::MoveLeft);
+	EnhancedInputComponent->BindAction(RightAction, ETriggerEvent::Triggered, this, &AURRBoard::MoveRight);
+	EnhancedInputComponent->BindAction(UpAction, ETriggerEvent::Triggered, this, &AURRBoard::MoveUp);
+	EnhancedInputComponent->BindAction(DownAction, ETriggerEvent::Triggered, this, &AURRBoard::MoveDown);
 	EnhancedInputComponent->BindAction(ClickAction, ETriggerEvent::Triggered, this, &AURRBoard::OnClicked);
 }
 
-void AURRBoard::MoveInputPressed(int32 InputId)
-{
-	switch (InputId)
-	{
-	case MoveDir::MOVE_LEFT:
-		MoveLeft();
-		break;
-	case MoveDir::MOVE_RIGHT:
-		MoveRight();
-		break;
-	case MoveDir::MOVE_UP:
-		MoveUp();
-		break;
-	case MoveDir::MOVE_DOWN:
-		MoveDown();
-		break;
-	}
-}
 
 void AURRBoard::OnClicked()
 {
@@ -234,10 +216,7 @@ void AURRBoard::MoveLeft()
 
 		for (int j = 0; j < 4; j++)
 		{
-			if (Tiles[i][j]->IsEmpty())
-			{
-				EmptySet.Add(j);
-			}
+			if (Tiles[i][j]->IsEmpty()) EmptySet.Add(j);
 			else ExistSet.Add(j);
 		}
 
@@ -278,8 +257,9 @@ void AURRBoard::MoveLeft()
 				int firstEmpty;
 				EmptySet.HeapPop(firstEmpty, true);
 
-				Tiles[i][currentIdx]->DestroyUnit();
-				Tiles[i][firstEmpty]->SpawnUnit(currentRank);
+				Swap(Tiles[i][firstEmpty]->UnitCharacter, Tiles[i][currentIdx]->UnitCharacter);
+				Tiles[i][firstEmpty]->AdjustUnit();
+				Tiles[i][currentIdx]->AdjustUnit();
 			}
 		
 			EmptySet.HeapPush(currentIdx);
@@ -340,8 +320,9 @@ void AURRBoard::MoveRight()
 				int firstEmpty;
 				EmptySet.HeapPop(firstEmpty, TGreater<int>(), true);
 
-				Tiles[i][currentIdx]->DestroyUnit();
-				Tiles[i][firstEmpty]->SpawnUnit(currentRank);
+				Swap(Tiles[i][firstEmpty]->UnitCharacter, Tiles[i][currentIdx]->UnitCharacter);
+				Tiles[i][firstEmpty]->AdjustUnit();
+				Tiles[i][currentIdx]->AdjustUnit();
 			}
 
 			EmptySet.HeapPush(currentIdx, TGreater<int>());
@@ -402,8 +383,9 @@ void AURRBoard::MoveUp()
 				int firstEmpty;
 				EmptySet.HeapPop(firstEmpty, true);
 
-				Tiles[currentIdx][j]->DestroyUnit();
-				Tiles[firstEmpty][j]->SpawnUnit(currentRank);
+				Swap(Tiles[currentIdx][j]->UnitCharacter, Tiles[firstEmpty][j]->UnitCharacter);
+				Tiles[currentIdx][j]->AdjustUnit();
+				Tiles[firstEmpty][j]->AdjustUnit();
 			}
 			
 			EmptySet.HeapPush(currentIdx);
@@ -464,8 +446,9 @@ void AURRBoard::MoveDown()
 				int firstEmpty;
 				EmptySet.HeapPop(firstEmpty, TGreater<int>(), true);
 
-				Tiles[currentIdx][j]->DestroyUnit();
-				Tiles[firstEmpty][j]->SpawnUnit(currentRank);
+				Swap(Tiles[currentIdx][j]->UnitCharacter, Tiles[firstEmpty][j]->UnitCharacter);
+				Tiles[currentIdx][j]->AdjustUnit();
+				Tiles[firstEmpty][j]->AdjustUnit();
 			}
 			
 			EmptySet.HeapPush(currentIdx, TGreater<int>());

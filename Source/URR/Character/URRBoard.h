@@ -84,7 +84,6 @@ protected:
 	TSubclassOf<class UGameplayEffect> GetCoinEffect;
 
 protected:
-	void MoveInputPressed(int32 InputId);
 	void OnClicked();
 
 	bool IsValidIdx(int y, int x);

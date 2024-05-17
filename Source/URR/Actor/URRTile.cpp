@@ -2,15 +2,17 @@
 
 
 #include "Actor/URRTile.h"
+#include "Character/URRBoard.h"
 #include "Character/URRCharacterUnit.h"
 #include "UI/URRGASWidgetComponent.h"
 #include "UI/URRTileRankWidget.h"
 #include "Engine/AssetManager.h"
 #include "GameplayEffect.h"
 #include "AbilitySystemComponent.h"
-#include "Urr.h"
+#include "Attribute/URRUnitAttributeSet.h"
 #include "Components/CapsuleComponent.h"
 #include "Physics/URRCollision.h"
+#include "Urr.h"
 
 // Sets default values
 AURRTile::AURRTile(): isEmpty(true)
@@ -58,23 +60,16 @@ void AURRTile::BeginPlay()
 
 void AURRTile::UnitLoadCompleteCallback()
 {
-	FVector StartLoc = GetActorLocation();
-	StartLoc.Z += 500;
-	FVector EndLoc = GetActorLocation();
-	EndLoc.Z -= 500;
+	FVector SpawnLoc = GetActorLocation();
+	SpawnLoc.Z += 50;
 
-	FHitResult hitResult;
-	if (GetWorld()->LineTraceSingleByChannel(hitResult, StartLoc, EndLoc, CCHANNEL_URRFINDSPAWN))
-	{
-		float halfHeight = UnitCharacter->GetCapsuleComponent()->GetScaledCapsuleHalfHeight();
-		FVector SpawnLoc = hitResult.ImpactPoint;
-		URR_LOG(LogURR, Log, TEXT("ImpactPoint: %s"), *SpawnLoc.ToString());
-		URR_LOG(LogURR, Log, TEXT("halfHeight: %f"), halfHeight);
-		SpawnLoc.Z += halfHeight;
+	if (!UnitCharacter) return;
 
-		FTransform FinalTransform = FTransform(FRotator(0.f, 180.f, 0.f), SpawnLoc);
-		UnitCharacter->FinishSpawning(FinalTransform);
-	}
+	float halfHeight = UnitCharacter->GetCapsuleComponent()->GetScaledCapsuleHalfHeight();
+	SpawnLoc.Z += halfHeight;
+
+	FTransform FinalTransform = FTransform(FRotator(0.f, 180.f, 0.f), SpawnLoc);
+	UnitCharacter->FinishSpawning(FinalTransform);
 }
 
 void AURRTile::TileMaterialLoadCompleted()
@@ -95,6 +90,15 @@ void AURRTile::Tick(float DeltaTime)
 
 }
 
+void AURRTile::SetTileRankMat()
+{
+	if (!RankWidget) RankWidget = CastChecked<UURRTileRankWidget>(RankWidgetComp->GetWidget());
+	RankWidget->SetRank(Rank);
+	RankWidgetComp->SetHiddenInGame(false);
+
+	TileMaterialHandle = UAssetManager::Get().GetStreamableManager().RequestAsyncLoad(TileMaterials[Rank], FStreamableDelegate::CreateUObject(this, &AURRTile::TileMaterialLoadCompleted));
+}
+
 bool AURRTile::IsEmpty()
 {
 	return isEmpty;
@@ -109,12 +113,8 @@ void AURRTile::SpawnUnit(int rank)
 		return;
 	}
 
-	if(!RankWidget) RankWidget = CastChecked<UURRTileRankWidget>(RankWidgetComp->GetWidget());
 	Rank = rank;
-	RankWidget->SetRank(rank);
-	RankWidgetComp->SetHiddenInGame(false);
-
-	TileMaterialHandle = UAssetManager::Get().GetStreamableManager().RequestAsyncLoad(TileMaterials[Rank], FStreamableDelegate::CreateUObject(this, &AURRTile::TileMaterialLoadCompleted));
+	SetTileRankMat();
 
 	if (UnitClass)
 	{
@@ -148,7 +148,7 @@ void AURRTile::DestroyUnit()
 		Rank = 0;
 
 		if (!RankWidget) RankWidget = CastChecked<UURRTileRankWidget>(RankWidgetComp->GetWidget());
-		RankWidget->SetRank(0);
+		RankWidget->SetRank(Rank);
 		RankWidgetComp->SetHiddenInGame(true);
 
 		TileMaterialHandle = UAssetManager::Get().GetStreamableManager().RequestAsyncLoad(TileMaterials[11], FStreamableDelegate::CreateUObject(this, &AURRTile::TileMaterialLoadCompleted));
@@ -169,4 +169,44 @@ void AURRTile::ApplyAugment(TSubclassOf<UGameplayEffect> GE)
 
 	FGameplayEffectContextHandle EffectContext = ASC->MakeEffectContext();
 	ASC->BP_ApplyGameplayEffectToSelf(GE, 0, EffectContext);
+}
+
+void AURRTile::AdjustUnit()
+{
+	if (!UnitCharacter)
+	{
+		//Set Tile Empty
+		Rank = 0;
+		isEmpty = true;
+		if (!RankWidget) RankWidget = CastChecked<UURRTileRankWidget>(RankWidgetComp->GetWidget());
+		RankWidget->SetRank(0);
+		RankWidgetComp->SetHiddenInGame(true);
+
+		TileMaterialHandle = UAssetManager::Get().GetStreamableManager().RequestAsyncLoad(TileMaterials[11], FStreamableDelegate::CreateUObject(this, &AURRTile::TileMaterialLoadCompleted));
+		return;
+	}
+	
+	UnitCharacter->SetOwner(this);
+	isEmpty = false;
+
+	FVector newLoc = GetActorLocation();
+	newLoc.Z += 50;
+
+	float halfHeight = UnitCharacter->GetCapsuleComponent()->GetScaledCapsuleHalfHeight();
+	newLoc.Z += halfHeight;
+
+	FTransform FinalTransform = FTransform(FRotator(0.f, 180.f, 0.f), newLoc, UnitCharacter->GetActorScale3D());
+	UnitCharacter->SetActorTransform(FinalTransform);
+
+	UAbilitySystemComponent* UnitASC = UnitCharacter->GetAbilitySystemComponent();
+	if (UnitASC)
+	{
+		const UURRUnitAttributeSet* UnitAttribute = UnitASC->GetSet<UURRUnitAttributeSet>();
+		if (UnitAttribute)
+		{
+			Rank = int(UnitAttribute->GetRank());
+		}
+	}
+
+	SetTileRankMat();
 }

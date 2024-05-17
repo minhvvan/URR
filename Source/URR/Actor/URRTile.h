@@ -53,6 +53,9 @@ protected:
 	bool isEmpty;
 	int Rank;
 
+protected:
+	void SetTileRankMat();
+
 public:
 	bool IsEmpty();
 	void SpawnUnit(int rank);
@@ -63,4 +66,8 @@ public:
 	int GetRank();
 
 	void ApplyAugment(TSubclassOf<class UGameplayEffect> GE);
+
+	void AdjustUnit();
+
+	friend class AURRBoard;
 };
