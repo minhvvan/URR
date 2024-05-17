@@ -35,7 +35,7 @@ FGameplayAbilityTargetDataHandle AURRTA_MinHPSingle::MakeTargetData() const
 	if (bHitDetected)
 	{
 		FHitResult Target;
-		float MinHealth = 0;
+		float MinHealth = 999'999.f;
 
 		for (FHitResult& hitResult : OutHitResults)
 		{
