@@ -10,6 +10,7 @@
 #include "Tag/URRGameplayTag.h"
 #include "URR.h"
 #include "Kismet/KismetMathLibrary.h"
+#include "Framework/URRWaveManager.h"
 
 AURRCharacterUnit::AURRCharacterUnit() : Rank(0)
 {
@@ -92,6 +93,20 @@ void AURRCharacterUnit::PostInitializeComponents()
 		if (EffectSpecHandle.IsValid())
 		{
 			ASC->BP_ApplyGameplayEffectSpecToSelf(EffectSpecHandle);
+		}
+
+		UURRWaveManager* WaveManager = Cast<UURRWaveManager>(GEngine->GameSingleton);
+		if (WaveManager)
+		{
+			TArray<FAugment*> Augments = WaveManager->GetAugments(Rank);
+			for (auto& augment : Augments)
+			{
+				FGameplayEffectSpecHandle AugmentSpecHandle = ASC->MakeOutgoingSpec(augment->GE, 0, EffectContextHandle);
+				if (AugmentSpecHandle.IsValid())
+				{
+					ASC->BP_ApplyGameplayEffectSpecToSelf(AugmentSpecHandle);
+				}
+			}
 		}
 
 		FGameplayAbilitySpec* Spec = ASC->FindAbilitySpecFromInputID(0);
@@ -234,8 +249,6 @@ void AURRCharacterUnit::Init(int rank)
 		SetActorScale3D(FVector(2.3f));
 		break;
 	}
-
-	URR_LOG(LogURR, Log, TEXT("Init"));
 }
 
 void AURRCharacterUnit::SetTargetMonster(AURRCharacterMonster* target)

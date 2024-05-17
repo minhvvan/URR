@@ -70,6 +70,13 @@ void UURRWaveManager::PrepareNextWave()
 	}
 }
 
+TArray<FAugment*> UURRWaveManager::GetAugments(int Rank)
+{
+	if(SelectedAugment.Contains(Rank)) return SelectedAugment[Rank];
+
+	return TArray<FAugment*>();
+}
+
 void UURRWaveManager::StartNextWave()
 {
 	UGameplayStatics::SetGamePaused(GEngine->GameViewport->GetWorld(), false);
@@ -89,6 +96,12 @@ void UURRWaveManager::AugmentSelectedCallback(UURRAugmentData* augment)
 
 		if (type == EAugmentType::AUG_Unit)
 		{
+			for (auto rank : augment->AugmentData->Targets)
+			{
+				if(!SelectedAugment.Contains(rank)) SelectedAugment.Add(rank);
+				SelectedAugment[rank].Add(augment->AugmentData);
+			}
+
 			Board->ApplyAugmentToUnit(augment->AugmentData->GE, augment->AugmentData->Targets);
 		}
 		else if (type == EAugmentType::AUG_Util)

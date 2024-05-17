@@ -81,6 +81,8 @@ public:
 	void SetUpAllAugment();
 	void PrepareNextWave();
 
+	TArray<FAugment*> GetAugments(int Rank);
+
 protected:
 	void StartNextWave();
 
@@ -103,4 +105,6 @@ protected:
 
 	TArray<FAugment*> Augments;
 	TArray<FAugment*> CurrentShowAugments;
+
+	TMap<int, TArray<FAugment*>> SelectedAugment;
 };
