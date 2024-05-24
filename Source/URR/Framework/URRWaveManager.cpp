@@ -70,6 +70,12 @@ void UURRWaveManager::PrepareNextWave()
 	}
 }
 
+void UURRWaveManager::FinishStage()
+{
+	//move to Lobby
+	URR_LOG(LogURR, Log, TEXT("Stage Clear"));
+}
+
 TArray<FAugment*> UURRWaveManager::GetAugments(int Rank)
 {
 	if(SelectedAugment.Contains(Rank)) return SelectedAugment[Rank];

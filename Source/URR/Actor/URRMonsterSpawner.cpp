@@ -8,6 +8,7 @@
 #include "AbilitySystemComponent.h"
 #include "Tag/URRGameplayTag.h"
 #include "UI/URRWaveAlertWidget.h"
+#include "UI/URRStageClearWidget.h"
 #include "URR.h"
 
 // Sets default values
@@ -33,6 +34,12 @@ AURRMonsterSpawner::AURRMonsterSpawner():
 	if (WidgetRef.Succeeded())
 	{
 		WaveAlertWidgetClass = WidgetRef.Class;
+	}	
+	
+	ConstructorHelpers::FClassFinder<UURRStageClearWidget> StageWidgetRef(TEXT("/Script/UMGEditor.WidgetBlueprint'/Game/URR/UI/WBP_StateClear.WBP_StateClear_C'"));
+	if (StageWidgetRef.Succeeded())
+	{
+		StageClearWidgetClass = StageWidgetRef.Class;
 	}
 }
 
@@ -110,8 +117,26 @@ void AURRMonsterSpawner::MonsterDeathCallback(AActor* monster)
 
 	if (SpawnedMonsters.Num() == 0 && !ASC->HasMatchingGameplayTag(URRTAG_MONSTER_SPAWNING))
 	{
-		if (!WaveManager) WaveManager = Cast<UURRWaveManager>(GEngine->GameSingleton);
-		WaveManager->PrepareNextWave();
+		if (MonsterWaves.IsValidIndex(currentIdx))
+		{
+			if (!WaveManager) WaveManager = Cast<UURRWaveManager>(GEngine->GameSingleton);
+			WaveManager->PrepareNextWave();
+		}
+		else
+		{
+			//종료
+			//TODO: 카메라 이동도 하면 좋고
+			//Stage Clear Wdiget 띄우기
+			if (StageClearWidgetClass)
+			{
+				StageClearWidget = CreateWidget<UURRStageClearWidget>(GetWorld(), StageClearWidgetClass);
+				StageClearWidget->AddToViewport();
+			}
+			else
+			{
+				//강제 종료
+			}
+		}
 	}
 }
 

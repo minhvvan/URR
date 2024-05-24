@@ -50,6 +50,11 @@ protected:
 
 	TObjectPtr<UURRWaveAlertWidget> WaveAlertWidget;
 
+	UPROPERTY(EditAnywhere)
+	TSubclassOf<class UURRStageClearWidget> StageClearWidgetClass;
+
+	TObjectPtr<UURRStageClearWidget> StageClearWidget;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
