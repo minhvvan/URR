@@ -32,7 +32,6 @@ void UURRWaveAlertWidget::PlayAlertAnim()
 
 void UURRWaveAlertWidget::AnimationFinished()
 {
-	URR_LOG(LogURR, Log, TEXT("AnimationFinished"));
 	UnbindFromAnimationFinished(WaveAnim, EndDelegate);
 	OnAnimFinish.Broadcast();
 }

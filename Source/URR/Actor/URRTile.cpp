@@ -65,11 +65,16 @@ void AURRTile::UnitLoadCompleteCallback()
 
 	if (!UnitCharacter) return;
 
+	UnitCharacter->OnLoadCompleteDelegate.RemoveAll(this);
 	float halfHeight = UnitCharacter->GetCapsuleComponent()->GetScaledCapsuleHalfHeight();
 	SpawnLoc.Z += halfHeight;
 
 	FTransform FinalTransform = FTransform(FRotator(0.f, 180.f, 0.f), SpawnLoc);
 	UnitCharacter->FinishSpawning(FinalTransform);
+
+	URR_LOG(LogURR, Log, TEXT("Spawn"));
+
+	OnCompleteSpawnUnitDelegate.Broadcast();
 }
 
 void AURRTile::TileMaterialLoadCompleted()
@@ -106,6 +111,7 @@ bool AURRTile::IsEmpty()
 
 void AURRTile::SpawnUnit(int rank)
 {
+	if (UnitCharacter) return;
 	if (rank > 10)
 	{
 		//Shuffle

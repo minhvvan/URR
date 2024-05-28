@@ -7,6 +7,8 @@
 #include "Engine/StreamableManager.h"
 #include "URRTile.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FCompleteSpawnUnit);
+
 UCLASS(config = URR)
 class URR_API AURRTile : public AActor
 {
@@ -57,6 +59,8 @@ protected:
 	void SetTileRankMat();
 
 public:
+	FCompleteSpawnUnit OnCompleteSpawnUnitDelegate;
+
 	bool IsEmpty();
 	void SpawnUnit(int rank);
 	void RankUpUnit();

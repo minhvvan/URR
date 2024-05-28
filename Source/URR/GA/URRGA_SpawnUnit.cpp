@@ -2,8 +2,7 @@
 
 
 #include "URRGA_SpawnUnit.h"
-#include "Character/URRBoard.h"
-#include "Actor/URRTile.h"
+#include "GA/AT/URRAT_SpawnUnit.h"
 #include "URR.h"
 
 UURRGA_SpawnUnit::UURRGA_SpawnUnit()
@@ -15,28 +14,22 @@ void UURRGA_SpawnUnit::ActivateAbility(const FGameplayAbilitySpecHandle Handle, 
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
-	AURRBoard* Board = Cast<AURRBoard>(ActorInfo->AvatarActor.Get());
-	AURRTile* Tile = Board->GetEmptyTile();
-	if (Tile)
-	{
-		int temp = FMath::Rand() % 100;
-		int rank = 0;
-		if (temp < 70) rank = 0;
-		else if (temp < 90) rank = 1;
-		else if (temp < 98) rank = 2;
-		else rank = 3;
+	//at생성 & callback 설정
+	UURRAT_SpawnUnit* SpawnAT = UURRAT_SpawnUnit::SpawnUnit(this, FName(TEXT("SpawnUnit")));
+	SpawnAT->OnCompeleteSpawnUnit.AddDynamic(this, &UURRGA_SpawnUnit::SpawnCompleteCallback);
+	SpawnAT->ReadyForActivation();
 
-		Tile->SpawnUnit(rank);
-
-		CommitAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo);
-	}
-
-	bool bReplicateEndAbility = true;
-	bool bWasCancelled = false;
-	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, bReplicateEndAbility, bWasCancelled);
+	CommitAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo);	
 }
 
 void UURRGA_SpawnUnit::EndAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, bool bReplicateEndAbility, bool bWasCancelled)
 {
 	Super::EndAbility(Handle, ActorInfo, ActivationInfo, bReplicateEndAbility, bWasCancelled);
+}
+
+void UURRGA_SpawnUnit::SpawnCompleteCallback()
+{
+	bool bReplicateEndAbility = true;
+	bool bWasCancelled = false;
+	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, bReplicateEndAbility, bWasCancelled);
 }

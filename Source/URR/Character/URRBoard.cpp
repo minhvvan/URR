@@ -116,6 +116,7 @@ void AURRBoard::BeginPlay()
 	}
 	
 	FActorSpawnParameters SpawnParams;
+	SpawnParams.Owner = this;
 	FRotator Rotator;
 	FVector SpawnLocation  = FVector::ZeroVector;
 	SpawnLocation.Z = 600;
@@ -209,6 +210,8 @@ bool AURRBoard::IsValidIdx(int y, int x)
 
 void AURRBoard::MoveLeft()
 {
+	if (ASC->HasMatchingGameplayTag(URRTAG_PLAYER_ISSPAWNING)) return;
+
 	for (int i = 0; i < 4; i++)
 	{
 		TArray<int> ExistSet;
@@ -269,6 +272,7 @@ void AURRBoard::MoveLeft()
 
 void AURRBoard::MoveRight()
 {
+	if (ASC->HasMatchingGameplayTag(URRTAG_PLAYER_ISSPAWNING)) return;
 	for (int i = 0; i < 4; i++)
 	{
 		TArray<int> ExistSet;
@@ -332,6 +336,7 @@ void AURRBoard::MoveRight()
 
 void AURRBoard::MoveUp()
 {
+	if (ASC->HasMatchingGameplayTag(URRTAG_PLAYER_ISSPAWNING)) return;
 	for (int j = 0; j < 4; j++)
 	{
 		TArray<int> ExistSet;
@@ -395,6 +400,7 @@ void AURRBoard::MoveUp()
 
 void AURRBoard::MoveDown()
 {
+	if (ASC->HasMatchingGameplayTag(URRTAG_PLAYER_ISSPAWNING)) return;
 	for (int j = 0; j < 4; j++)
 	{
 		TArray<int> ExistSet;
@@ -460,6 +466,21 @@ void AURRBoard::SpawnUnit()
 {
 	//GA Activate
 	if (!ASC) return;
+
+	bool bPossible = false;
+	for (auto row : Tiles)
+	{
+		for (auto tile : row)
+		{
+			if (tile->IsEmpty())
+			{
+				bPossible = true;
+				break;
+			}
+		}
+	}
+
+	if (!bPossible) return;
 
 	FGameplayAbilitySpec* Spec = ASC->FindAbilitySpecFromInputID(0);
 	if (Spec)
