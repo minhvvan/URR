@@ -55,6 +55,8 @@ protected:
 
 	TObjectPtr<UURRStageClearWidget> StageClearWidget;
 
+	TObjectPtr<class AURRBoard> Board;
+
 protected:
 	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
@@ -73,7 +75,7 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	FMonsterInfo GetCurrentMonsterInfo();
+	FMonsterInfo GetCurrentMonsterInfo(int increase);
 
 	void AddSpawnedMonster(AURRCharacterMonster* monster);
 
@@ -82,4 +84,5 @@ public:
 	FVector GetGatePos();
 
 	friend UURRWaveManager;
+
 };

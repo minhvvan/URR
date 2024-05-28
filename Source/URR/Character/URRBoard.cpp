@@ -531,3 +531,19 @@ void AURRBoard::ApplyAugmentToSelf(TSubclassOf<UGameplayEffect> GE)
 		ASC->BP_ApplyGameplayEffectSpecToSelf(EffectSpecHandle);
 	}
 }
+
+void AURRBoard::SetCurrentMonsterWave(FMonsterInfo monster)
+{
+	if (HudWidget)
+	{
+		HudWidget->SetCurrentMosterInfo(monster);
+	}
+}
+
+void AURRBoard::DeathMonster()
+{
+	if (HudWidget)
+	{
+		HudWidget->DeathMonster();
+	}
+}

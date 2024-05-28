@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Pawn.h"
 #include "AbilitySystemInterface.h"
+#include "Framework/URRWaveManager.h"
 #include "URRBoard.generated.h"
 
 UCLASS()
@@ -102,4 +103,7 @@ public:
 
 	void ApplyAugmentToUnit(TSubclassOf<UGameplayEffect> GE, TArray<int> Targets);
 	void ApplyAugmentToSelf(TSubclassOf<UGameplayEffect> GE);
+
+	void SetCurrentMonsterWave(FMonsterInfo monster);
+	void DeathMonster();
 };

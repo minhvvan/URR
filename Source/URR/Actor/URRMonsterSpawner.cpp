@@ -10,6 +10,8 @@
 #include "UI/URRWaveAlertWidget.h"
 #include "UI/URRStageClearWidget.h"
 #include "URR.h"
+#include "Kismet/GameplayStatics.h"
+#include "Character/URRBoard.h"
 
 // Sets default values
 AURRMonsterSpawner::AURRMonsterSpawner():
@@ -96,6 +98,12 @@ void AURRMonsterSpawner::SpawnMonster()
 	WaveAlertWidget->SetWaveNum(currentIdx + 1);
 	WaveAlertWidget->SetMonsterInfo(MonsterWaves[currentIdx]);
 
+	Board = Cast<AURRBoard>(UGameplayStatics::GetActorOfClass(GetWorld(), AURRBoard::StaticClass()));
+	if (Board)
+	{
+		Board->SetCurrentMonsterWave(MonsterWaves[currentIdx]);
+	}
+
 	WaveAlertWidget->PlayAlertAnim();
 }
 
@@ -114,6 +122,8 @@ void AURRMonsterSpawner::MonsterDeathCallback(AActor* monster)
 {
 	AURRCharacterMonster* Target = Cast<AURRCharacterMonster>(monster);
 	SpawnedMonsters.Remove(Target);
+
+	Board->DeathMonster();
 
 	if (SpawnedMonsters.Num() == 0 && !ASC->HasMatchingGameplayTag(URRTAG_MONSTER_SPAWNING))
 	{
@@ -146,17 +156,16 @@ void AURRMonsterSpawner::Tick(float DeltaTime)
 	Super::Tick(DeltaTime);
 }
 
-FMonsterInfo AURRMonsterSpawner::GetCurrentMonsterInfo()
+FMonsterInfo AURRMonsterSpawner::GetCurrentMonsterInfo(int increase)
 {
 	if (MonsterWaves.IsValidIndex(currentIdx))
 	{
-		return MonsterWaves[currentIdx++];
+		int current = currentIdx;
+		currentIdx += increase;
+		return MonsterWaves[current];
 	}
-	else
-	{
-		//Clear Stage
-		return FMonsterInfo();
-	}
+
+	return FMonsterInfo();
 }
 
 void AURRMonsterSpawner::AddSpawnedMonster(AURRCharacterMonster* monster)

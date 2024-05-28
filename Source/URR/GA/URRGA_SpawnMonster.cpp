@@ -28,7 +28,7 @@ void UURRGA_SpawnMonster::ActivateAbility(const FGameplayAbilitySpecHandle Handl
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
 
 	Spawner = CastChecked<AURRMonsterSpawner>(ActorInfo->AvatarActor.Get());
-	FMonsterInfo CurrentMonsterInfo = Spawner->GetCurrentMonsterInfo();
+	FMonsterInfo CurrentMonsterInfo = Spawner->GetCurrentMonsterInfo(1);
 
 	AURRBoard* Board = Cast<AURRBoard>(UGameplayStatics::GetActorOfClass(GEngine->GameViewport->GetWorld(), AURRBoard::StaticClass()));
 	if (Board)

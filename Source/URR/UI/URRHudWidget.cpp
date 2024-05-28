@@ -6,8 +6,11 @@
 #include "Components/TextBlock.h"
 #include "Components/ProgressBar.h"
 #include "Components/Border.h"
+#include "Components/Image.h"
 #include "Character/URRBoard.h"
 #include "Character/URRCharacterUnit.h"
+#include "Actor/URRMonsterSpawner.h"
+#include "Kismet/GameplayStatics.h"
 #include "AbilitySystemComponent.h"
 #include "Attribute/URRPlayerAttributeSet.h"
 #include "Attribute/URRUnitAttributeSet.h"
@@ -84,6 +87,12 @@ void UURRHudWidget::NativeOnInitialized()
 	Super::NativeOnInitialized();
 
 	BtnSpawn->OnClicked.AddDynamic(this, &UURRHudWidget::OnSpawnClicked);
+
+	AURRMonsterSpawner* Spawner = Cast<AURRMonsterSpawner>(UGameplayStatics::GetActorOfClass(GetWorld(), AURRMonsterSpawner::StaticClass()));
+	if (!Spawner) return;
+
+	FMonsterInfo monsterInfo = Spawner->GetCurrentMonsterInfo(0);
+	SetCurrentMosterInfo(monsterInfo);
 }
 
 void UURRHudWidget::OnSpawnClicked()
@@ -125,4 +134,17 @@ FText UURRHudWidget::GetFindTargetTypeText(float type)
 
 	int temp = type;
 	return FText::FromString(FindTargetTable->FindRow<FFindTargetText>(FName(FString::Printf(TEXT("%d"), temp)), TEXT(""))->Text);
+}
+
+void UURRHudWidget::SetCurrentMosterInfo(FMonsterInfo monster)
+{
+	CurrentMonsterNum = monster.MonsterNum;
+
+	ImgMonster->SetBrushFromTexture(MonsterImages[monster.MonsterID]);
+	TxtMonsterNum->SetText(FText::AsNumber(CurrentMonsterNum));
+}
+
+void UURRHudWidget::DeathMonster()
+{
+	TxtMonsterNum->SetText(FText::AsNumber(--CurrentMonsterNum));
 }

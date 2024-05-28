@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "UI/URRGASWidget.h"
 #include "GameplayEffectTypes.h"
+#include "Framework/URRWaveManager.h"
 #include "URRHudWidget.generated.h"
 
 /**
@@ -58,7 +59,13 @@ protected:
 	class UTextBlock* TxtUnitCritMult;	
 
 	UPROPERTY(VisibleAnywhere, meta = (BindWidget))
-	class UTextBlock* TxtUnitTarget;
+	class UTextBlock* TxtUnitTarget;	
+	
+	UPROPERTY(VisibleAnywhere, meta = (BindWidget))
+	class UImage* ImgMonster;
+
+	UPROPERTY(VisibleAnywhere, meta = (BindWidget))
+	class UTextBlock* TxtMonsterNum;
 
 protected:
 	UPROPERTY(VisibleAnywhere)
@@ -89,4 +96,14 @@ protected:
 
 	float CurrentHealth;
 	float CurrentMaxHealth;
+
+	int CurrentMonsterNum;
+
+	UPROPERTY(EditAnywhere)
+	TMap<int, UTexture2D*> MonsterImages;
+
+public:
+	void SetCurrentMosterInfo(FMonsterInfo monster);
+
+	void DeathMonster();
 };
