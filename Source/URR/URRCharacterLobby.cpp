@@ -13,7 +13,10 @@
 #include "NiagaraFunctionLibrary.h"
 #include "URR.h"
 
-AURRCharacterLobby::AURRCharacterLobby()
+AURRCharacterLobby::AURRCharacterLobby() :
+	bShouldMove(false),
+	CachedDestination(FVector::ZeroVector),
+	FollowTime(0.f)
 {
 	ConstructorHelpers::FObjectFinder<USkeletalMesh> MeshRef(TEXT("/Script/Engine.SkeletalMesh'/Game/soldier_battle_pack/Mesh/Soldier/SK_Soldier.SK_Soldier'"));
 	if (MeshRef.Succeeded())
@@ -38,6 +41,42 @@ AURRCharacterLobby::AURRCharacterLobby()
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
 	FollowCamera->bUsePawnControlRotation = false;
+
+	HeadMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("HeadMesh"));
+	HeadMesh->SetupAttachment(RootComponent);
+	HeadMesh->SetLeaderPoseComponent(GetMesh());
+
+	BodyMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("BodyMesh"));
+	BodyMesh->SetupAttachment(RootComponent);
+	BodyMesh->SetLeaderPoseComponent(GetMesh());
+
+	AccMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("AccMesh"));
+	AccMesh->SetupAttachment(RootComponent);
+	AccMesh->SetLeaderPoseComponent(GetMesh());
+
+	ConstructorHelpers::FObjectFinder<USkeletalMesh> HeadMeshRef(TEXT("/Script/Engine.SkeletalMesh'/Game/soldier_battle_pack/Mesh/Soldier/SK_Helmet.SK_Helmet'"));
+	if (HeadMeshRef.Succeeded())
+	{
+		HeadMesh->SetSkeletalMesh(HeadMeshRef.Object);
+		HeadMesh->SetRelativeLocation(FVector(0, 0, -90));
+		HeadMesh->SetRelativeRotation(FRotator(0, -90, 0));
+	}
+
+	ConstructorHelpers::FObjectFinder<USkeletalMesh> BodyMeshRef(TEXT("/Script/Engine.SkeletalMesh'/Game/soldier_battle_pack/Mesh/Soldier/SK_BodyKit.SK_BodyKit'"));
+	if (BodyMeshRef.Succeeded())
+	{
+		BodyMesh->SetSkeletalMesh(BodyMeshRef.Object);
+		BodyMesh->SetRelativeLocation(FVector(0, 0, -90));
+		BodyMesh->SetRelativeRotation(FRotator(0, -90, 0));
+	}
+
+	ConstructorHelpers::FObjectFinder<USkeletalMesh> AccMeshRef(TEXT("/Script/Engine.SkeletalMesh'/Game/soldier_battle_pack/Mesh/Soldier/SK_BackPack.SK_BackPack'"));
+	if (AccMeshRef.Succeeded())
+	{
+		AccMesh->SetSkeletalMesh(AccMeshRef.Object);
+		AccMesh->SetRelativeLocation(FVector(0, 0, -90));
+		AccMesh->SetRelativeRotation(FRotator(0, -90, 0));
+	}
 }
 
 void AURRCharacterLobby::BeginPlay()

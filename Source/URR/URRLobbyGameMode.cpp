@@ -7,7 +7,7 @@
 AURRLobbyGameMode::AURRLobbyGameMode()
 {
 	static ConstructorHelpers::FClassFinder<APawn> PlayerPawnBPClass(TEXT("/Script/Engine.Blueprint'/Game/URR/Blueprint/BP_LobbyCharacter.BP_LobbyCharacter_C'"));
-	if (PlayerPawnBPClass.Class != nullptr)
+	if (PlayerPawnBPClass.Succeeded())
 	{
 		DefaultPawnClass = PlayerPawnBPClass.Class;
 	}

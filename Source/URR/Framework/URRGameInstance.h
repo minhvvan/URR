@@ -8,7 +8,7 @@
 
 
 UENUM(BlueprintType)
-enum class EUnitType : uint8 
+enum class EURRUnitType : uint8 
 { 
 	UT_Pistol UMETA(DisplayName = "Pistol"), 
 	UT_Rifle UMETA(DisplayName = "Rifle"),

@@ -24,6 +24,16 @@ protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, Meta = (AllowPrivateAccess = "true"))
 	TObjectPtr<class UCameraComponent> FollowCamera;
 
+	UPROPERTY(EditAnywhere, Category = Mesh)
+	TObjectPtr<USkeletalMeshComponent> HeadMesh;
+
+	UPROPERTY(EditAnywhere, Category = Mesh)
+	TObjectPtr<USkeletalMeshComponent> BodyMesh;
+
+	UPROPERTY(EditAnywhere, Category = Mesh)
+	TObjectPtr<USkeletalMeshComponent> AccMesh;
+
+
 protected:
 	virtual void BeginPlay() override;
 	
@@ -56,6 +66,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Input)
 	TObjectPtr<class UNiagaraSystem> FXCursor;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	bool bShouldMove;
 
 private:
 	FVector CachedDestination;
