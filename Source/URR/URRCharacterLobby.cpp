@@ -6,6 +6,7 @@
 #include "EnhancedInputSubsystems.h"
 #include "Camera/CameraComponent.h"
 #include "GameFramework/SpringArmComponent.h"
+#include "GameFramework/CharacterMovementComponent.h"
 #include "Framework/URRLobbyPC.h"
 #include "Blueprint/AIBlueprintHelperLibrary.h"
 #include "NiagaraSystem.h"
@@ -24,7 +25,15 @@ AURRCharacterLobby::AURRCharacterLobby()
 
 	CameraBoom = CreateDefaultSubobject<USpringArmComponent>(TEXT("CameraBoom"));
 	CameraBoom->SetupAttachment(RootComponent);
-	CameraBoom->TargetArmLength = 2400.0f;
+	CameraBoom->SetUsingAbsoluteRotation(true);
+	CameraBoom->SetRelativeRotation(FRotator(-65.f, 0.f, 0.f));
+	CameraBoom->bDoCollisionTest = false;
+	CameraBoom->TargetArmLength = 1400.0f;
+
+	GetCharacterMovement()->bOrientRotationToMovement = true;
+	GetCharacterMovement()->RotationRate = FRotator(0.f, 640.f, 0.f);
+	GetCharacterMovement()->bConstrainToPlane = true;
+	GetCharacterMovement()->bSnapToPlaneAtStart = true;
 
 	FollowCamera = CreateDefaultSubobject<UCameraComponent>(TEXT("FollowCamera"));
 	FollowCamera->SetupAttachment(CameraBoom, USpringArmComponent::SocketName);
@@ -82,6 +91,8 @@ void AURRCharacterLobby::OnSetDestinationTriggered()
 	}
 
 	FVector WorldDirection = (CachedDestination - GetActorLocation()).GetSafeNormal();
+
+	URR_LOG(LogURR, Log, TEXT("%s"), *WorldDirection.ToString());
 	AddMovementInput(WorldDirection, 1.0, false);
 }
 
