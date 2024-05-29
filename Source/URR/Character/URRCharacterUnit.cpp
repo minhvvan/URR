@@ -80,8 +80,8 @@ void AURRCharacterUnit::PostInitializeComponents()
 			FGameplayAbilitySpec FindTargetSpec(FindTargetAbilities[Rank]);
 			FindTargetSpec.InputID = 1;
 			ASC->GiveAbility(FindTargetSpec);
-		}		
-		
+		}
+
 		if (AttakAbilities[Rank])
 		{
 			FGameplayAbilitySpec AttackSpec(AttakAbilities[Rank]);
