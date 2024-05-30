@@ -15,6 +15,7 @@
 
 AURRCharacterLobby::AURRCharacterLobby() :
 	bShouldMove(false),
+	bReady(false),
 	CachedDestination(FVector::ZeroVector),
 	FollowTime(0.f)
 {
@@ -77,6 +78,11 @@ AURRCharacterLobby::AURRCharacterLobby() :
 		AccMesh->SetRelativeLocation(FVector(0, 0, -90));
 		AccMesh->SetRelativeRotation(FRotator(0, -90, 0));
 	}
+}
+
+void AURRCharacterLobby::SetReady(bool ready)
+{
+	bReady = ready;
 }
 
 void AURRCharacterLobby::BeginPlay()

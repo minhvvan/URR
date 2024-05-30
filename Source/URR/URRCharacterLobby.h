@@ -13,9 +13,6 @@ UCLASS()
 class URR_API AURRCharacterLobby : public AURRCharacterBase
 {
 	GENERATED_BODY()
-	
-public: 
-	AURRCharacterLobby();
 
 protected:
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly, Category = Camera, Meta = (AllowPrivateAccess = "true"))
@@ -33,6 +30,11 @@ protected:
 	UPROPERTY(EditAnywhere, Category = Mesh)
 	TObjectPtr<USkeletalMeshComponent> AccMesh;
 
+
+public:
+	AURRCharacterLobby();
+
+	void SetReady(bool ready);
 
 protected:
 	virtual void BeginPlay() override;
@@ -69,6 +71,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
 	bool bShouldMove;
+
+	UPROPERTY(VisibleAnywhere, BlueprintReadOnly)
+	bool bReady;
 
 private:
 	FVector CachedDestination;
