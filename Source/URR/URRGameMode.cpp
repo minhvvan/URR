@@ -8,7 +8,8 @@
 #include "Framework/URRPlayerController.h"
 #include "URR.h"
 
-AURRGameMode::AURRGameMode()
+AURRGameMode::AURRGameMode():
+	LobbyLevelName(TEXT("Lobby"))
 {
 	// use our custom PlayerController class
 	static ConstructorHelpers::FClassFinder<APawn> PlayerPawnBPClass(TEXT("/Script/Engine.Blueprint'/Game/URR/Blueprint/BP_Board.BP_Board_C'"));
@@ -24,4 +25,10 @@ AURRGameMode::AURRGameMode()
 void AURRGameMode::BeginPlay()
 {
 	Super::BeginPlay();
+}
+
+void AURRGameMode::OpenLobbyLevel()
+{
+	//TODO: stage clear data : saveGame
+	UGameplayStatics::OpenLevel(this, FName(LobbyLevelName));
 }

@@ -44,6 +44,9 @@ protected:
 	UFUNCTION()
 	void AnimationFinished();
 
+	UFUNCTION()
+	void OnPlayClicked();
+
 public:
 	void DetachWidget();
 

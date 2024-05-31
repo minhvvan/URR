@@ -10,6 +10,7 @@
 #include "UI/URRWaveAlertWidget.h"
 #include "UI/URRStageClearWidget.h"
 #include "URR.h"
+#include "Framework/URRGameInstance.h"
 #include "Kismet/GameplayStatics.h"
 #include "Character/URRBoard.h"
 
@@ -59,7 +60,10 @@ void AURRMonsterSpawner::BeginPlay()
 	//Spawn
 	if (!WaveManager) WaveManager = Cast<UURRWaveManager>(GEngine->GameSingleton);
 
-	SetWaveInfo(WaveManager->GetWaveInfo(1/*Stage Level*/));
+	UURRGameInstance* GI = Cast<UURRGameInstance>(GetGameInstance());
+	if (!GI) return;
+
+	SetWaveInfo(WaveManager->GetWaveInfo(GI->GetStageNum()));
 	SpawnMonster();
 }
 

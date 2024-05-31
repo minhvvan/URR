@@ -9,11 +9,14 @@
 #include "Animation/WidgetAnimation.h"
 #include "Data/URRMonsterData.h"
 #include "Framework/URRWaveManager.h"
+#include "URRLobbyGameMode.h"
 #include "URR.h"
 
 void UURRStageWidget::NativeOnInitialized()
 {
 	Super::NativeOnInitialized();
+
+	BtnPlay->OnClicked.AddDynamic(this, &UURRStageWidget::OnPlayClicked);
 }
 
 void UURRStageWidget::NativeConstruct()
@@ -44,6 +47,15 @@ void UURRStageWidget::NativeDestruct()
 void UURRStageWidget::AnimationFinished()
 {
 	RemoveFromViewport();
+}
+
+void UURRStageWidget::OnPlayClicked()
+{
+	AURRLobbyGameMode* GM = Cast<AURRLobbyGameMode>(GetWorld()->GetAuthGameMode());
+	if (!GM) return;
+
+	GM->OpenStageLevel(stageNum);
+	DetachWidget();
 }
 
 void UURRStageWidget::DetachWidget()

@@ -3,8 +3,11 @@
 
 #include "URRLobbyGameMode.h"
 #include "Framework/URRLobbyPC.h"
+#include "Kismet/GameplayStatics.h"
+#include "Framework/URRGameInstance.h"
 
-AURRLobbyGameMode::AURRLobbyGameMode()
+AURRLobbyGameMode::AURRLobbyGameMode(): 
+	StageLevelName(TEXT("Stage"))
 {
 	static ConstructorHelpers::FClassFinder<APawn> PlayerPawnBPClass(TEXT("/Script/Engine.Blueprint'/Game/URR/Blueprint/BP_LobbyCharacter.BP_LobbyCharacter_C'"));
 	if (PlayerPawnBPClass.Succeeded())
@@ -13,4 +16,13 @@ AURRLobbyGameMode::AURRLobbyGameMode()
 	}
 
 	PlayerControllerClass = AURRLobbyPC::StaticClass();
+}
+
+void AURRLobbyGameMode::OpenStageLevel(int stageNum)
+{
+	UURRGameInstance* GI = Cast<UURRGameInstance>(GetGameInstance());
+	if (!GI) return;
+
+	GI->SetStageNum(stageNum);
+	UGameplayStatics::OpenLevel(this, FName(StageLevelName));
 }

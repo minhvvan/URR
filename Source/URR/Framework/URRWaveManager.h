@@ -81,8 +81,6 @@ public:
 	void SetUpAllAugment();
 	void PrepareNextWave();
 
-	void FinishStage();
-
 	TArray<FAugment*> GetAugments(int Rank);
 
 protected:

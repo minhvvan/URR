@@ -3,7 +3,8 @@
 
 #include "Framework/URRGameInstance.h"
 
-UURRGameInstance::UURRGameInstance()
+UURRGameInstance::UURRGameInstance():
+	SelectedStageNum(0)
 {
 
 }

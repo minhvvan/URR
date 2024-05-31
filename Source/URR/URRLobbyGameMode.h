@@ -16,4 +16,10 @@ class URR_API AURRLobbyGameMode : public AGameModeBase
 	
 public:
 	AURRLobbyGameMode();
+
+	void OpenStageLevel(int stageNum);
+
+protected:
+	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
+	FString StageLevelName;
 };

@@ -46,6 +46,9 @@ class URR_API UURRGameInstance : public UGameInstance
 public:
 	UURRGameInstance();
 
-protected:
+	void SetStageNum(int stageNum) { SelectedStageNum = stageNum; }
+	int GetStageNum() { return SelectedStageNum; }
 
+protected:
+	int SelectedStageNum;
 };

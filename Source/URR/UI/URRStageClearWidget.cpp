@@ -4,6 +4,7 @@
 #include "UI/URRStageClearWidget.h"
 #include "Components/Button.h"
 #include "Framework/URRWaveManager.h"
+#include "URRGameMode.h"
 
 void UURRStageClearWidget::NativeOnInitialized()
 {
@@ -16,9 +17,9 @@ void UURRStageClearWidget::NativeOnInitialized()
 void UURRStageClearWidget::OnExitClicked()
 {
 	//Lobby¿Ãµø
-	UURRWaveManager* WaveManager = Cast<UURRWaveManager>(GEngine->GameSingleton);
-	if (!WaveManager) return;
+	AURRGameMode* GM = Cast<AURRGameMode>(GetWorld()->GetAuthGameMode());
+	if (!GM) return;
 
-	WaveManager->FinishStage();
+	GM->OpenLobbyLevel();
 	RemoveFromParent();
 }

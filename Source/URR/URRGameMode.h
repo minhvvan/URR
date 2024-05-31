@@ -14,6 +14,12 @@ class AURRGameMode : public AGameModeBase
 public:
 	AURRGameMode();
 
+	void OpenLobbyLevel();
+
 protected:
 	virtual void BeginPlay() override;
+
+protected:
+	UPROPERTY(EditAnywhere, meta = (AllowPrivateAccess = "true"))
+	FString LobbyLevelName;
 };
