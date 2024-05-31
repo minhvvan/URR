@@ -55,7 +55,6 @@ UAbilitySystemComponent* AURRMonsterSpawner::GetAbilitySystemComponent() const
 void AURRMonsterSpawner::BeginPlay()
 {
 	Super::BeginPlay();
-	//UI Alert
 
 	//Spawn
 	if (!WaveManager) WaveManager = Cast<UURRWaveManager>(GEngine->GameSingleton);
@@ -63,7 +62,8 @@ void AURRMonsterSpawner::BeginPlay()
 	UURRGameInstance* GI = Cast<UURRGameInstance>(GetGameInstance());
 	if (!GI) return;
 
-	SetWaveInfo(WaveManager->GetWaveInfo(GI->GetStageNum()));
+	//SetWaveInfo(WaveManager->GetWaveInfo(GI->GetStageNum()));
+	SetWaveInfo(WaveManager->GetWaveInfo(1));
 	SpawnMonster();
 }
 
