@@ -15,12 +15,9 @@ class URR_API UURRWaveAlertWidget : public UUserWidget
 	GENERATED_BODY()
 	
 protected:
-	UPROPERTY(VisibleAnywhere, meta = (BindWidget))
-	TObjectPtr<class UImage> ImgMonster;
-	
-	UPROPERTY(VisibleAnywhere, meta = (BindWidget))
-	TObjectPtr<class UTextBlock> TxtMonster;
-	
+	UPROPERTY(VisibleAnywhere, meta = (BindWidgetOptional))
+	TObjectPtr<class UURRMonsterEntryWidget> MonsterEntry;
+
 	UPROPERTY(VisibleAnywhere, meta = (BindWidget))
 	TObjectPtr<class UTextBlock> TxtWave;
 

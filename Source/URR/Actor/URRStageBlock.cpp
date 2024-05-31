@@ -6,6 +6,7 @@
 #include "Components/SphereComponent.h"
 #include "UI/URRStageWidget.h"
 #include "URRCharacterLobby.h"
+#include "URR.h"
 
 // Sets default values
 AURRStageBlock::AURRStageBlock()
@@ -64,6 +65,7 @@ void AURRStageBlock::OnBeginOverlap(UPrimitiveComponent* OverlappedComponent, AA
 	if (StageWidgetClass)
 	{
 		StageWidget = CreateWidget<UURRStageWidget>(GetWorld(), StageWidgetClass);
+		StageWidget->SetStageNum(stageNum);
 		StageWidget->AddToViewport();
 	}
 

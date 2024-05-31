@@ -4,6 +4,7 @@
 #include "UI/URRWaveAlertWidget.h"
 #include "Components/Image.h"
 #include "Components/TextBlock.h"
+#include "UI/URRMonsterEntryWidget.h"
 #include "URR.h"
 
 void UURRWaveAlertWidget::SetWaveNum(int num)
@@ -13,8 +14,7 @@ void UURRWaveAlertWidget::SetWaveNum(int num)
 
 void UURRWaveAlertWidget::SetMonsterInfo(FMonsterInfo monsters)
 {
-	ImgMonster->SetBrushFromTexture(MonsterImages[monsters.MonsterID]);
-	TxtMonster->SetText(FText::AsNumber(monsters.MonsterNum));
+	MonsterEntry->SetMonsterInfo(monsters);
 }
 
 void UURRWaveAlertWidget::PlayAlertAnim()
