@@ -43,6 +43,12 @@ protected:
 	void OnEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex);
 
 protected:
-	UPROPERTY(EditAnywhere, Category = Monster)
+	UPROPERTY(EditAnywhere, Category = Stage)
 	int stageNum;
+
+	UPROPERTY(EditAnywhere, Category = Stage)
+	int stageScore;
+
+	UPROPERTY(EditAnywhere, Category = Stage)
+	bool bComplete;
 };

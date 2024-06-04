@@ -5,11 +5,16 @@
 #include "Physics/URRCollision.h"
 #include "Components/SphereComponent.h"
 #include "UI/URRStageWidget.h"
-#include "URRCharacterLobby.h"
+#include "Character/URRCharacterLobby.h"
+#include "Kismet/GameplayStatics.h"
+#include "Framework/URRStageSG.h"
 #include "URR.h"
 
 // Sets default values
-AURRStageBlock::AURRStageBlock()
+AURRStageBlock::AURRStageBlock():
+	stageNum(0),
+	stageScore(0),
+	bComplete(false)
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -38,6 +43,15 @@ void AURRStageBlock::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	UURRStageSG* LoadGameInstance = Cast<UURRStageSG>(UGameplayStatics::CreateSaveGameObject(UURRStageSG::StaticClass()));
+	
+	FString SlotName(TEXT("Stage"));
+	SlotName += FString::Printf(TEXT("%d"), stageNum);
+	LoadGameInstance = Cast<UURRStageSG>(UGameplayStatics::LoadGameFromSlot(SlotName, LoadGameInstance->UserIndex));
+	
+	if (!LoadGameInstance) return;
+	stageScore = LoadGameInstance->Score;
+	bComplete = true;
 }
 
 void AURRStageBlock::PostInitializeComponents()
@@ -66,6 +80,8 @@ void AURRStageBlock::OnBeginOverlap(UPrimitiveComponent* OverlappedComponent, AA
 	{
 		StageWidget = CreateWidget<UURRStageWidget>(GetWorld(), StageWidgetClass);
 		StageWidget->SetStageNum(stageNum);
+		StageWidget->SetStageScore(stageScore);
+		StageWidget->SetStageCompleted(bComplete);
 		StageWidget->AddToViewport();
 	}
 

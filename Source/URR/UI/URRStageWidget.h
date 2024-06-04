@@ -29,6 +29,9 @@ protected:
 
 	UPROPERTY(VisibleAnywhere, meta = (BindWidget))
 	TObjectPtr<class UButton> BtnPlay;	
+
+	UPROPERTY(VisibleAnywhere, meta = (BindWidget))
+	TObjectPtr<class UTextBlock> TxtPlay;
 	
 	UPROPERTY(VisibleAnywhere, meta = (BindWidget))
 	TObjectPtr<class UListView> LVMonsterInfo;
@@ -51,12 +54,23 @@ public:
 	void DetachWidget();
 
 	void SetStageNum(int num) { stageNum = num; }
+	void SetStageScore(int score) { stageScore = score; }
+	void SetStageCompleted(bool bComplete) { stageCompleted = bComplete; }
 
 protected:
 	FWidgetAnimationDynamicEvent EndDelegate;
 
 	UPROPERTY(EditAnywhere, Category = Monster)
 	int stageNum;
+
+	UPROPERTY(EditAnywhere, Category = Monster)
+	int stageScore;
+
+	UPROPERTY(EditAnywhere, Category = Monster)
+	int stageCompleted;
+
+	UPROPERTY(EditAnywhere, Category = Stage)
+	UTexture2D* FillStar;
 
 	TArray<struct FMonsterInfo> Waves;
 };

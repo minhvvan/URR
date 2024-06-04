@@ -23,6 +23,14 @@ void UURRStageWidget::NativeConstruct()
 {
 	Super::NativeConstruct();
 
+	TxtStageNum->SetText(FText::AsNumber(stageNum));
+
+	if (stageScore >= 20) ImgStar1->SetBrushFromTexture(FillStar);
+	if (stageScore >= 50) ImgStar2->SetBrushFromTexture(FillStar);
+	if (stageScore >= 90) ImgStar3->SetBrushFromTexture(FillStar);
+
+	if (stageCompleted) TxtPlay->SetText(FText::FromString(TEXT("Replay")));
+
 	UURRWaveManager* WaveManager = Cast<UURRWaveManager>(GEngine->GameSingleton);
 	if (!WaveManager) return;
 

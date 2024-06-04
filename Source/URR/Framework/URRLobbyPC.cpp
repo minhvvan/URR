@@ -6,5 +6,4 @@
 
 AURRLobbyPC::AURRLobbyPC()
 {
-	URR_LOG(LogURR, Log, TEXT("PC"));
 }
