@@ -5,7 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "AbilitySystemInterface.h"
-#include "URRGameMode.h"
+#include "Framework/URRGameMode.h"
 #include "Framework/URRWaveManager.h"
 #include "URRMonsterSpawner.generated.h"
 

@@ -9,7 +9,7 @@
 #include "Animation/WidgetAnimation.h"
 #include "Data/URRMonsterData.h"
 #include "Framework/URRWaveManager.h"
-#include "URRLobbyGameMode.h"
+#include "Framework/URRLobbyGameMode.h"
 #include "URR.h"
 
 void UURRStageWidget::NativeOnInitialized()

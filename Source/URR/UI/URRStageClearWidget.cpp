@@ -4,7 +4,7 @@
 #include "UI/URRStageClearWidget.h"
 #include "Components/Button.h"
 #include "Framework/URRWaveManager.h"
-#include "URRGameMode.h"
+#include "Framework/URRGameMode.h"
 
 void UURRStageClearWidget::NativeOnInitialized()
 {
