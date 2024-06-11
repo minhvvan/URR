@@ -48,10 +48,28 @@ void AURRStageBlock::BeginPlay()
 	FString SlotName(TEXT("Stage"));
 	SlotName += FString::Printf(TEXT("%d"), stageNum);
 	LoadGameInstance = Cast<UURRStageSG>(UGameplayStatics::LoadGameFromSlot(SlotName, LoadGameInstance->UserIndex));
-	
-	if (!LoadGameInstance) return;
-	stageScore = LoadGameInstance->Score;
-	bComplete = true;
+
+	if (LoadGameInstance)
+	{
+		stageScore = LoadGameInstance->Score;
+		bComplete = true;
+
+		if (!BlockMats[EBlockMat::CLEAR]) return;
+		Mesh->SetMaterial(0, BlockMats[EBlockMat::CLEAR]);
+	}
+	else
+	{
+		UURRStageSG* PrevLoadInstance = Cast<UURRStageSG>(UGameplayStatics::CreateSaveGameObject(UURRStageSG::StaticClass()));
+
+		//이전 단계 확인
+		FString PrevStageName(TEXT("Stage"));
+		PrevStageName += FString::Printf(TEXT("%d"), stageNum - 1);
+		PrevLoadInstance = Cast<UURRStageSG>(UGameplayStatics::LoadGameFromSlot(PrevStageName, PrevLoadInstance->UserIndex));
+
+		if (!PrevLoadInstance) return;
+		if (!BlockMats[EBlockMat::CURRENT]) return;
+		Mesh->SetMaterial(0, BlockMats[EBlockMat::CURRENT]);
+	}
 }
 
 void AURRStageBlock::PostInitializeComponents()
@@ -84,8 +102,6 @@ void AURRStageBlock::OnBeginOverlap(UPrimitiveComponent* OverlappedComponent, AA
 		StageWidget->SetStageCompleted(bComplete);
 		StageWidget->AddToViewport();
 	}
-
-	//TODO: Block Material 변경(Anim쓰자)
 }
 
 void AURRStageBlock::OnEndOverlap(UPrimitiveComponent* OverlappedComponent, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex)
@@ -96,7 +112,5 @@ void AURRStageBlock::OnEndOverlap(UPrimitiveComponent* OverlappedComponent, AAct
 	Character->SetReady(false);
 
 	if (StageWidget) StageWidget->DetachWidget();
-
-	//TODO: Block Material 변경(Anim쓰자)
 }
 

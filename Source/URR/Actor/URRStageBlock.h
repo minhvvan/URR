@@ -6,6 +6,15 @@
 #include "GameFramework/Actor.h"
 #include "URRStageBlock.generated.h"
 
+UENUM(BlueprintType)
+enum class EBlockMat : uint8
+{
+	LOCKED UMETA(DisplayName = "Locked"),
+	CLEAR UMETA(DisplayName = "Clear"),
+	CURRENT UMETA(DisplayName = "Current"),
+	SIZE UMETA(DisplayName = "Size"),
+};
+
 UCLASS()
 class URR_API AURRStageBlock : public AActor
 {
@@ -23,6 +32,9 @@ protected:
 
 	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = UI)
 	TObjectPtr<class UURRStageWidget> StageWidget;
+
+	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = Mat)
+	TMap<EBlockMat, TObjectPtr<UMaterialInstance>> BlockMats;
 
 public:	
 	// Sets default values for this actor's properties
