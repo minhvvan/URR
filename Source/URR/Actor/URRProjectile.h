@@ -44,6 +44,7 @@ protected:
 	TSubclassOf<class UGameplayEffect> DebuffEffect;
 
 protected:
+	UPROPERTY(EditAnywhere, Category = STAT)
 	float AttackRate;
 
 	UPROPERTY(EditAnywhere, Category = STAT)
@@ -54,6 +55,12 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = STAT)
 	float SlowRate;
+
+	UPROPERTY(EditAnywhere, Category = STAT)
+	float CriticalProb;
+
+	UPROPERTY(EditAnywhere, Category = STAT)
+	float CriticalRate;
 
 protected:
 	// Called when the game starts or when spawned
@@ -69,6 +76,8 @@ public:
 	void SetAttackRate(float attackRate) { AttackRate = attackRate; }
 	void SetSlowRate(float slow) { SlowRate = slow; }
 	void SetKnockBackDist(float knockBack) { KnockBackDist = knockBack; }
+	void SetCriticalProb(float prob) { CriticalProb = prob; }
+	void SetCriticalRate(float rate) { CriticalRate = rate; }
 
 protected:
 	UFUNCTION()

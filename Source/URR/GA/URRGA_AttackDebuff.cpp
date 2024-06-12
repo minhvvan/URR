@@ -20,7 +20,6 @@ void UURRGA_AttackDebuff::ActivateAbility(const FGameplayAbilitySpecHandle Handl
 void UURRGA_AttackDebuff::OnCompleteCallback()
 {
 	BP_ApplyGameplayEffectToTarget(CurrentEventData.TargetData, DebuffEffect);
-	BP_ApplyGameplayEffectToTarget(CurrentEventData.TargetData, AttackDamageEffect);
 
 	Super::OnCompleteCallback();
 }

@@ -27,7 +27,10 @@ void UURRAttackDamageExecutionCalc::Execute_Implementation(const FGameplayEffect
 			{
 				float Damage = UnitAttribute->GetAttackRate();
 
-				//URR_LOG(LogURR, Log, TEXT("Damage: %f"), Damage);
+				int rand = FMath::Rand() % 100;
+				float Prob = UnitAttribute->GetCriticalProbability();
+				if(rand <= Prob) Damage = UnitAttribute->GetCriticalAttackRate();
+
 				OutExecutionOutput.AddOutputModifier(FGameplayModifierEvaluatedData(UURRMonsterAttributeSet::GetDamageAttribute(), EGameplayModOp::Additive, Damage));
 			}
 		}

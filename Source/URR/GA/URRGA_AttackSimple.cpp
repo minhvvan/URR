@@ -11,12 +11,9 @@ UURRGA_AttackSimple::UURRGA_AttackSimple()
 void UURRGA_AttackSimple::ActivateAbility(const FGameplayAbilitySpecHandle Handle, const FGameplayAbilityActorInfo* ActorInfo, const FGameplayAbilityActivationInfo ActivationInfo, const FGameplayEventData* TriggerEventData)
 {
 	Super::ActivateAbility(Handle, ActorInfo, ActivationInfo, TriggerEventData);
-	BP_ApplyGameplayEffectToTarget(TriggerEventData->TargetData, AttackDamageEffect);
 }
 
 void UURRGA_AttackSimple::OnCompleteCallback()
 {
-	BP_ApplyGameplayEffectToTarget(CurrentEventData.TargetData, AttackDamageEffect);
-
 	Super::OnCompleteCallback();
 }

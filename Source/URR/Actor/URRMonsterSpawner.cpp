@@ -62,7 +62,8 @@ void AURRMonsterSpawner::BeginPlay()
 	UURRGameInstance* GI = Cast<UURRGameInstance>(GetGameInstance());
 	if (!GI) return;
 
-	SetWaveInfo(WaveManager->GetWaveInfo(GI->GetStageNum()));
+	//SetWaveInfo(WaveManager->GetWaveInfo(GI->GetStageNum()));
+	SetWaveInfo(WaveManager->GetWaveInfo(1));
 	SpawnMonster();
 }
 
