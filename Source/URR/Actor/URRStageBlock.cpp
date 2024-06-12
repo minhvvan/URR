@@ -11,12 +11,12 @@
 #include "URR.h"
 
 // Sets default values
-AURRStageBlock::AURRStageBlock():
+AURRStageBlock::AURRStageBlock() :
 	stageNum(0),
 	stageScore(0),
-	bComplete(false)
+	bComplete(false),
+	bCurrent(false)
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 	Sphere = CreateDefaultSubobject<USphereComponent>(TEXT("Sphere"));
 	SetRootComponent(Sphere);
@@ -68,6 +68,8 @@ void AURRStageBlock::BeginPlay()
 
 		if (!PrevLoadInstance) return;
 		if (!BlockMats[EBlockMat::CURRENT]) return;
+
+		bCurrent = true;
 		Mesh->SetMaterial(0, BlockMats[EBlockMat::CURRENT]);
 	}
 }
@@ -100,6 +102,7 @@ void AURRStageBlock::OnBeginOverlap(UPrimitiveComponent* OverlappedComponent, AA
 		StageWidget->SetStageNum(stageNum);
 		StageWidget->SetStageScore(stageScore);
 		StageWidget->SetStageCompleted(bComplete);
+		StageWidget->SetCurrentStage(bCurrent);
 		StageWidget->AddToViewport();
 	}
 }

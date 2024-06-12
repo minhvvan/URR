@@ -34,7 +34,10 @@ protected:
 	TObjectPtr<class UTextBlock> TxtPlay;
 	
 	UPROPERTY(VisibleAnywhere, meta = (BindWidget))
-	TObjectPtr<class UListView> LVMonsterInfo;
+	TObjectPtr<class UListView> LVMonsterInfo;	
+	
+	UPROPERTY(VisibleAnywhere, meta = (BindWidget))
+	TObjectPtr<class UBorder> BorderLock;
 
 	UPROPERTY(Transient, meta=(BindWidgetAnim))
 	TObjectPtr<UWidgetAnimation> BoderShow;
@@ -56,6 +59,7 @@ public:
 	void SetStageNum(int num) { stageNum = num; }
 	void SetStageScore(int score) { stageScore = score; }
 	void SetStageCompleted(bool bComplete) { stageCompleted = bComplete; }
+	void SetCurrentStage(bool bCurrent) { bCurrentStage = bCurrent; }
 
 protected:
 	FWidgetAnimationDynamicEvent EndDelegate;
@@ -67,7 +71,10 @@ protected:
 	int stageScore;
 
 	UPROPERTY(EditAnywhere, Category = Monster)
-	int stageCompleted;
+	bool stageCompleted;
+
+	UPROPERTY(EditAnywhere, Category = Monster)
+	bool bCurrentStage;
 
 	UPROPERTY(EditAnywhere, Category = Stage)
 	UTexture2D* FillStar;

@@ -63,4 +63,7 @@ protected:
 
 	UPROPERTY(EditAnywhere, Category = Stage)
 	bool bComplete;
+
+	UPROPERTY(EditAnywhere, Category = Stage)
+	bool bCurrent;
 };

@@ -5,6 +5,7 @@
 #include "Components/TextBlock.h"
 #include "Components/Image.h"
 #include "Components/Button.h"
+#include "Components/Border.h"
 #include "Components/ListView.h"
 #include "Animation/WidgetAnimation.h"
 #include "Data/URRMonsterData.h"
@@ -42,6 +43,17 @@ void UURRStageWidget::NativeConstruct()
 		WaveData->MonsterInfo = wave;
 
 		LVMonsterInfo->AddItem(WaveData);
+	}
+
+	if (stageCompleted || bCurrentStage)
+	{
+		BorderLock->SetVisibility(ESlateVisibility::Hidden);
+		BtnPlay->SetVisibility(ESlateVisibility::Visible);
+	}
+	else
+	{
+		BorderLock->SetVisibility(ESlateVisibility::Visible);
+		BtnPlay->SetVisibility(ESlateVisibility::HitTestInvisible);
 	}
 
 	if (BoderShow) PlayAnimation(BoderShow);
