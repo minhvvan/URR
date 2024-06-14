@@ -58,7 +58,13 @@ void UURRWaveManager::PrepareNextWave()
 		AugmentWidget->OnAugmentSelected.AddDynamic(this, &UURRWaveManager::AugmentSelectedCallback);
 		AugmentWidget->AddToViewport();
 
-		for (int i = 0; i < 3; i++)
+		FAugment* temp = Augments[1];
+		Augments.Remove(temp);
+		CurrentShowAugments.Add(temp);
+
+		AugmentWidget->AddItem(temp, 0);
+
+		for (int i = 1; i <= 2; i++)
 		{
 			int idx = FMath::RandRange(0, Augments.Num()-1);
 			FAugment* augment = Augments[idx];
@@ -72,7 +78,7 @@ void UURRWaveManager::PrepareNextWave()
 
 TArray<FAugment*> UURRWaveManager::GetAugments(int Rank)
 {
-	if(SelectedAugment.Contains(Rank)) return SelectedAugment[Rank];
+	if(SelectedAugments.Contains(Rank)) return SelectedAugments[Rank];
 
 	return TArray<FAugment*>();
 }
@@ -90,27 +96,27 @@ void UURRWaveManager::AugmentSelectedCallback(UURRAugmentData* augment)
 	UGameplayStatics::SetGamePaused(GEngine->GameViewport->GetWorld(), false);
 	AURRBoard* Board = Cast<AURRBoard>(UGameplayStatics::GetActorOfClass(GEngine->GameViewport->GetWorld(), AURRBoard::StaticClass()));
 
+	FAugment* AugmentData = augment->AugmentData;
 	if (Board)
 	{
-		EAugmentType type = augment->AugmentData->AugmentType;
+		EAugmentType type = AugmentData->AugmentType;
 
 		if (type == EAugmentType::AUG_Unit)
 		{
-			for (auto rank : augment->AugmentData->Targets)
+			for (auto rank : AugmentData->Targets)
 			{
-				if(!SelectedAugment.Contains(rank)) SelectedAugment.Add(rank);
-				SelectedAugment[rank].Add(augment->AugmentData);
+				if(!SelectedAugments.Contains(rank)) SelectedAugments.Add(rank);
+				SelectedAugments[rank].Add(AugmentData);
+				Board->ApplyAugmentToUnit(AugmentData->GE, rank);
 			}
-
-			Board->ApplyAugmentToUnit(augment->AugmentData->GE, augment->AugmentData->Targets);
 		}
 		else if (type == EAugmentType::AUG_Util)
 		{
-			Board->ApplyAugmentToSelf(augment->AugmentData->GE);
+			Board->ApplyAugmentToSelf(AugmentData->GE);
 		}
 	}
 
-	CurrentShowAugments.Remove(augment->AugmentData);
+	CurrentShowAugments.Remove(AugmentData);
 	while (!CurrentShowAugments.IsEmpty())
 	{
 		Augments.Add(CurrentShowAugments.Pop());

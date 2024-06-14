@@ -96,12 +96,14 @@ protected:
 
 	TObjectPtr<class AURRCharacterUnit> SelectedUnit;
 
+	virtual void OnHealthChanged(const FOnAttributeChangeData& ChangeData);
+
 public:
 	void SpawnUnit();
 
 	class AURRTile* GetEmptyTile();
 
-	void ApplyAugmentToUnit(TSubclassOf<UGameplayEffect> GE, TArray<int> Targets);
+	void ApplyAugmentToUnit(TSubclassOf<UGameplayEffect> GE, int Target);
 	void ApplyAugmentToSelf(TSubclassOf<UGameplayEffect> GE);
 
 	void SetCurrentMonsterWave(FMonsterInfo monster);

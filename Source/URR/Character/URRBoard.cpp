@@ -8,11 +8,13 @@
 #include "EnhancedInputComponent.h"
 #include "EnhancedInputSubsystems.h"
 #include "AbilitySystemComponent.h"
+#include "Attribute/URRPlayerAttributeSet.h"
 #include "UI/URRHudWidget.h"
 #include "Player/URRPlayerState.h"
 #include "GA/URRGA_SpawnUnit.h"
 #include "Tag/URRGameplayTag.h"
 #include "Framework/URRPlayerController.h"
+#include "Framework/URRWaveManager.h"
 #include "Character/URRCharacterUnit.h"
 #include "Physics/URRCollision.h"
 #include "Urr.h"
@@ -154,6 +156,8 @@ void AURRBoard::BeginPlay()
 	{
 		ASC->BP_ApplyGameplayEffectSpecToSelf(EffectSpecHandle);
 	}
+	
+	ASC->GetGameplayAttributeValueChangeDelegate(UURRPlayerAttributeSet::GetHealthAttribute()).AddUObject(this, &AURRBoard::OnHealthChanged);
 }
 
 // Called every frame
@@ -462,6 +466,30 @@ void AURRBoard::MoveDown()
 	}
 }
 
+void AURRBoard::OnHealthChanged(const FOnAttributeChangeData& ChangeData)
+{
+	UURRWaveManager* WaveManager = Cast<UURRWaveManager>(GEngine->GameSingleton);
+	if (!WaveManager) return;
+
+	for (int rank = 0; rank < 11; rank++)
+	{
+		TArray<FAugment*> Augments = WaveManager->GetAugments(rank);
+
+		for (auto augment : Augments)
+		{
+			if (!augment->bRelateHP) continue;
+			if (augment->AugmentType == EAugmentType::AUG_Unit)
+			{
+				ApplyAugmentToUnit(augment->GE, rank);
+			}
+			else if(augment->AugmentType == EAugmentType::AUG_Util)
+			{
+				ApplyAugmentToSelf(augment->GE);
+			}
+		}
+	}
+}
+
 void AURRBoard::SpawnUnit()
 {
 	//GA Activate
@@ -506,16 +534,26 @@ AURRTile* AURRBoard::GetEmptyTile()
 	return EmptyTiles[rand];
 }
 
-void AURRBoard::ApplyAugmentToUnit(TSubclassOf<UGameplayEffect> GE, TArray<int> Targets)
+void AURRBoard::ApplyAugmentToUnit(TSubclassOf<UGameplayEffect> GE, int Target)
 {
+	if (!ASC) return;
+
+	FGameplayEffectContextHandle EffectContextHandle = ASC->MakeEffectContext();
+	FGameplayEffectSpecHandle EffectSpecHandle = ASC->MakeOutgoingSpec(GE, 0, EffectContextHandle);
+
 	for (auto& Row : Tiles)
 	{
 		for (auto& tile : Row)
 		{
-			if (Targets.Contains(tile->GetRank()))
-			{
-				tile->ApplyAugment(GE);
-			}
+			if (Target != tile->GetRank()) continue;
+
+			auto UnitCharacter = tile->UnitCharacter;
+			if (!UnitCharacter) continue;
+
+			UAbilitySystemComponent* TargetASC = UnitCharacter->GetAbilitySystemComponent();
+			if (!TargetASC) continue;
+
+			ASC->BP_ApplyGameplayEffectSpecToTarget(EffectSpecHandle, TargetASC);
 		}
 	}
 }

@@ -9,7 +9,11 @@ UURRPlayerAttributeSet::UURRPlayerAttributeSet() :
 	Coin(1000),
 	Health(2048),
 	MaxHealth(2048),
-	RewardLevel(1)
+	RewardLevel(1),
+	Cost(0),
+	Damage(0),
+	BonusCoin(0),
+	PrevHealth(0)
 {
 }
 
@@ -30,7 +34,7 @@ void UURRPlayerAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModC
 	}
 	else if (Data.EvaluatedData.Attribute == GetCostAttribute())
 	{
-		float newCoin = GetCoin() - GetCost();
+		float newCoin = GetCoin() - GetCost() + GetBonusCoin();
 		if (newCoin < 0) newCoin = 0.f;
 
 		SetCoin(newCoin);
@@ -45,12 +49,14 @@ void UURRPlayerAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModC
 	{
 		float MinHealth = 0.f;
 
+		SetPrevHealth(GetHealth());
+
 		SetHealth(FMath::Clamp(GetHealth() - GetDamage(), MinHealth, GetMaxHealth()));
 		SetDamage(0.f);
 
 		if (GetHealth() < 0.f)
 		{
-			//Data.Target.RemoveLooseGameplayTag(URRTAG_PLAYER_CANSPAWN);
+			Data.Target.RemoveLooseGameplayTag(URRTAG_PLAYER_CANSPAWN);
 		}
 	}
 }

@@ -2,6 +2,8 @@
 
 
 #include "Attribute/URRUnitAttributeSet.h"
+#include "GameplayEffectExtension.h"
+#include "Tag/URRGameplayTag.h"
 
 UURRUnitAttributeSet::UURRUnitAttributeSet() :
 	Rank(0),
@@ -9,7 +11,14 @@ UURRUnitAttributeSet::UURRUnitAttributeSet() :
 	AttackRange(100),
 	AttackSpeed(1),
 	CriticalProbability(1),
-	CriticalAttackRate(2)
+	CriticalAttackRate(2),
+	AdditiveAttackRate(0)
 {
+
+}
+
+void UURRUnitAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModCallbackData& Data)
+{
+	Super::PostGameplayEffectExecute(Data);
 
 }

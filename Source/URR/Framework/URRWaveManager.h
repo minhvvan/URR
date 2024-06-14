@@ -65,6 +65,12 @@ public:
 
 	UPROPERTY(EditAnywhere, BlueprintReadWrite)
 	EAugmentType AugmentType;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bRelateHP;
+
+	UPROPERTY(EditAnywhere, BlueprintReadWrite)
+	bool bRelateCoin;
 };
 
 
@@ -106,5 +112,5 @@ protected:
 	TArray<FAugment*> Augments;
 	TArray<FAugment*> CurrentShowAugments;
 
-	TMap<int, TArray<FAugment*>> SelectedAugment;
+	TMap<int, TArray<FAugment*>> SelectedAugments;
 };

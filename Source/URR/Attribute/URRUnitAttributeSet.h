@@ -33,6 +33,7 @@ public:
 	ATTRIBUTE_ACCESSORS(UURRUnitAttributeSet, KnockBackDist);
 	ATTRIBUTE_ACCESSORS(UURRUnitAttributeSet, SlowRate);
 	ATTRIBUTE_ACCESSORS(UURRUnitAttributeSet, FindTargetType);
+	ATTRIBUTE_ACCESSORS(UURRUnitAttributeSet, AdditiveAttackRate);
 
 protected:
 	UPROPERTY(BlueprintReadOnly, Category = Stat, meta = (AllowPrivateAccess = true))
@@ -61,4 +62,11 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, Category = Stat, meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData FindTargetType;
+
+	UPROPERTY(BlueprintReadOnly, Category = Stat, meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData AdditiveAttackRate;
+
+public:
+	virtual void PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data) override;
+
 };
