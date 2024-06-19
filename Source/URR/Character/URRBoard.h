@@ -108,4 +108,6 @@ public:
 
 	void SetCurrentMonsterWave(FMonsterInfo monster);
 	void DeathMonster();
+
+	const TArray<TArray<class AURRTile*>> GetTiles();
 };

@@ -13,7 +13,8 @@ UURRPlayerAttributeSet::UURRPlayerAttributeSet() :
 	Cost(0),
 	Damage(0),
 	BonusCoin(0),
-	PrevHealth(0)
+	PrevHealth(0),
+	Shield(0)
 {
 }
 
@@ -51,7 +52,16 @@ void UURRPlayerAttributeSet::PostGameplayEffectExecute(const FGameplayEffectModC
 
 		SetPrevHealth(GetHealth());
 
-		SetHealth(FMath::Clamp(GetHealth() - GetDamage(), MinHealth, GetMaxHealth()));
+		float CurrentShield = GetShield();
+		SetShield(FMath::Clamp(GetShield() - GetDamage(), 0.f, CurrentShield));
+
+		float OverShieldDamage = GetDamage() - CurrentShield;
+
+		if (OverShieldDamage > 0)
+		{
+			SetHealth(FMath::Clamp(GetHealth() - OverShieldDamage, MinHealth, GetMaxHealth()));
+		}
+
 		SetDamage(0.f);
 
 		if (GetHealth() < 0.f)

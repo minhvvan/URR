@@ -15,5 +15,6 @@ void UURRGA_AttackSimple::ActivateAbility(const FGameplayAbilitySpecHandle Handl
 
 void UURRGA_AttackSimple::OnCompleteCallback()
 {
+	BP_ApplyGameplayEffectToTarget(CurrentEventData.TargetData, AttackDamageEffect);
 	Super::OnCompleteCallback();
 }

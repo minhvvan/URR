@@ -9,6 +9,7 @@
 #include "Character/URRBoard.h"
 #include "UI/URRAugmentWidget.h"
 #include "Kismet/KismetArrayLibrary.h"
+#include "AbilitySystemComponent.h"
 
 UURRWaveManager::UURRWaveManager()
 {
@@ -58,7 +59,7 @@ void UURRWaveManager::PrepareNextWave()
 		AugmentWidget->OnAugmentSelected.AddDynamic(this, &UURRWaveManager::AugmentSelectedCallback);
 		AugmentWidget->AddToViewport();
 
-		FAugment* temp = Augments[1];
+		FAugment* temp = Augments[27];
 		Augments.Remove(temp);
 		CurrentShowAugments.Add(temp);
 

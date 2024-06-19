@@ -32,6 +32,7 @@ public:
 	ATTRIBUTE_ACCESSORS(UURRPlayerAttributeSet, Damage);
 	ATTRIBUTE_ACCESSORS(UURRPlayerAttributeSet, BonusCoin);
 	ATTRIBUTE_ACCESSORS(UURRPlayerAttributeSet, PrevHealth);
+	ATTRIBUTE_ACCESSORS(UURRPlayerAttributeSet, Shield);
 
 protected:
 	UPROPERTY(BlueprintReadOnly, Category = Stat, meta = (AllowPrivateAccess = true))
@@ -57,6 +58,9 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, Category = Stat, meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData PrevHealth;
+
+	UPROPERTY(BlueprintReadOnly, Category = Stat, meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData Shield;
 
 public:
 	virtual void PostGameplayEffectExecute(const struct FGameplayEffectModCallbackData& Data) override;

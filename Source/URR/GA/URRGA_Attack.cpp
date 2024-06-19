@@ -70,8 +70,6 @@ void UURRGA_Attack::EndAbility(const FGameplayAbilitySpecHandle Handle, const FG
 
 void UURRGA_Attack::OnCompleteCallback()
 {
-	BP_ApplyGameplayEffectToTarget(CurrentEventData.TargetData, AttackDamageEffect);
-
 	bool bReplicateEndAbility = true;
 	bool bWasCancelled = false;
 	EndAbility(CurrentSpecHandle, CurrentActorInfo, CurrentActivationInfo, bReplicateEndAbility, bWasCancelled);

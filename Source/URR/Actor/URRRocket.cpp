@@ -69,7 +69,7 @@ void AURRRocket::OnHitCallback(UPrimitiveComponent* HitComponent, AActor* OtherA
 				ASC->BP_ApplyGameplayEffectSpecToTarget(Spec, Monster->GetAbilitySystemComponent());
 			}
 		}
-
-		Destroy();
 	}
+
+	Destroy();
 }
