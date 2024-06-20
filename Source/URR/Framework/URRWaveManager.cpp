@@ -59,13 +59,7 @@ void UURRWaveManager::PrepareNextWave()
 		AugmentWidget->OnAugmentSelected.AddDynamic(this, &UURRWaveManager::AugmentSelectedCallback);
 		AugmentWidget->AddToViewport();
 
-		FAugment* temp = Augments[27];
-		Augments.Remove(temp);
-		CurrentShowAugments.Add(temp);
-
-		AugmentWidget->AddItem(temp, 0);
-
-		for (int i = 1; i <= 2; i++)
+		for (int i = 0; i < 3; i++)
 		{
 			int idx = FMath::RandRange(0, Augments.Num()-1);
 			FAugment* augment = Augments[idx];

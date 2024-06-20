@@ -7,6 +7,7 @@
 #include "Attribute/URRProjectileAttributeSet.h"
 #include "Physics/URRCollision.h"
 #include "Tag/URRGameplayTag.h"
+#include "Kismet/GameplayStatics.h"
 #include "URR.h"
 
 AURRMine::AURRMine()
@@ -53,6 +54,7 @@ void AURRMine::BeginOverlapCallback(UPrimitiveComponent* OverlappedComp, AActor*
 				ASC->BP_ApplyGameplayEffectSpecToTarget(DebuffSpec, Monster->GetAbilitySystemComponent());
 			}
 		}
+		UGameplayStatics::PlaySound2D(GetWorld(), ExplosionSFX);
 
 		Destroy();
 	}

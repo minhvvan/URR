@@ -52,6 +52,9 @@ protected:
 	UPROPERTY()
 	TObjectPtr<class UURRTileRankWidget> RankWidget;
 
+	UPROPERTY(EditAnywhere, Category = Sound)
+	TObjectPtr<USoundBase> RankUpSFX;
+
 	bool isEmpty;
 	int Rank;
 

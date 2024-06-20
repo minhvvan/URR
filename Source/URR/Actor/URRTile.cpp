@@ -13,6 +13,7 @@
 #include "Components/CapsuleComponent.h"
 #include "Physics/URRCollision.h"
 #include "Urr.h"
+#include "Kismet/GameplayStatics.h"
 
 // Sets default values
 AURRTile::AURRTile(): isEmpty(true)
@@ -140,6 +141,8 @@ void AURRTile::RankUpUnit()
 {
 	int CurrentRank = Rank;
 	DestroyUnit();
+
+	UGameplayStatics::PlaySound2D(GetWorld(), RankUpSFX);
 
 	SpawnUnit(CurrentRank + 1);
 }

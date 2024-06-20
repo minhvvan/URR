@@ -6,6 +6,7 @@
 #include "Character/URRCharacterMonster.h"
 #include "Attribute/URRProjectileAttributeSet.h"
 #include "Physics/URRCollision.h"
+#include "Kismet/GameplayStatics.h"
 #include "Tag/URRGameplayTag.h"
 #include "URR.h"
 
@@ -43,6 +44,7 @@ void AURRRocket::BeginOverlapCallback(UPrimitiveComponent* OverlappedComp, AActo
 			}
 		}
 
+		UGameplayStatics::PlaySound2D(GetWorld(), ExplosionSFX);
 		Destroy();
 	}
 }
@@ -71,5 +73,6 @@ void AURRRocket::OnHitCallback(UPrimitiveComponent* HitComponent, AActor* OtherA
 		}
 	}
 
+	UGameplayStatics::PlaySound2D(GetWorld(), ExplosionSFX);
 	Destroy();
 }

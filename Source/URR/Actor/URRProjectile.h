@@ -43,7 +43,11 @@ protected:
 	UPROPERTY(EditAnywhere, Category = GAS)
 	TSubclassOf<class UGameplayEffect> DebuffEffect;
 
+	UPROPERTY(EditAnywhere, Category = Sound)
+	TObjectPtr<USoundBase> ExplosionSFX;
+
 protected:
+	//TODO: Set ´Þ±â
 	UPROPERTY(EditAnywhere, Category = STAT)
 	float AttackRate;
 
