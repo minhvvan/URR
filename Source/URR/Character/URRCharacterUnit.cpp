@@ -269,20 +269,7 @@ TSubclassOf<AURRProjectile> AURRCharacterUnit::GetProjectileClass()
 
 FTransform AURRCharacterUnit::GetMuzzleTransform()
 {
-	if (Rank == 2)
-	{
-		return GetMesh()->GetSocketTransform(MuzzleSocketName[0]);
-	}
-	else if(Rank == 3)
-	{
-		return GetMesh()->GetSocketTransform(MuzzleSocketName[1]);
-	}
-	else if (Rank == 5)
-	{
-		return GetMesh()->GetSocketTransform(MuzzleSocketName[2]);
-	}
-
-	return FTransform::Identity;
+	return GetMesh()->GetSocketTransform(MuzzleSocketName[Rank]);
 }
 
 void AURRCharacterUnit::SetShowRangeIndicator(bool bShow)
@@ -536,4 +523,14 @@ void AURRCharacterUnit::UnitLoadCompleted(int part)
 	}
 
 	if (bComplete) OnLoadCompleteDelegate.Broadcast();
+}
+
+void AURRCharacterUnit::InvokeGC()
+{
+	if (Rank == 2 || Rank == 3) return;
+
+	FGameplayCueParameters Param;
+	Param.SourceObject = this;
+	Param.Location = GetMuzzleTransform().GetLocation();
+	ASC->ExecuteGameplayCue(GameplayCueTag, Param);
 }

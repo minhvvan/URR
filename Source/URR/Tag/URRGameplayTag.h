@@ -14,3 +14,5 @@
 #define URRTAG_DATA_ATTACKRATE FGameplayTag::RequestGameplayTag(FName("Data.AttackRate"))
 #define URRTAG_DATA_KNOCKBACK FGameplayTag::RequestGameplayTag(FName("Data.KnockBackDistance"))
 #define URRTAG_DATA_SLOW FGameplayTag::RequestGameplayTag(FName("Data.SlowRate"))
+
+#define URRTAG_GAMEPLAYCUE_CHARACTER_SHOOT FGameplayTag::RequestGameplayTag(FName("GameplayCue.Unit.Shoot"))

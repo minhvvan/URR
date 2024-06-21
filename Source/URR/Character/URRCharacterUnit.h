@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Character/URRCharacterBase.h"
 #include "Engine/StreamableManager.h"
+#include "GameplayTagContainer.h"
 #include "URRCharacterUnit.generated.h"
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOnLoadCompleted);
@@ -96,8 +97,10 @@ public:
 	TSubclassOf<AURRProjectile> GetProjectileClass();
 
 	FTransform GetMuzzleTransform();
+	FVector GetFireMuzzleLocation();
 
 	void SetShowRangeIndicator(bool bShow);
+	void InvokeGC();
 
 protected:
 	void UnitMeshLoadCompleted();
@@ -118,6 +121,7 @@ protected:
 	void PlacedMontageLoadCompleted();
 
 	virtual void UnitLoadCompleted(int part);
+
 
 protected:
 	int Rank;
@@ -178,4 +182,10 @@ protected:
 
 	UPROPERTY(config)
 	TArray<FName> MuzzleSocketName;
+
+	UPROPERTY(config)
+	TArray<FName> MuzzleNames;
+
+	UPROPERTY(EditAnywhere, Category = GAS, Meta=(Categories=GameplayCue))
+	FGameplayTag GameplayCueTag;
 };

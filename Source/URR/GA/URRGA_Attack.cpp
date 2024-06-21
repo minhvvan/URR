@@ -35,6 +35,7 @@ void UURRGA_Attack::ActivateAbility(const FGameplayAbilitySpecHandle Handle, con
 	}
 
 	Unit->SetTargetMonster(Monster);
+	Unit->InvokeGC();
 
 	UAbilityTask_PlayMontageAndWait* MontageAT = UAbilityTask_PlayMontageAndWait::CreatePlayMontageAndWaitProxy(this, TEXT("PlayMontage"), Unit->GetAttackMontage(), 1.f);
 	MontageAT->OnCompleted.AddDynamic(this, &UURRGA_Attack::OnCompleteCallback);
