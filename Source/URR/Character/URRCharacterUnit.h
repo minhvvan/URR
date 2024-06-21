@@ -128,7 +128,7 @@ protected:
 	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = Animation)
 	TObjectPtr<class UAnimMontage> AttackActionMontage;
 
-	UPROPERTY()
+	UPROPERTY(VisibleAnywhere)
 	TObjectPtr<AURRCharacterMonster> TargetMonster;
 
 	UPROPERTY()

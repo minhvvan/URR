@@ -128,7 +128,7 @@ void AURRCharacterUnit::TickActor(float DeltaTime, ELevelTick TickType, FActorTi
 {
 	Super::TickActor(DeltaTime, TickType, ThisTickFunction);
 
-	if (TargetMonster && ASC->HasMatchingGameplayTag(URRTAG_UNIT_ATTACKING))
+	if (TargetMonster.Get() && ASC->HasMatchingGameplayTag(URRTAG_UNIT_ATTACKING))
 	{
 		FVector TargetPos = TargetMonster->GetActorLocation();
 

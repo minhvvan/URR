@@ -584,6 +584,8 @@ void AURRBoard::DeathMonster()
 	{
 		HudWidget->DeathMonster();
 	}
+
+
 }
 
 const TArray<TArray<class AURRTile*>> AURRBoard::GetTiles()

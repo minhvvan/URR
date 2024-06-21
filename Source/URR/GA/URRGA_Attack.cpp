@@ -28,7 +28,11 @@ void UURRGA_Attack::ActivateAbility(const FGameplayAbilitySpecHandle Handle, con
 		Monster = CastChecked<AURRCharacterMonster>(Monsters[0]);
 	}
 
-	if (!Monster) return;
+	if (!Monster)
+	{
+		OnCancelledCallback();
+		return;
+	}
 
 	Unit->SetTargetMonster(Monster);
 

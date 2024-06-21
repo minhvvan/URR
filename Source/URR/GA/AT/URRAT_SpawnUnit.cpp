@@ -29,6 +29,8 @@ void UURRAT_SpawnUnit::Activate()
 		else if (temp < 98) rank = 2;
 		else rank = 3;
 
+		rank = 2;
+
 		Tile->SpawnUnit(rank);
 	}
 	else
