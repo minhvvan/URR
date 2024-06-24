@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
 #include "AbilitySystemInterface.h"
+#include "GameplayTagContainer.h"
 #include "URRProjectile.generated.h"
 
 UCLASS()
@@ -37,8 +38,8 @@ protected:
 	UPROPERTY(EditAnywhere, Category = GAS)
 	TSubclassOf<class UGameplayEffect> AttackEffect;
 
-	UPROPERTY(EditAnywhere, Category = GAS)
-	TSubclassOf<class UGameplayEffect> InitStatEffect;
+	//UPROPERTY(EditAnywhere, Category = GAS)
+	//TSubclassOf<class UGameplayEffect> InitStatEffect;
 
 	UPROPERTY(EditAnywhere, Category = GAS)
 	TSubclassOf<class UGameplayEffect> DebuffEffect;
@@ -47,24 +48,26 @@ protected:
 	TObjectPtr<USoundBase> ExplosionSFX;
 
 protected:
-	//TODO: Set ´Þ±â
-	UPROPERTY(EditAnywhere, Category = STAT)
-	float AttackRate;
+	//UPROPERTY(EditAnywhere, Category = STAT)
+	//float AttackRate;
 
 	UPROPERTY(EditAnywhere, Category = STAT)
 	float ExplosionRange;
 
-	UPROPERTY(EditAnywhere, Category = STAT)
-	float KnockBackDist;
+	//UPROPERTY(EditAnywhere, Category = STAT)
+	//float KnockBackDist;
 
-	UPROPERTY(EditAnywhere, Category = STAT)
-	float SlowRate;
+	//UPROPERTY(EditAnywhere, Category = STAT)
+	//float SlowRate;
 
-	UPROPERTY(EditAnywhere, Category = STAT)
-	float CriticalProb;
+	//UPROPERTY(EditAnywhere, Category = STAT)
+	//float CriticalProb;
 
-	UPROPERTY(EditAnywhere, Category = STAT)
-	float CriticalRate;
+	//UPROPERTY(EditAnywhere, Category = STAT)
+	//float CriticalRate;
+
+	UPROPERTY(EditAnywhere, Category = GAS, Meta = (Categories = GameplayCue))
+	FGameplayTag GCTag;
 
 protected:
 	// Called when the game starts or when spawned
@@ -77,11 +80,6 @@ public:
 	virtual void Tick(float DeltaTime) override;
 
 	void FireInDirection(FVector vel);
-	void SetAttackRate(float attackRate) { AttackRate = attackRate; }
-	void SetSlowRate(float slow) { SlowRate = slow; }
-	void SetKnockBackDist(float knockBack) { KnockBackDist = knockBack; }
-	void SetCriticalProb(float prob) { CriticalProb = prob; }
-	void SetCriticalRate(float rate) { CriticalRate = rate; }
 
 protected:
 	UFUNCTION()
@@ -89,4 +87,6 @@ protected:
 
 	UFUNCTION()
 	virtual void OnHitCallback(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit) {};
+
+	void InvokeGC();
 };

@@ -8,6 +8,8 @@
 #include "Physics/URRCollision.h"
 #include "Kismet/GameplayStatics.h"
 #include "Tag/URRGameplayTag.h"
+#include "AbilitySystemBlueprintLibrary.h"
+#include "DrawDebugHelpers.h"
 #include "URR.h"
 
 void AURRRocket::PostInitializeComponents()
@@ -17,10 +19,9 @@ void AURRRocket::PostInitializeComponents()
 
 void AURRRocket::BeginOverlapCallback(UPrimitiveComponent* OverlappedComp, AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
-	float AttackRange = ProjectileAttributeSet->GetAttackRange();
 	TArray<FOverlapResult> OverlapResults;
 
-	if (GetWorld()->OverlapMultiByChannel(OverlapResults, GetActorLocation(), FQuat::Identity, CCHANNEL_URRATTACK, FCollisionShape::MakeSphere(AttackRange)))
+	if (GetWorld()->OverlapMultiByChannel(OverlapResults, GetActorLocation(), FQuat::Identity, CCHANNEL_URRATTACK, FCollisionShape::MakeSphere(ExplosionRange)))
 	{
 		for (auto result : OverlapResults)
 		{
@@ -44,6 +45,7 @@ void AURRRocket::BeginOverlapCallback(UPrimitiveComponent* OverlappedComp, AActo
 			}
 		}
 
+		InvokeGC();
 		UGameplayStatics::PlaySound2D(GetWorld(), ExplosionSFX);
 		Destroy();
 	}
@@ -51,10 +53,9 @@ void AURRRocket::BeginOverlapCallback(UPrimitiveComponent* OverlappedComp, AActo
 
 void AURRRocket::OnHitCallback(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit)
 {
-	float AttackRange = ProjectileAttributeSet->GetAttackRange();
 	TArray<FOverlapResult> OverlapResults;
 
-	if (GetWorld()->OverlapMultiByChannel(OverlapResults, GetActorLocation(), FQuat::Identity, CCHANNEL_URRATTACK, FCollisionShape::MakeSphere(AttackRange)))
+	if (GetWorld()->OverlapMultiByChannel(OverlapResults, GetActorLocation(), FQuat::Identity, CCHANNEL_URRATTACK, FCollisionShape::MakeSphere(ExplosionRange)))
 	{
 		for (auto result : OverlapResults)
 		{
@@ -73,6 +74,7 @@ void AURRRocket::OnHitCallback(UPrimitiveComponent* HitComponent, AActor* OtherA
 		}
 	}
 
+	InvokeGC();
 	UGameplayStatics::PlaySound2D(GetWorld(), ExplosionSFX);
 	Destroy();
 }

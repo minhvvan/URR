@@ -39,13 +39,14 @@ void UURRGA_AttackSpwanActor::ActivateAbility(const FGameplayAbilitySpecHandle H
 		const UURRUnitAttributeSet* UnitAttribute = SourceASC->GetSet<UURRUnitAttributeSet>();
 		if (!UnitAttribute) return;
 
-		Projectile->SetAttackRate(UnitAttribute->GetAttackRate());
-		Projectile->SetKnockBackDist(UnitAttribute->GetKnockBackDist());
-		Projectile->SetSlowRate(UnitAttribute->GetSlowRate());
-		Projectile->SetCriticalProb(UnitAttribute->GetCriticalProbability());
-		Projectile->SetCriticalRate(UnitAttribute->GetCriticalAttackRate());
-
 		Projectile->FinishSpawning(Unit->GetMuzzleTransform());
+
+		FGameplayEffectContextHandle EffectContextHandle = SourceASC->MakeEffectContext();
+		FGameplayEffectSpecHandle EffectSpecHandle = SourceASC->MakeOutgoingSpec(InitStatGE, 0, EffectContextHandle);
+		if (EffectSpecHandle.IsValid())
+		{
+			SourceASC->BP_ApplyGameplayEffectSpecToTarget(EffectSpecHandle, Projectile->GetAbilitySystemComponent());
+		}
 
 		FActorSpawnParameters params;
 		FVector SpawnLoc = Projectile->GetActorLocation();

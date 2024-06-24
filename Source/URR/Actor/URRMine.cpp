@@ -28,10 +28,9 @@ void AURRMine::BeginOverlapCallback(UPrimitiveComponent* OverlappedComp, AActor*
 {
 	if (OtherActor == this || OtherActor == GetOwner()) return;
 
-	float AttackRange = ProjectileAttributeSet->GetAttackRange();
 	TArray<FOverlapResult> OverlapResults;
 
-	if (GetWorld()->OverlapMultiByChannel(OverlapResults, GetActorLocation(), FQuat::Identity, CCHANNEL_URRATTACK, FCollisionShape::MakeSphere(AttackRange)))
+	if (GetWorld()->OverlapMultiByChannel(OverlapResults, GetActorLocation(), FQuat::Identity, CCHANNEL_URRATTACK, FCollisionShape::MakeSphere(ExplosionRange)))
 	{
 		for (auto result : OverlapResults)
 		{
@@ -54,14 +53,14 @@ void AURRMine::BeginOverlapCallback(UPrimitiveComponent* OverlappedComp, AActor*
 				ASC->BP_ApplyGameplayEffectSpecToTarget(DebuffSpec, Monster->GetAbilitySystemComponent());
 			}
 		}
-		UGameplayStatics::PlaySound2D(GetWorld(), ExplosionSFX);
 
+		UGameplayStatics::PlaySound2D(GetWorld(), ExplosionSFX);
+		InvokeGC();
 		Destroy();
 	}
 }
 
 void AURRMine::OnHitCallback(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NormalImpulse, const FHitResult& Hit)
 {
-	//Ground -> ¼³Ä¡
 	SetActorRotation(FQuat::Identity);
 }

@@ -29,6 +29,9 @@ public:
 	ATTRIBUTE_ACCESSORS(UURRProjectileAttributeSet, AttackRate);
 	ATTRIBUTE_ACCESSORS(UURRProjectileAttributeSet, KnockBackDistance);
 	ATTRIBUTE_ACCESSORS(UURRProjectileAttributeSet, SlowRate);
+	ATTRIBUTE_ACCESSORS(UURRProjectileAttributeSet, ExplosionRange);
+	ATTRIBUTE_ACCESSORS(UURRProjectileAttributeSet, CriticalProb);
+	ATTRIBUTE_ACCESSORS(UURRProjectileAttributeSet, CriticalRate);
 
 protected:
 	UPROPERTY(BlueprintReadOnly, Category = Stat, meta = (AllowPrivateAccess = true))
@@ -42,4 +45,13 @@ protected:
 
 	UPROPERTY(BlueprintReadOnly, Category = Stat, meta = (AllowPrivateAccess = true))
 	FGameplayAttributeData SlowRate;
+
+	UPROPERTY(BlueprintReadOnly, Category = Stat, meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData ExplosionRange;
+
+	UPROPERTY(BlueprintReadOnly, Category = Stat, meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData CriticalProb;
+
+	UPROPERTY(BlueprintReadOnly, Category = Stat, meta = (AllowPrivateAccess = true))
+	FGameplayAttributeData CriticalRate;
 };

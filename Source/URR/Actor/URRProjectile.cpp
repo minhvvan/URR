@@ -10,10 +10,8 @@
 
 
 // Sets default values
-AURRProjectile::AURRProjectile(): 
-	ExplosionRange(500.f),
-	KnockBackDist(0),
-	SlowRate(0)
+AURRProjectile::AURRProjectile():
+	ExplosionRange(500)
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -59,22 +57,21 @@ void AURRProjectile::FireInDirection(FVector vel)
 	ProjectileMovementComponent->Velocity = vel;
 }
 
+void AURRProjectile::InvokeGC()
+{
+	FGameplayCueParameters Param;
+	Param.SourceObject = this;
+	Param.Location = GetActorLocation();
+	Param.RawMagnitude = ExplosionRange;
+
+	ASC->ExecuteGameplayCue(GCTag, Param);
+}
+
 void AURRProjectile::PostInitializeComponents()
 {
 	Super::PostInitializeComponents();
 
 	ASC->InitAbilityActorInfo(this, this);
-
-	FGameplayEffectContextHandle Context = ASC->MakeEffectContext();
-	FGameplayEffectSpecHandle Spec = ASC->MakeOutgoingSpec(InitStatEffect, 0, Context);
-	if (Spec.IsValid())
-	{
-		Spec.Data->SetSetByCallerMagnitude(URRTAG_DATA_ATTACKRANGE, ExplosionRange);
-		Spec.Data->SetSetByCallerMagnitude(URRTAG_DATA_ATTACKRATE, AttackRate);
-		Spec.Data->SetSetByCallerMagnitude(URRTAG_DATA_KNOCKBACK, KnockBackDist);
-		Spec.Data->SetSetByCallerMagnitude(URRTAG_DATA_SLOW, SlowRate);
-		ASC->BP_ApplyGameplayEffectSpecToSelf(Spec);
-	}
 
 	Capsule->OnComponentBeginOverlap.AddDynamic(this, &AURRProjectile::BeginOverlapCallback);
 	Capsule->OnComponentHit.AddDynamic(this, &AURRProjectile::OnHitCallback);

@@ -16,3 +16,4 @@
 #define URRTAG_DATA_SLOW FGameplayTag::RequestGameplayTag(FName("Data.SlowRate"))
 
 #define URRTAG_GAMEPLAYCUE_CHARACTER_SHOOT FGameplayTag::RequestGameplayTag(FName("GameplayCue.Unit.Shoot"))
+#define URRTAG_GAMEPLAYCUE_EXPLOSION FGameplayTag::RequestGameplayTag(FName("GameplayCue.Projectile.Explosion"))
