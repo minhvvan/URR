@@ -38,9 +38,6 @@ protected:
 	UPROPERTY(EditAnywhere, Category = GAS)
 	TSubclassOf<class UGameplayEffect> AttackEffect;
 
-	//UPROPERTY(EditAnywhere, Category = GAS)
-	//TSubclassOf<class UGameplayEffect> InitStatEffect;
-
 	UPROPERTY(EditAnywhere, Category = GAS)
 	TSubclassOf<class UGameplayEffect> DebuffEffect;
 
@@ -48,24 +45,6 @@ protected:
 	TObjectPtr<USoundBase> ExplosionSFX;
 
 protected:
-	//UPROPERTY(EditAnywhere, Category = STAT)
-	//float AttackRate;
-
-	UPROPERTY(EditAnywhere, Category = STAT)
-	float ExplosionRange;
-
-	//UPROPERTY(EditAnywhere, Category = STAT)
-	//float KnockBackDist;
-
-	//UPROPERTY(EditAnywhere, Category = STAT)
-	//float SlowRate;
-
-	//UPROPERTY(EditAnywhere, Category = STAT)
-	//float CriticalProb;
-
-	//UPROPERTY(EditAnywhere, Category = STAT)
-	//float CriticalRate;
-
 	UPROPERTY(EditAnywhere, Category = GAS, Meta = (Categories = GameplayCue))
 	FGameplayTag GCTag;
 

@@ -42,7 +42,7 @@ void UURRGA_AttackSpwanActor::ActivateAbility(const FGameplayAbilitySpecHandle H
 		Projectile->FinishSpawning(Unit->GetMuzzleTransform());
 
 		FGameplayEffectContextHandle EffectContextHandle = SourceASC->MakeEffectContext();
-		FGameplayEffectSpecHandle EffectSpecHandle = SourceASC->MakeOutgoingSpec(InitStatGE, 0, EffectContextHandle);
+		FGameplayEffectSpecHandle EffectSpecHandle = SourceASC->MakeOutgoingSpec(InitStatGE, UnitAttribute->GetRank(), EffectContextHandle);
 		if (EffectSpecHandle.IsValid())
 		{
 			SourceASC->BP_ApplyGameplayEffectSpecToTarget(EffectSpecHandle, Projectile->GetAbilitySystemComponent());

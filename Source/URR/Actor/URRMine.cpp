@@ -29,6 +29,7 @@ void AURRMine::BeginOverlapCallback(UPrimitiveComponent* OverlappedComp, AActor*
 	if (OtherActor == this || OtherActor == GetOwner()) return;
 
 	TArray<FOverlapResult> OverlapResults;
+	float ExplosionRange = ProjectileAttributeSet->GetExplosionRange();
 
 	if (GetWorld()->OverlapMultiByChannel(OverlapResults, GetActorLocation(), FQuat::Identity, CCHANNEL_URRATTACK, FCollisionShape::MakeSphere(ExplosionRange)))
 	{

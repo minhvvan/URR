@@ -10,8 +10,7 @@
 
 
 // Sets default values
-AURRProjectile::AURRProjectile():
-	ExplosionRange(500)
+AURRProjectile::AURRProjectile()
 {
  	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
@@ -62,7 +61,7 @@ void AURRProjectile::InvokeGC()
 	FGameplayCueParameters Param;
 	Param.SourceObject = this;
 	Param.Location = GetActorLocation();
-	Param.RawMagnitude = ExplosionRange;
+	Param.RawMagnitude = ProjectileAttributeSet->GetExplosionRange();
 
 	ASC->ExecuteGameplayCue(GCTag, Param);
 }
