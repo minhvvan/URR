@@ -54,6 +54,17 @@
 각 스테이지 블럭의 스테이지 넘버를 통해 조회합니다.
 </br>
 </br>
+![image](https://github.com/user-attachments/assets/b7debbf9-80a6-43bc-8142-dc4cf912d7b4)
+
+
+게임이 시작되면 Level에 배치된 StageBlock은 설정된 Stage의 단계에 따라 클리어 여부, 점수 등을 저장한 SaveGame을 Local 컴퓨터에서 탐색합니다.
+만약, SaveGame이 존재한다면 클리어 정보를 출력해 줍니다.
+SaveGame이 존재하지 않은 가장 낮은 단계의 Stage의 잠금이 해제되며 StageBlock에 올라가게 되면 해당 Stage의 정보를 StageWidget을 통해 확인할 수 있습니다.
+StageWidget에서 'Play'버튼을 누르게 되면 GameMode에 게임 시작 요청을 합니다.
+GameMode는 Stage에 필요한 정보를 GameInstance에 설정한 후 게임 Level로 이동합니다.
+
+</br>
+</br>
 </br>
 
 # Gameplay
