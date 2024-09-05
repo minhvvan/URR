@@ -70,10 +70,21 @@ GameMode는 Stage에 필요한 정보를 GameInstance에 설정한 후 게임 Le
 # Gameplay
 ## Spawn Unit
 ![spawn](https://github.com/user-attachments/assets/11bf5cb6-7123-4042-9b14-81de921b86b0)
-
+</br>
+</br>
+</br>
 골드를 소모하여 유닛을 소환할 수 있습니다.
 1~4 단계의 유닛이 일정한 확률에 의해 소환됩니다.
-
+</br>
+![image](https://github.com/user-attachments/assets/eca4cb66-ec52-4bdd-a72c-ffef2554f862)
+</br>
+</br>
+MainUI에 있는 '유닛 스폰'버튼을 클릭하면 PlayerPawn인 Board에게 SpawnAction을 실행하도록 요청합니다.
+Board에서는 소유한 ASC에게 Unit을 Spawn하는 Action(GA_Spawn)을 찾아 실행합니다.
+GA_Spawn에서는 비동기로 유닛을 소환하는 ActionTask(AT_SpawnUnit)를 생성하고 대기합니다.
+AT_SpawnUnit이 실행되면 Board에서 빈 타일을 받아와 해당 타일에 유닛을 생성한 뒤 종료합니다.
+</br>
+</br>
 ![can't spwan](https://github.com/user-attachments/assets/f59e8517-4dff-4a15-b69b-829564c981a9)
 
 만약, 타일이 가득찬 상태라면 소환이 불가능합니다.
@@ -81,19 +92,35 @@ GameMode는 Stage에 필요한 정보를 GameInstance에 설정한 후 게임 Le
 </br>
 ## Unit Info
 ![unitInfo](https://github.com/user-attachments/assets/d8b89d85-ed01-43d4-b7d8-fdbb8a27d48d)
-
+</br>
 유닛을 클릭하여 유닛의 정보를 확인할 수 있습니다.
 사거리가 표시되며 오른쪽에 유닛의 단계, 공격력, 공격 속도 등에 대한 정보가 표시됩니다.
 </br>
 </br>
-## Attack
-![attack](https://github.com/user-attachments/assets/4b6c0ea0-af89-4e78-be83-5d79429744b0)
+![image](https://github.com/user-attachments/assets/726088e5-bcde-43c4-a53f-3b6041e2d6f7)
 
+</br>
+</br>
+
+## Attack
+
+![attack](https://github.com/user-attachments/assets/4b6c0ea0-af89-4e78-be83-5d79429744b0)
+</br>
 소환된 유닛은 범위 내에 적을 탐지하여 공격합니다.
 적을 처치하면 1골드를 획득합니다.
 증강을 통해 적 처치시 획득 골드를 증가시킬 수 있습니다.
 </br>
+
+![image](https://github.com/user-attachments/assets/cfd40af4-d553-49fd-869e-8635225a92fd)
+유닛은 Tick이 실행되면서 공격중인 유닛이 없다면 적을 찾는 Action을 실행합니다.
+적을 찾는 Action에서는 TargetActor를 만드는 ActionTask를 실행합니다.
+TargetActor는 유닛의 단계마다 다르게 적용됩니다.
+예를 들어, 권총을 든 유닛은 가장 가까운 적을 공격하고 지뢰를 든 유닛은 가장 앞에 있는 적을 타깃으로 설정합니다.
+TargetActor가 생성이 완료되고 데이터가 설정되었다면 ActionTask는 Callback을 통해 데이터를 전달받습니다.
+ActionTask는 UAbilitySystemBlueprintLibrary를 이용하여 event를 발생시켜 Unit에게 Tag를 부여하며 타깃인 적을 설정한 뒤 공격합니다.
 </br>
+
+
 ## Merge
 ![move](https://github.com/user-attachments/assets/d3ebb612-a9ba-47bc-8908-b6a8817e45ba)
 ![merge](https://github.com/user-attachments/assets/86102ab7-130b-4f4c-9232-7e31bb86f74d)
