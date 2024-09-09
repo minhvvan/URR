@@ -90,6 +90,7 @@ AT_SpawnUnit이 실행되면 Board에서 빈 타일을 받아와 해당 타일�
 만약, 타일이 가득찬 상태라면 소환이 불가능합니다.
 </br>
 </br>
+</br>
 ## Unit Info
 ![unitInfo](https://github.com/user-attachments/assets/d8b89d85-ed01-43d4-b7d8-fdbb8a27d48d)
 </br>
@@ -99,6 +100,7 @@ AT_SpawnUnit이 실행되면 Board에서 빈 타일을 받아와 해당 타일�
 </br>
 ![image](https://github.com/user-attachments/assets/726088e5-bcde-43c4-a53f-3b6041e2d6f7)
 
+</br>
 </br>
 </br>
 
@@ -118,12 +120,17 @@ TargetActor는 유닛의 단계마다 다르게 적용됩니다.
 예를 들어, 권총을 든 유닛은 가장 가까운 적을 공격하고 지뢰를 든 유닛은 가장 앞에 있는 적을 타깃으로 설정합니다.
 TargetActor가 생성이 완료되고 데이터가 설정되었다면 ActionTask는 Callback을 통해 데이터를 전달받습니다.
 ActionTask는 UAbilitySystemBlueprintLibrary를 이용하여 event를 발생시켜 Unit에게 Tag를 부여하며 타깃인 적을 설정한 뒤 공격합니다.
+
+</br>
+</br>
 </br>
 
-
 ## Merge
+
 ![move](https://github.com/user-attachments/assets/d3ebb612-a9ba-47bc-8908-b6a8817e45ba)
 ![merge](https://github.com/user-attachments/assets/86102ab7-130b-4f4c-9232-7e31bb86f74d)
+</br>
+</br>
 
 한 방향으로 모든 유닛을 이동시킬 수 있습니다.
 만약, 이동에 의해 같은 단계의 유닛이 만나게 된다면 한 단계 높은 유닛으로 진화합니다.
@@ -131,13 +138,94 @@ ActionTask는 UAbilitySystemBlueprintLibrary를 이용하여 event를 발생시�
 만약, 타일이 모두 가득찬 상태에서 어떤 방향으로든 유닛을 이동시켜 공간을 만들 수 없다면 더이상 유닛을 이동시킬 수 없습니다.
 </br>
 </br>
+
+```
+void AURRBoard::MoveLeft()
+{
+	if (ASC->HasMatchingGameplayTag(URRTAG_PLAYER_ISSPAWNING)) return;
+
+	for (int i = 0; i < 4; i++)
+	{
+		TArray<int> ExistSet;
+		TArray<int> EmptySet;
+
+		for (int j = 0; j < 4; j++)
+		{
+			if (Tiles[i][j]->IsEmpty()) EmptySet.Add(j);
+			else ExistSet.Add(j);
+		}
+
+		ExistSet.Heapify();
+		EmptySet.Heapify();
+
+		while(!ExistSet.IsEmpty())
+		{
+			int currentIdx;
+			ExistSet.HeapPop(currentIdx, true);
+			int currentRank = Tiles[i][currentIdx]->GetRank();
+
+			int prevRank = -1;
+			int prevIdx = -1;
+
+			for (int j = currentIdx - 1; j >= 0; j--)
+			{
+				if (!Tiles[i][j]->IsEmpty())
+				{
+					prevRank = Tiles[i][j]->GetRank();
+					prevIdx = j;
+					break;
+				}
+			}
+
+			if (currentRank == prevRank)
+			{
+				Tiles[i][currentIdx]->DestroyUnit();
+				Tiles[i][prevIdx]->RankUpUnit();
+
+				ExistSet.HeapPush(prevIdx);
+			}
+			else
+			{
+				if (EmptySet.IsEmpty()) continue;
+				if (currentIdx < EmptySet.HeapTop()) continue;
+
+				int firstEmpty;
+				EmptySet.HeapPop(firstEmpty, true);
+
+				Swap(Tiles[i][firstEmpty]->UnitCharacter, Tiles[i][currentIdx]->UnitCharacter);
+				Tiles[i][firstEmpty]->AdjustUnit();
+				Tiles[i][currentIdx]->AdjustUnit();
+			}
+		
+			EmptySet.HeapPush(currentIdx);
+		}
+	}
+}
+```
+왼쪽 이동 함수입니다.
+이동하는 방향으로 비어있는 칸이 있다면 계속 이동합니다.
+즉, 이동하는 쪽으로 쏠린다고 할 수 있습니다.
+만약, 같은 단계의 유닛이 있다면 두 유닛은 합쳐져 한 단계 진화합니다.
+모든 유닛을 하나씩 옮겨도 되지만 합쳐져 진화한 유닛이 또 다시 진화할 가능성이 있기 때문에 조금 복잡해질 수 있습니다.
+이를 해결하기 위해, Heap을 이용해 자신이 이동해야 하는 최종적인 위치를 구해낼 수 있습니다.
+최종 위치 이전의 유닛이 존재한다면 같은 단계인지 확인한 후 다음 작업을 이어나갑니다.
+만약, 같은 단계의 유닛이 존재한다면 둘 중 하나의 유닛을 파괴하고 남은 유닛은 한 단계 진화시킨 후, 다시 작업해야 하는 Heap에 추가합니다.
+모든 유닛을 처리했다면 작업을 마무리합니다.
+
+</br>
+</br>
+</br>
+
 ## Monster Attack
 ![monsterAttack](https://github.com/user-attachments/assets/3670ab4c-d6c2-472a-bf9b-9d606f4558ca)
 
 특정 경로를 따라 이동하는 적이 죽지 않고 성문앞에 도착하면 성문을 공격합니다.
 이때, 적의 남은 체력만큼 피해를 입힙니다.
+
 </br>
 </br>
+</br>
+
 ## Augment
 ![augment](https://github.com/user-attachments/assets/2727a572-1aff-48b2-81f8-a31c108daebb)
 
@@ -145,10 +233,13 @@ ActionTask는 UAbilitySystemBlueprintLibrary를 이용하여 event를 발생시�
 증강의 종류에는 몬스터 처치시 획득하는 골드가 증가하거나 유닛을 소환하는 골드가 감소하는 등 돈과 관련된 증강이 있고, 특정 단계의 유닛의 공격력, 사거리, 공격 속도 등을 증가시키는 증강이 있으며, 특정 단계 혹은 모든 유닛의 단계를 높이는 등의 증강이 존재합니다.
 </br>
 </br>
+</br>
+
 ## Clear
 ![clear](https://github.com/user-attachments/assets/6e76fa8e-b2c9-46ff-b3e7-8b748d9d7635)
 
 마지막 몬스터 웨이브가 종료되었을 때, 성문이 부서지지 않았다면 해당 단계를 통과하여 다음 단계를 진행할 수 있습니다.
+</br>
 </br>
 </br>
 ## Fail
