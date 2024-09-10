@@ -226,6 +226,17 @@ void AURRBoard::MoveLeft()
 </br>
 </br>
 
+![image](https://github.com/user-attachments/assets/3bc99a0e-4971-4a07-a6b5-ff61f5ea70ea)
+몬스터가 소환된 후 경로를 따라 이동하는 Action을 실행합니다.
+해당 Action에서는 Spline을 따라 이동하는 ActionTask(AT_MoveWithSpline)를 생성한 뒤 목적지에 도달하기를 기다립니다.
+AT_MoveWithSpline에서는 Tick마다 몬스터의 이동속도에 맞게 계속하여 이동합니다.
+만약, 사망하지 않고 목적지(Gate)에 도달했다면 Delegate를 통해 몬스터에게 공격하라는 요청합니다.
+몬스터의 공격 Montage가 실행되면, 남아있는 체력만큼 플레이어에게 피해을 입히고 파괴됩니다.
+
+</br>
+</br>
+</br>
+
 ## Augment
 ![augment](https://github.com/user-attachments/assets/2727a572-1aff-48b2-81f8-a31c108daebb)
 
