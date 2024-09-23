@@ -244,7 +244,17 @@ AT_MoveWithSpline에서는 Tick마다 몬스터의 이동속도에 맞게 계속
 증강의 종류에는 몬스터 처치시 획득하는 골드가 증가하거나 유닛을 소환하는 골드가 감소하는 등 돈과 관련된 증강이 있고, 특정 단계의 유닛의 공격력, 사거리, 공격 속도 등을 증가시키는 증강이 있으며, 특정 단계 혹은 모든 유닛의 단계를 높이는 등의 증강이 존재합니다.
 </br>
 </br>
+![image](https://github.com/user-attachments/assets/8a6ec49e-8e43-4e15-8246-c45445b85955)
+
 </br>
+Wave에 포함된 모든 몬스터를 처치하거나 공격을 당해도 생존하였다면 증강을 선택할 수 있는 Widget을 플레이어에게 보여줍니다.
+플레이어는 상황에 맞게 유리한 증강을 선택하여 게임을 이어나갈 수 있습니다.
+선택된 증강은 WaveManager에게 Callback형태로 전달되어 플레이어의 상태 혹은 유닛에게 적용합니다.
+
+</br>
+</br>
+</br>
+
 
 ## Clear
 ![clear](https://github.com/user-attachments/assets/6e76fa8e-b2c9-46ff-b3e7-8b748d9d7635)
