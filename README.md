@@ -2,7 +2,6 @@
 
 <div align="center">
   <img src="https://github.com/user-attachments/assets/f26f1b01-c2ab-41ac-a94e-0b35473b2ba1" alt="URR Main Image" width="600">
-  <p><i>디펜스 게임에 퍼즐 게임 요소를 더한 창의적인 게임 프로젝트</i></p>
 </div>
 
 <br><br>
