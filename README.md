@@ -1,4 +1,4 @@
-# URR - 디펜스 + 퍼즐 게임
+# URR
 
 <div align="center">
   <img src="https://github.com/user-attachments/assets/f26f1b01-c2ab-41ac-a94e-0b35473b2ba1" alt="URR Main Image" width="600">
